@@ -8,6 +8,7 @@ import {
     createStackedBarChartState,
     createSlopeChartState,
     createMapChartState,
+    createCanadaMapChartState,
 } from "../../../.storybook/helpers/grapherStateFactory"
 
 const meta: Meta<typeof Grapher> = {
@@ -66,6 +67,13 @@ export const SlopeChart: Story = {
 export const MapChart: Story = {
     render: () => {
         const grapherState = createMapChartState()
+        return <Grapher grapherState={grapherState} />
+    },
+}
+
+export const CanadaMapChart: Story = {
+    render: () => {
+        const grapherState = createCanadaMapChartState()
         return <Grapher grapherState={grapherState} />
     },
 }

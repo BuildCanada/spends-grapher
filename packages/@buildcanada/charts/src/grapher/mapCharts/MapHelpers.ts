@@ -16,6 +16,7 @@ import {
     MapRenderFeature,
     RenderFeatureType,
 } from "./MapChartConstants"
+import { CanadaTopology } from "./CanadaTopology.js"
 import { MapTopology } from "./MapTopology.js"
 import { MapSelectionArray } from "../selection/MapSelectionArray.js"
 import * as R from "remeda"
@@ -147,6 +148,18 @@ export const isOnTheMap = (entityName: EntityName): boolean => {
             MapTopology.objects.world.geometries.map((region: any) => region.id)
         )
     return _isOnTheMapCache.has(entityName)
+}
+
+let _isOnTheCanadaMapCache: Set<string>
+export const isOnTheCanadaMap = (entityName: EntityName): boolean => {
+    // Cache the result
+    if (!_isOnTheCanadaMapCache)
+        _isOnTheCanadaMapCache = new Set(
+            CanadaTopology.objects.canada.geometries.map(
+                (region: any) => region.id
+            )
+        )
+    return _isOnTheCanadaMapCache.has(entityName)
 }
 
 export function isMapRenderFeature(

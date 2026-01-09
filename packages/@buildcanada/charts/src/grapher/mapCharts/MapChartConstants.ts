@@ -79,6 +79,7 @@ export const MAP_REGION_LABELS: Record<MapRegionName, string> = {
     Asia: "Asia",
     Europe: "Europe",
     Oceania: "Oceania",
+    Canada: "Canada",
 }
 
 export const MAP_REGION_NAMES = R.invert(MAP_REGION_LABELS)
@@ -170,6 +171,7 @@ export const GLOBE_VIEWPORTS: Record<GlobeRegionName, GlobeViewport> = {
     SouthAmerica: { rotation: [-62, -22], zoom: 1.75 },
     Asia: { rotation: [81, 26], zoom: 1.85 },
     Oceania: { rotation: [152.65, -18.8], zoom: 2 },
+    Canada: { rotation: [-100, 60], zoom: 2.5 },
 }
 
 /** Viewport for each region, defined by center and width+height in fractional coordinates */
@@ -181,6 +183,7 @@ export const MAP_VIEWPORTS: Record<MapRegionName, MapViewport> = {
     SouthAmerica: { x: 0.52, y: 0.815, width: 0.1, height: 0.26, ratio: 0.62 },
     Asia: { x: 0.74, y: 0.45, width: 0.36, height: 0.5, ratio: 1.65 },
     Oceania: { x: 0.51, y: 0.75, width: 0.1, height: 0.2, ratio: 1.47 },
+    Canada: { x: 0.5, y: 0.5, width: 0.9, height: 0.9, ratio: 1.5 },
 }
 
 // Custom viewport for faceted world map, which zooms in a little bit to make best use of the available space

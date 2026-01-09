@@ -472,6 +472,7 @@ export enum MapRegionName {
     Asia = "Asia",
     Europe = "Europe",
     Oceania = "Oceania",
+    Canada = "Canada",
 }
 
 // 'World' doesn't make sense as a region for the globe

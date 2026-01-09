@@ -6,6 +6,7 @@ import {
     RenderFeatureType,
 } from "./MapChartConstants"
 import { Bounds, lazy, MapRegionName, PointVector } from "../../utils/index.js"
+import { CanadaTopology } from "./CanadaTopology"
 import { MapTopology } from "./MapTopology"
 import { geoBounds, geoCentroid, geoPath } from "d3-geo"
 import { MAP_PROJECTIONS } from "./MapProjections"
@@ -20,6 +21,18 @@ export const GeoFeatures: GeoFeature[] = (
 
 export const GeoFeaturesById = new Map(
     GeoFeatures.map((feature) => [feature.id, feature])
+)
+
+// Canadian province features
+export const CanadaGeoFeatures: GeoFeature[] = (
+    topojson.feature(
+        CanadaTopology as any,
+        CanadaTopology.objects.canada as any
+    ) as any
+).features
+
+export const CanadaGeoFeaturesById = new Map(
+    CanadaGeoFeatures.map((feature) => [feature.id, feature])
 )
 
 // Get the svg path specification string for every feature
@@ -76,12 +89,63 @@ const geoBoundsForFeatures = GeoFeatures.map((feature) => {
     )
 })
 
+// Canada-specific computed values
+const canadaGeoCentroidsForFeatures = CanadaGeoFeatures.map((feature) =>
+    geoCentroid(feature.geometry)
+)
+
+const canadaGeoBoundsForFeatures = CanadaGeoFeatures.map((feature) => {
+    const corners = geoBounds(feature)
+    return Bounds.fromCorners(
+        new PointVector(...corners[0]),
+        new PointVector(...corners[1])
+    )
+})
+
+// Canada-specific path and bounds functions
+const canadaGeoPathsFor = (): string[] => {
+    const projectionGeo = geoPath()
+        .digits(1)
+        .projection(MAP_PROJECTIONS[MapRegionName.Canada])
+    return CanadaGeoFeatures.map((feature) => projectionGeo(feature) ?? "")
+}
+
+const canadaGeoBoundsFor = (): Bounds[] => {
+    const projectionGeo = geoPath().projection(MAP_PROJECTIONS[MapRegionName.Canada])
+    return CanadaGeoFeatures.map((feature) => {
+        const corners = projectionGeo.bounds(feature)
+        return Bounds.fromCorners(
+            new PointVector(...corners[0]),
+            new PointVector(...corners[1])
+        )
+    })
+}
+
 const geoFeaturesForMapCache = new Map<MapRegionName, MapRenderFeature[]>()
 export const getGeoFeaturesForMap = (
     regionName: MapRegionName
 ): MapRenderFeature[] => {
     if (geoFeaturesForMapCache.has(regionName))
         return geoFeaturesForMapCache.get(regionName)!
+
+    // Handle Canada region separately using Canadian province features
+    if (regionName === MapRegionName.Canada) {
+        const projBounds = canadaGeoBoundsFor()
+        const projPaths = canadaGeoPathsFor()
+
+        const features = CanadaGeoFeatures.map((geo, index) => ({
+            type: RenderFeatureType.Map,
+            id: geo.id as string,
+            geo: geo,
+            projBounds: projBounds[index],
+            geoBounds: canadaGeoBoundsForFeatures[index],
+            geoCentroid: canadaGeoCentroidsForFeatures[index],
+            path: projPaths[index],
+        })) satisfies MapRenderFeature[]
+
+        geoFeaturesForMapCache.set(regionName, features)
+        return geoFeaturesForMapCache.get(regionName)!
+    }
 
     const projBounds = geoBoundsFor(regionName)
     const projPaths = geoPathsFor(regionName)

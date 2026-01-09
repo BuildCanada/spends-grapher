@@ -978,5 +978,63 @@
     {
         "id": "Zimbabwe",
         "ellipse": { "cx": 29.79, "cy": -18.85, "left": 26.94, "top": -16.42 }
+    },
+    {
+        "id": "Alberta",
+        "ellipse": { "cx": -114.5, "cy": 55, "left": -118, "top": 57 }
+    },
+    {
+        "id": "British Columbia",
+        "ellipse": { "cx": -125, "cy": 54, "left": -130, "top": 57 }
+    },
+    {
+        "id": "Manitoba",
+        "ellipse": { "cx": -98, "cy": 55, "left": -102, "top": 57 }
+    },
+    {
+        "id": "New Brunswick",
+        "ellipse": { "cx": -66, "cy": 46.5, "left": -68, "top": 47.5 },
+        "direction": "right",
+        "anchorPoint": [-65.5, 46.2]
+    },
+    {
+        "id": "Newfoundland and Labrador",
+        "ellipse": { "cx": -60, "cy": 53, "left": -65, "top": 56 }
+    },
+    {
+        "id": "Northwest Territories",
+        "ellipse": { "cx": -120, "cy": 65, "left": -130, "top": 68 }
+    },
+    {
+        "id": "Nova Scotia",
+        "ellipse": { "cx": -63, "cy": 45, "left": -65, "top": 46 },
+        "direction": "rightBottom",
+        "anchorPoint": [-62.5, 44.5]
+    },
+    {
+        "id": "Nunavut",
+        "ellipse": { "cx": -92, "cy": 70, "left": -100, "top": 73 }
+    },
+    {
+        "id": "Ontario",
+        "ellipse": { "cx": -85, "cy": 50, "left": -90, "top": 53 }
+    },
+    {
+        "id": "Prince Edward Island",
+        "ellipse": { "cx": -63, "cy": 46.5, "left": -64, "top": 47 },
+        "direction": "right",
+        "anchorPoint": [-63, 46.3]
+    },
+    {
+        "id": "Quebec",
+        "ellipse": { "cx": -72, "cy": 52, "left": -78, "top": 56 }
+    },
+    {
+        "id": "Saskatchewan",
+        "ellipse": { "cx": -106, "cy": 55, "left": -110, "top": 57 }
+    },
+    {
+        "id": "Yukon",
+        "ellipse": { "cx": -135, "cy": 64, "left": -140, "top": 66 }
     }
 ]

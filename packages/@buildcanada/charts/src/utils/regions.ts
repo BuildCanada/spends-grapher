@@ -9,6 +9,7 @@ export enum RegionType {
     Aggregate = "aggregate",
     Continent = "continent",
     IncomeGroup = "income_group",
+    Province = "province",
 }
 
 export interface BaseRegion {
@@ -49,7 +50,14 @@ export interface IncomeGroup extends BaseRegion {
     members: string[]
 }
 
-export type Region = Country | Aggregate | Continent | IncomeGroup
+export interface Province extends BaseRegion {
+    regionType: RegionType.Province
+    parentCountry: string
+    shortCode?: string
+    isMappable?: boolean
+}
+
+export type Region = Country | Aggregate | Continent | IncomeGroup | Province
 
 export const regions: Region[] = entities as Region[]
 
@@ -101,6 +109,10 @@ export function checkIsOwidContinent(region: Region): region is Continent {
 
 export function checkIsIncomeGroup(region: Region): region is IncomeGroup {
     return region.regionType === RegionType.IncomeGroup
+}
+
+export function checkIsProvince(region: Region): region is Province {
+    return region.regionType === RegionType.Province
 }
 
 export function checkHasMembers(
@@ -155,6 +167,18 @@ export const getIncomeGroups = lazy(
         ) as IncomeGroup[]
 )
 
+export const getProvinces = lazy(
+    () =>
+        entities.filter(
+            (entity) => entity.regionType === RegionType.Province
+        ) as Province[]
+)
+
+export const mappableProvinces: Province[] = regions.filter(
+    (region): region is Province =>
+        checkIsProvince(region) && !!region.isMappable
+)
+
 const regionsByName = lazy(() =>
     Object.fromEntries(regions.map((region) => [region.name, region]))
 )
@@ -183,6 +207,15 @@ export const incomeGroupsByName = lazy(
 const countriesBySlug = lazy(() =>
     Object.fromEntries(countries.map((country) => [country.slug, country]))
 )
+
+const provincesByName = lazy(() =>
+    Object.fromEntries(
+        mappableProvinces.map((province) => [province.name, province])
+    )
+)
+
+export const getProvinceByName = (name: string): Province | undefined =>
+    provincesByName()[name]
 
 /**
  * Lazy-loaded map of region names to their parent regions.

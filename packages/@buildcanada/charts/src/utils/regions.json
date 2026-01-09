@@ -5514,5 +5514,122 @@
         "slug": "zimbabwe",
         "regionType": "country",
         "isMappable": true
+    },
+    {
+        "code": "CA-AB",
+        "shortCode": "AB",
+        "name": "Alberta",
+        "slug": "alberta",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-BC",
+        "shortCode": "BC",
+        "name": "British Columbia",
+        "slug": "british-columbia",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-MB",
+        "shortCode": "MB",
+        "name": "Manitoba",
+        "slug": "manitoba",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-NB",
+        "shortCode": "NB",
+        "name": "New Brunswick",
+        "slug": "new-brunswick",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-NL",
+        "shortCode": "NL",
+        "name": "Newfoundland and Labrador",
+        "slug": "newfoundland-and-labrador",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-NS",
+        "shortCode": "NS",
+        "name": "Nova Scotia",
+        "slug": "nova-scotia",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-NT",
+        "shortCode": "NT",
+        "name": "Northwest Territories",
+        "slug": "northwest-territories",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-NU",
+        "shortCode": "NU",
+        "name": "Nunavut",
+        "slug": "nunavut",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-ON",
+        "shortCode": "ON",
+        "name": "Ontario",
+        "slug": "ontario",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-PE",
+        "shortCode": "PE",
+        "name": "Prince Edward Island",
+        "slug": "prince-edward-island",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-QC",
+        "shortCode": "QC",
+        "name": "Quebec",
+        "slug": "quebec",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-SK",
+        "shortCode": "SK",
+        "name": "Saskatchewan",
+        "slug": "saskatchewan",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
+    },
+    {
+        "code": "CA-YT",
+        "shortCode": "YT",
+        "name": "Yukon",
+        "slug": "yukon",
+        "regionType": "province",
+        "parentCountry": "CAN",
+        "isMappable": true
     }
 ]

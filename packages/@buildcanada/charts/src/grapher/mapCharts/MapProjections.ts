@@ -38,4 +38,10 @@ export const MAP_PROJECTIONS: Record<MapRegionName, GeoProjection> = {
         .rotate([-135, 0])
         .center([0, -20])
         .parallels([-10, -30]),
+
+    // Lambert Conformal Conic - standard for Canadian government maps
+    Canada: geoConicConformal()
+        .rotate([95, 0])
+        .center([0, 60])
+        .parallels([49, 77]),
 } as const
