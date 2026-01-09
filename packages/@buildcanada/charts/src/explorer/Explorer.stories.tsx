@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react"
 
 import { Explorer } from "./Explorer"
-import { SampleExplorerOfGraphers, SampleInlineDataExplorer } from "./Explorer.sample"
+import {
+    SampleExplorerOfGraphers,
+    SampleInlineDataExplorer,
+} from "./Explorer.sample"
 import { Bounds } from "../utils/index.js"
 
 const meta: Meta<typeof Explorer> = {
@@ -26,6 +29,7 @@ export const WithGrapherConfigs: Story = {
     render: () => {
         const explorer = SampleExplorerOfGraphers({
             bounds: new Bounds(0, 0, 1000, 700),
+            forceWideMode: true,
         })
         return <Explorer {...explorer.props} />
     },
@@ -35,6 +39,7 @@ export const WithInlineData: Story = {
     render: () => {
         const explorer = SampleInlineDataExplorer({
             bounds: new Bounds(0, 0, 1000, 700),
+            forceWideMode: true,
         })
         return <Explorer {...explorer.props} />
     },

@@ -6,7 +6,7 @@ import {
 } from "../grapher/index.js"
 import { Explorer, ExplorerProps } from "./Explorer.js"
 
-const SampleExplorerOfGraphersProgram = `explorerTitle	CO₂
+const SampleExplorerOfGraphersProgram = `explorerTitle	CO₂ Data Explorer
 isPublished	false
 explorerSubtitle	Download the complete <i>Our World in Data</i> <a href="https://github.com/owid/co2-data">CO₂ and GHG Emissions Dataset</a>.
 subNavId	co2
@@ -45,52 +45,102 @@ graphers
 	4224	Nitrous oxide	Production-based		Per country	false
 	4244	Nitrous oxide	Production-based		Per capita	false`
 
-export const SampleExplorerOfGraphers = (props?: Partial<ExplorerProps>) => {
-    const title = "AlphaBeta"
-    const owidDataset = new Map([
-        [
-            142609,
-            {
-                data: {
-                    years: [-1, 0, 1, 2],
-                    entities: [1, 2, 1, 2],
-                    values: [51, 52, 53, 54],
+// Generate realistic CO2 per capita emissions data (tonnes per person)
+// Based on approximate real-world trends from OWID CO2 data
+function generateCO2PerCapitaData() {
+    const startYear = 1990
+    const endYear = 2024
+    const years: number[] = []
+    const entities: number[] = []
+    const values: number[] = []
+
+    // Entity IDs matching the selection: China, United States, India, United Kingdom, World
+    const entityData = [
+        {
+            id: 1,
+            name: "China",
+            code: "CHN",
+            // CO2 per capita rose from ~2 to ~8 tonnes
+            baseValue: 2.1,
+            trend: (year: number) => 2.1 + (year - 1990) * 0.18,
+        },
+        {
+            id: 2,
+            name: "United States",
+            code: "USA",
+            // CO2 per capita declined from ~20 to ~14 tonnes
+            baseValue: 19.5,
+            trend: (year: number) =>
+                19.5 - (year - 1990) * 0.15 + Math.sin(year * 0.5) * 0.3,
+        },
+        {
+            id: 3,
+            name: "India",
+            code: "IND",
+            // CO2 per capita rose from ~0.7 to ~2 tonnes
+            baseValue: 0.7,
+            trend: (year: number) => 0.7 + (year - 1990) * 0.04,
+        },
+        {
+            id: 4,
+            name: "United Kingdom",
+            code: "GBR",
+            // CO2 per capita declined from ~10 to ~5 tonnes
+            baseValue: 10.2,
+            trend: (year: number) =>
+                10.2 - (year - 1990) * 0.15 + Math.sin(year * 0.3) * 0.2,
+        },
+        {
+            id: 5,
+            name: "World",
+            code: "OWID_WRL",
+            // Global average rose from ~4 to ~4.7 tonnes
+            baseValue: 4.0,
+            trend: (year: number) =>
+                4.0 + (year - 1990) * 0.02 + Math.sin(year * 0.2) * 0.1,
+        },
+    ]
+
+    // Generate data for each year and entity
+    for (let year = startYear; year <= endYear; year++) {
+        for (const entity of entityData) {
+            years.push(year)
+            entities.push(entity.id)
+            // Add some realistic variation
+            const baseValue = entity.trend(year)
+            const noise = (Math.sin(year * entity.id) * 0.1 + 1) * baseValue
+            values.push(Math.round(noise * 100) / 100)
+        }
+    }
+
+    const yearValues: { id: number }[] = []
+    for (let year = startYear; year <= endYear; year++) {
+        yearValues.push({ id: year })
+    }
+
+    return {
+        data: { years, entities, values },
+        metadata: {
+            id: 142609,
+            display: { yearIsDay: false },
+            dimensions: {
+                entities: {
+                    values: entityData.map((e) => ({
+                        name: e.name,
+                        code: e.code,
+                        id: e.id,
+                    })),
                 },
-                metadata: {
-                    id: 142609,
-                    display: { zeroDay: "2020-01-21", yearIsDay: true },
-                    dimensions: {
-                        entities: {
-                            values: [
-                                {
-                                    name: "United Kingdom",
-                                    code: "GBR",
-                                    id: 1,
-                                },
-                                { name: "Ireland", code: "IRL", id: 2 },
-                            ],
-                        },
-                        years: {
-                            values: [
-                                {
-                                    id: -1,
-                                },
-                                {
-                                    id: 0,
-                                },
-                                {
-                                    id: 1,
-                                },
-                                {
-                                    id: 2,
-                                },
-                            ],
-                        },
-                    },
-                },
+                years: { values: yearValues },
             },
-        ],
-    ])
+        },
+    }
+}
+
+export const SampleExplorerOfGraphers = (props?: Partial<ExplorerProps>) => {
+    const title = "CO₂ emissions per capita"
+    const co2Data = generateCO2PerCapitaData()
+    const owidDataset = new Map([[142609, co2Data]])
     const dimensions = [
         {
             variableId: 142609,
@@ -113,7 +163,7 @@ export const SampleExplorerOfGraphers = (props?: Partial<ExplorerProps>) => {
         {
             ...first,
             id: 4147,
-            title: "Switched to Something Else",
+            title: "All GHGs per capita",
         },
     ]
     return new Explorer({

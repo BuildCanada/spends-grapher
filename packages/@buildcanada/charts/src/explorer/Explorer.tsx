@@ -98,6 +98,8 @@ export interface ExplorerProps extends SerializedGridProgram {
     setupGrapher?: boolean
     archiveContext?: ArchiveContext
     loadInputTableForConfig?: FetchInputTableForConfigFn
+    /** Force wide mode (sidebar layout) regardless of viewport width. Useful for Storybook testing. */
+    forceWideMode?: boolean
 }
 
 const LivePreviewComponent = (props: ExplorerProps) => {
@@ -996,7 +998,7 @@ export class Explorer
         )
     }
 
-    private isNarrow = isNarrow()
+    private isNarrow = this.props.forceWideMode ? false : isNarrow()
 
     @computed private get isInIFrame() {
         return isInIFrame()
@@ -1060,7 +1062,7 @@ export class Explorer
         if (this.grapherContainerRef.current?.offsetParent === null) return
 
         const oldIsNarrow = this.isNarrow
-        this.isNarrow = isNarrow()
+        this.isNarrow = this.props.forceWideMode ? false : isNarrow()
         this.updateGrapherBounds()
 
         // If we changed between narrow and wide mode, we need to wait for CSS changes to kick in
