@@ -1,0 +1,61 @@
+import { Meta } from "@storybook/addon-docs/blocks"
+
+<Meta title="Docs/Introduction" />
+
+# @buildcanada/charts
+
+A configurable data visualization library for creating interactive charts. Extracted from [Our World in Data's Grapher](https://github.com/owid/owid-grapher).
+
+## Features
+
+- **Multiple Chart Types**: Line charts, bar charts, stacked area, slope charts, scatter plots, and maps
+- **Interactive**: Tooltips, zoom, entity selection, and time sliders
+- **Configurable**: Custom branding, colors, and data sources
+- **Responsive**: Adapts to container size
+- **Accessible**: Keyboard navigation and screen reader support
+
+## Quick Start
+
+```bash
+npm install @buildcanada/charts
+# or
+bun add @buildcanada/charts
+```
+
+```tsx
+import { ChartsProvider, Grapher, GrapherState } from "@buildcanada/charts"
+import "@buildcanada/charts/styles.css"
+
+const config = {
+  branding: { poweredByText: "My Organization" },
+  dataApi: { baseUrl: "https://api.example.com/v1/indicators/" }
+}
+
+function App() {
+  return (
+    <ChartsProvider config={config}>
+      <Grapher grapherState={grapherState} />
+    </ChartsProvider>
+  )
+}
+```
+
+## Peer Dependencies
+
+This library requires the following peer dependencies:
+
+- `react` ^19.0.0
+- `react-dom` ^19.0.0
+- `mobx` ^6.13.0
+- `mobx-react` ^7.6.0
+
+## Browse the Documentation
+
+- **[Getting Started](/docs/docs-getting-started--docs)** - Setup and basic usage
+- **[Configuration](/docs/docs-configuration--docs)** - Customize branding and data sources
+- **[Charts/Grapher](/docs/charts-grapher--docs)** - Main chart component examples
+- **[Charts/Explorer](/docs/charts-explorer--docs)** - Data explorer with filters
+
+## License
+
+MIT License - Based on Our World in Data's Grapher (Apache 2.0)

@@ -47,5 +47,8 @@ cfstorage/
 vite.*.mjs
 archive/*
 
+# Storybook build output
+storybook-static/
+
 # Sentry Config File
 .env.sentry-build-plugin

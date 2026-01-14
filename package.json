@@ -26,7 +26,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static"
+    "build-storybook": "storybook build -o storybook-static",
+    "serve-storybook": "serve storybook-static -p 6006"
   },
   "keywords": [
     "charts",
@@ -84,6 +85,7 @@
     "versor": "^0.2.0"
   },
   "devDependencies": {
+    "@storybook/addon-docs": "^10.1.11",
     "@storybook/react": "^10.1.11",
     "@storybook/react-vite": "^10.1.11",
     "@testing-library/dom": "^10.4.1",
@@ -112,6 +114,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "sass": "^1.77.0",
+    "serve": "^14.2.5",
     "storybook": "^10.1.11",
     "typescript": "~5.9.2",
     "vite": "^6.0.0",
