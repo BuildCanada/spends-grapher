@@ -7,10 +7,10 @@ A configurable data visualization library for creating interactive charts. Extra
 ## Commands
 
 ```bash
-yarn install        # Install dependencies
-yarn storybook      # Run Storybook on port 6006
-yarn test           # Run tests
-yarn typecheck      # TypeScript check
+bun install         # Install dependencies
+bun run storybook   # Run Storybook on port 6006
+bun test            # Run tests
+bun run typecheck   # TypeScript check
 ```
 
 ## Architecture
