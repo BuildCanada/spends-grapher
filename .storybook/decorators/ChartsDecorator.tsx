@@ -1,7 +1,7 @@
 import * as React from "react"
 
-import { ChartsProvider } from "../../src/config/ChartsProvider"
-import type { ChartsConfig } from "../../src/config/ChartsConfig"
+import { ChartsProvider } from "../../packages/charts/src/config/ChartsProvider"
+import type { ChartsConfig } from "../../packages/charts/src/config/ChartsConfig"
 
 const storybookChartsConfig: ChartsConfig = {
     branding: {

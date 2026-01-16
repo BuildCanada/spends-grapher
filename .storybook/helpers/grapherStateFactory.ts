@@ -1,15 +1,15 @@
-import { Bounds } from "../../src/utils/index.js"
-import { GrapherState } from "../../src/grapher/core/GrapherState.js"
+import { Bounds } from "../../packages/charts/src/utils/index.js"
+import { GrapherState } from "../../packages/charts/src/grapher/core/GrapherState.js"
 import {
     LifeExpectancyGrapher,
     CanadaProvinceGrapher,
-} from "../../src/grapher/testData/OwidTestData.sample.js"
-import type { GrapherProgrammaticInterface } from "../../src/grapher/core/Grapher.js"
+} from "../../packages/charts/src/grapher/testData/OwidTestData.sample.js"
+import type { GrapherProgrammaticInterface } from "../../packages/charts/src/grapher/core/Grapher.js"
 import {
     ColorSchemeName,
     GRAPHER_CHART_TYPES,
     MapRegionName,
-} from "../../src/types/index.js"
+} from "../../packages/charts/src/types/index.js"
 
 /**
  * Create a GrapherState configured for Storybook stories.

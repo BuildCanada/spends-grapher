@@ -9,7 +9,7 @@ import {
     createSlopeChartState,
     createMapChartState,
     createCanadaMapChartState,
-} from "../../../.storybook/helpers/grapherStateFactory"
+} from "../../../../../.storybook/helpers/grapherStateFactory"
 
 const meta: Meta<typeof Grapher> = {
     title: "Charts/Grapher",

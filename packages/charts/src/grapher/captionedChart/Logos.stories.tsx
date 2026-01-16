@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react"
 
 import { Grapher } from "../core/Grapher"
-import { createLineChartState } from "../../../.storybook/helpers/grapherStateFactory"
+import { createLineChartState } from "../../../../../.storybook/helpers/grapherStateFactory"
 import { LogoOption } from "../../types/index.js"
 
 const meta: Meta<typeof Grapher> = {

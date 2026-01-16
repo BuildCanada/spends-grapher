@@ -4,7 +4,8 @@ import pluginReact from "@vitejs/plugin-react"
 const config: StorybookConfig = {
     stories: [
         "./docs/**/*.mdx",
-        "../src/**/*.stories.@(ts|tsx)",
+        "../packages/charts/src/**/*.stories.@(ts|tsx)",
+        "../packages/colours/src/**/*.stories.@(ts|tsx)",
     ],
     addons: ["@storybook/addon-docs"],
     framework: {
@@ -40,6 +41,32 @@ const config: StorybookConfig = {
                     },
                 }),
             ],
+            resolve: {
+                ...config.resolve,
+                // Ensure workspace packages can resolve their dependencies
+                preserveSymlinks: true,
+            },
+            optimizeDeps: {
+                ...config.optimizeDeps,
+                // Include d3 packages to ensure they're properly bundled
+                include: [
+                    ...(config.optimizeDeps?.include || []),
+                    "d3",
+                    "d3-array",
+                    "d3-color",
+                    "d3-ease",
+                    "d3-force",
+                    "d3-format",
+                    "d3-geo",
+                    "d3-interpolate",
+                    "d3-quadtree",
+                    "d3-scale",
+                    "d3-selection",
+                    "d3-shape",
+                    "d3-transition",
+                    "d3-zoom",
+                ],
+            },
             esbuild: {
                 ...config.esbuild,
                 // Support TC-39 Stage 3 decorators used with MobX
@@ -48,7 +75,7 @@ const config: StorybookConfig = {
             css: {
                 preprocessorOptions: {
                     scss: {
-                        includePaths: ["./src"],
+                        includePaths: ["./packages/charts/src"],
                         silenceDeprecations: ["import"],
                     },
                 },

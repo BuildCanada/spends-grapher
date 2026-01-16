@@ -2,7 +2,7 @@ import type { Preview } from "@storybook/react"
 
 import { ChartsDecorator } from "./decorators/ChartsDecorator"
 
-import "../src/styles/charts.scss"
+import "../packages/charts/src/styles/charts.scss"
 
 const preview: Preview = {
     decorators: [ChartsDecorator],

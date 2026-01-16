@@ -1,0 +1,92 @@
+import { Meta } from "@storybook/addon-docs/blocks"
+
+<Meta title="Design System/Colours/Introduction" />
+
+# @buildcanada/colours
+
+Canadian colour tokens for design systems. A curated collection of colour definitions in both CSS and TypeScript formats.
+
+## Installation
+
+```bash
+npm install @buildcanada/colours
+# or
+bun add @buildcanada/colours
+```
+
+## Usage
+
+### TypeScript / JavaScript
+
+Import individual colour scales or chart themes:
+
+```typescript
+import { auburn, lake, pine } from "@buildcanada/colours"
+
+// Colour scales are objects with shade keys
+console.log(auburn["500"]) // "#d85b5b"
+console.log(lake["700"])   // "#3d8b9c"
+
+// Access all shades: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950
+```
+
+Import chart colour themes:
+
+```typescript
+import { lake_pine_blend, auburn_cool_bend } from "@buildcanada/colours/styles/themes/charts/twelve-tone"
+
+// Chart themes are arrays of 12 colours for data visualization
+console.log(lake_pine_blend) // ["#ddecf0", "#cbdfe3", ...]
+```
+
+### CSS Variables
+
+Import CSS files for use with CSS custom properties:
+
+```css
+@import "@buildcanada/colours/styles/colours/index.css";
+@import "@buildcanada/colours/styles/themes/main.css";
+```
+
+Then use the CSS variables:
+
+```css
+.my-element {
+  background-color: var(--color-auburn-500);
+  border-color: var(--color-lake-700);
+}
+```
+
+## Available Colours
+
+### Colour Scales
+
+Each colour scale includes 11 shades from 50 (lightest) to 950 (darkest):
+
+| Scale | Description |
+|-------|-------------|
+| **amethyst** | Purple/violet tones |
+| **auburn** | Warm red-brown tones |
+| **aurora** | Northern lights inspired |
+| **cerulean** | Sky blue tones |
+| **charcoal** | Dark neutral grays |
+| **copper** | Warm metallic orange |
+| **emerald** | Green gem tones |
+| **lake** | Cool blue-green |
+| **linen** | Warm cream/beige neutrals |
+| **maritime** | Ocean-inspired blues |
+| **nickel** | Cool metallic grays |
+| **pine** | Forest green tones |
+| **sienna** | Earth brown tones |
+| **steel** | Cool blue-gray neutrals |
+
+### Chart Themes
+
+Pre-blended colour combinations optimized for data visualization. Each theme provides 12 distinct colours suitable for charts with multiple data series.
+
+See the **Chart Themes** story for visual examples.
+
+## Browse the Colours
+
+- **[Colour Scales](/story/design-system-colours-scales--all-scales)** - View all colour scales with hex values
+- **[Chart Themes](/story/design-system-colours-chart-themes--all-themes)** - View chart colour themes
