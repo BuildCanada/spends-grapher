@@ -47,6 +47,8 @@ jobs:
 
             - run: npm publish --access public --provenance ${{ env.DRY_RUN }}
               working-directory: packages/charts
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     publish-colours:
         if: github.event.inputs.package == 'all' || github.event.inputs.package == 'colours' || github.event_name == 'release'
@@ -61,16 +63,14 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: "22"
+                  registry-url: "https://registry.npmjs.org"
 
             - run: bun install --frozen-lockfile
 
             - run: bun run build
               working-directory: packages/colours
 
-            - name: Configure npm registry without auth token
-              run: |
-                  echo "registry=https://registry.npmjs.org/" > ~/.npmrc
-                  cat ~/.npmrc
-
             - run: npm publish --access public --provenance ${{ env.DRY_RUN }}
               working-directory: packages/colours
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
