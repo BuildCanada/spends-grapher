@@ -67,12 +67,10 @@ jobs:
             - run: bun run build
               working-directory: packages/colours
 
-            - name: Debug OIDC token
+            - name: Configure npm registry without auth token
               run: |
-                  echo "ACTIONS_ID_TOKEN_REQUEST_URL set: $([[ -n \"$ACTIONS_ID_TOKEN_REQUEST_URL\" ]] && echo 'yes' || echo 'no')"
-                  echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN set: $([[ -n \"$ACTIONS_ID_TOKEN_REQUEST_TOKEN\" ]] && echo 'yes' || echo 'no')"
-                  TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm" | jq -r '.value // empty')
-                  echo "OIDC token obtained: $([[ -n \"$TOKEN\" ]] && echo 'yes (length: '${#TOKEN}')' || echo 'no')"
+                  echo "registry=https://registry.npmjs.org/" > ~/.npmrc
+                  cat ~/.npmrc
 
             - run: npm publish --access public --provenance ${{ env.DRY_RUN }}
               working-directory: packages/colours
