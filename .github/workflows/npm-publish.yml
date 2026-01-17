@@ -34,21 +34,17 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - uses: oven-sh/setup-bun@v2
-              with:
-                  bun-version: latest
-
             - uses: actions/setup-node@v4
               with:
-                  node-version: "22"
+                  node-version: "24"
                   registry-url: "https://registry.npmjs.org"
+
+            - uses: oven-sh/setup-bun@v2
 
             - run: bun install --frozen-lockfile
 
-            - run: npm publish --access public --provenance ${{ env.DRY_RUN }}
+            - run: bunx npm publish --access public --provenance ${{ env.DRY_RUN }}
               working-directory: packages/charts
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     publish-colours:
         if: github.event.inputs.package == 'all' || github.event.inputs.package == 'colours' || github.event_name == 'release'
@@ -56,21 +52,17 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - uses: oven-sh/setup-bun@v2
-              with:
-                  bun-version: latest
-
             - uses: actions/setup-node@v4
               with:
-                  node-version: "22"
+                  node-version: "24"
                   registry-url: "https://registry.npmjs.org"
+
+            - uses: oven-sh/setup-bun@v2
 
             - run: bun install --frozen-lockfile
 
             - run: bun run build
               working-directory: packages/colours
 
-            - run: npm publish --access public --provenance ${{ env.DRY_RUN }}
+            - run: bunx npm publish --access public --provenance ${{ env.DRY_RUN }}
               working-directory: packages/colours
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
