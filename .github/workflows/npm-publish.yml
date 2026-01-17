@@ -54,6 +54,11 @@ jobs:
             - name: Verify charts package can be packed
               run: cd packages/charts && npm pack --dry-run
 
+            - name: Configure npm for OIDC
+              run: |
+                  rm -f ~/.npmrc
+                  npm config set registry https://registry.npmjs.org/
+
             - name: Publish @buildcanada/charts
               run: cd packages/charts && npm publish --access public --provenance ${{ env.DRY_RUN }}
 
@@ -86,6 +91,11 @@ jobs:
 
             - name: Verify colours package can be packed
               run: cd packages/colours && npm pack --dry-run
+
+            - name: Configure npm for OIDC
+              run: |
+                  rm -f ~/.npmrc
+                  npm config set registry https://registry.npmjs.org/
 
             - name: Publish @buildcanada/colours
               run: cd packages/colours && npm publish --access public --provenance ${{ env.DRY_RUN }}
