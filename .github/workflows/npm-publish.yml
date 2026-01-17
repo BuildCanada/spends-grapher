@@ -56,8 +56,6 @@ jobs:
 
             - name: Publish @buildcanada/charts
               run: cd packages/charts && npm publish --access public --provenance ${{ env.DRY_RUN }}
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     publish-colours:
         if: github.event.inputs.package == 'all' || github.event.inputs.package == 'colours' || github.event_name == 'release'
@@ -91,5 +89,3 @@ jobs:
 
             - name: Publish @buildcanada/colours
               run: cd packages/colours && npm publish --access public --provenance ${{ env.DRY_RUN }}
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
