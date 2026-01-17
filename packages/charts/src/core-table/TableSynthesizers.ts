@@ -3,28 +3,28 @@ import {
     sampleFrom,
     getRandomNumberGenerator,
     countries,
-    OwidVariableDisplayConfigInterface,
+    VariableDisplayConfigInterface,
     ColumnSlug,
 } from "../utils/index.js"
 import {
     TimeRange,
     ColumnTypeNames,
-    OwidColumnDef,
-    OwidTableSlugs,
+    ColumnDef,
+    ChartsTableSlugs,
 } from "../types/index.js"
-import { OwidTable } from "./OwidTable.js"
+import { ChartsTable } from "./ChartsTable.js"
 
 interface SynthOptions {
     entityCount: number
     entityNames: string[]
     timeRange: TimeRange
-    columnDefs: OwidColumnDef[]
+    columnDefs: ColumnDef[]
 }
 
-const SynthesizeOwidTable = (
+const SynthesizeChartsTable = (
     options?: Partial<SynthOptions>,
     seed = Date.now()
-): OwidTable => {
+): ChartsTable => {
     const finalOptions: SynthOptions = {
         entityNames: [],
         entityCount: 2,
@@ -35,10 +35,10 @@ const SynthesizeOwidTable = (
     const { entityCount, columnDefs, timeRange, entityNames } = finalOptions
     const colSlugs = (
         [
-            OwidTableSlugs.entityName,
-            OwidTableSlugs.entityCode,
-            OwidTableSlugs.entityId,
-            OwidTableSlugs.year,
+            ChartsTableSlugs.entityName,
+            ChartsTableSlugs.entityCode,
+            ChartsTableSlugs.entityId,
+            ChartsTableSlugs.year,
         ] as ColumnSlug[]
     ).concat(columnDefs.map((col) => col.slug!))
 
@@ -67,7 +67,7 @@ const SynthesizeOwidTable = (
             .join("\n")
     })
 
-    return new OwidTable(
+    return new ChartsTable(
         `${colSlugs.join(",")}\n${rows.join("\n")}`,
         columnDefs
     )
@@ -76,8 +76,8 @@ const SynthesizeOwidTable = (
 export const SynthesizeNonCountryTable = (
     options?: Partial<SynthOptions>,
     seed = Date.now()
-): OwidTable =>
-    SynthesizeOwidTable(
+): ChartsTable =>
+    SynthesizeChartsTable(
         {
             entityNames: ["Fire", "Earthquake", "Tornado"],
             columnDefs: [
@@ -110,9 +110,9 @@ export enum SampleColumnSlugs {
 export const SynthesizeGDPTable = (
     options?: Partial<SynthOptions>,
     seed = Date.now(),
-    display?: OwidVariableDisplayConfigInterface
-): OwidTable =>
-    SynthesizeOwidTable(
+    display?: VariableDisplayConfigInterface
+): ChartsTable =>
+    SynthesizeChartsTable(
         {
             columnDefs: [
                 {
@@ -173,8 +173,8 @@ const SynthSource = (
 export const SynthesizeFruitTable = (
     options?: Partial<SynthOptions>,
     seed = Date.now()
-): OwidTable =>
-    SynthesizeOwidTable(
+): ChartsTable =>
+    SynthesizeChartsTable(
         {
             columnDefs: [
                 {
@@ -209,7 +209,7 @@ export const SynthesizeFruitTableWithNonPositives = (
     options?: Partial<SynthOptions>,
     howManyNonPositives = 20,
     seed = Date.now()
-): OwidTable => {
+): ChartsTable => {
     const rand = getRandomNumberGenerator(-1000, 0)
     return SynthesizeFruitTable(options, seed).replaceRandomCells(
         howManyNonPositives,
@@ -225,7 +225,7 @@ export const SynthesizeFruitTableWithStringValues = (
     options?: Partial<SynthOptions>,
     howMany = 20,
     seed = Date.now()
-): OwidTable => {
+): ChartsTable => {
     return SynthesizeFruitTable(options, seed).replaceRandomCells(
         howMany,
         [SampleColumnSlugs.Fruit, SampleColumnSlugs.Vegetables],
@@ -237,9 +237,9 @@ export const SynthesizeFruitTableWithStringValues = (
 export const SynthesizeProjectedPopulationTable = (
     options?: Partial<SynthOptions>,
     seed = Date.now(),
-    display?: OwidVariableDisplayConfigInterface
-): OwidTable =>
-    SynthesizeOwidTable(
+    display?: VariableDisplayConfigInterface
+): ChartsTable =>
+    SynthesizeChartsTable(
         {
             columnDefs: [
                 {

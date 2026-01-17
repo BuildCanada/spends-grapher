@@ -12,10 +12,10 @@ import {
     ColumnTypeNames,
     CoreColumnDef,
     ErrorValue,
-    OwidEntityCodeColumnDef,
-    OwidEntityIdColumnDef,
-    OwidEntityNameColumnDef,
-    OwidTableSlugs,
+    EntityCodeColumnDef,
+    EntityIdColumnDef,
+    EntityNameColumnDef,
+    ChartsTableSlugs,
 } from "../types/index.js"
 import { ErrorValueTypes, DroppedForTesting } from "./ErrorValues.js"
 
@@ -135,9 +135,9 @@ export const guessColumnDefFromSlugAndRow = (
             name: "Year",
         }
 
-    if (slug === OwidTableSlugs.entityName) return OwidEntityNameColumnDef
-    if (slug === OwidTableSlugs.entityCode) return OwidEntityCodeColumnDef
-    if (slug === OwidTableSlugs.entityId) return OwidEntityIdColumnDef
+    if (slug === ChartsTableSlugs.entityName) return EntityNameColumnDef
+    if (slug === ChartsTableSlugs.entityCode) return EntityCodeColumnDef
+    if (slug === ChartsTableSlugs.entityId) return EntityIdColumnDef
 
     if (slug === "date")
         return {

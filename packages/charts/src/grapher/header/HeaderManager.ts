@@ -5,7 +5,7 @@ export interface HeaderManager {
     currentTitle?: string
     currentSubtitle?: string
     hideLogo?: boolean
-    shouldLinkToOwid?: boolean
+    shouldLinkToSource?: boolean
     logo?: string
     canonicalUrl?: string
     captionedChartBounds?: Bounds

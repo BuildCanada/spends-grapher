@@ -6,8 +6,8 @@ import { GrapherProgrammaticInterface } from "../index.js"
 import { FetchingGrapher } from "./FetchingGrapher.js"
 import {
     ArchiveContext,
-    OwidVariableDataMetadataDimensions,
-    OwidVariableId,
+    VariableDataMetadataDimensions,
+    VariableId,
 } from "../../types/index.js"
 import { loadVariableDataAndMetadata } from "./loadVariable.js"
 import { createRoot } from "react-dom/client"
@@ -74,8 +74,8 @@ export function renderGrapherIntoContainer(
         const grapherConfigWithBounds = {
             ...config,
             additionalDataLoaderFn: (
-                varId: OwidVariableId
-            ): Promise<OwidVariableDataMetadataDimensions> =>
+                varId: VariableId
+            ): Promise<VariableDataMetadataDimensions> =>
                 loadVariableDataAndMetadata(varId, dataApiUrl, { noCache }),
         }
 

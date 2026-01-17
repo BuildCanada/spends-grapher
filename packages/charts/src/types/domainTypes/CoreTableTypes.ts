@@ -1,9 +1,9 @@
-import { OwidOrigin } from "../OwidOrigin.js"
+import { Origin } from "../Origin.js"
 import {
-    OwidProcessingLevel,
-    OwidVariablePresentation,
-} from "../OwidVariable.js"
-import { OwidVariableDisplayConfigInterface } from "../OwidVariableDisplayConfigInterface.js"
+    ProcessingLevel,
+    VariablePresentation,
+} from "../Variable.js"
+import { VariableDisplayConfigInterface } from "../VariableDisplayConfigInterface.js"
 import {
     Color,
     ColumnSlug,
@@ -119,7 +119,7 @@ type CoreVector = any[]
  */
 export type CoreMatrix = CoreVector[]
 
-export enum OwidTableSlugs {
+export enum ChartsTableSlugs {
     entityName = "entityName",
     entityColor = "entityColor",
     entityId = "entityId",
@@ -130,7 +130,7 @@ export enum OwidTableSlugs {
     date = "date",
 }
 
-enum OwidTableNames {
+enum ChartsTableNames {
     Entity = "Entity",
     Code = "Code",
 }
@@ -224,8 +224,8 @@ export interface CoreColumnDef extends ColumnColorScale {
     timespan?: string
 
     // Metadata v2
-    origins?: OwidOrigin[]
-    presentation?: OwidVariablePresentation
+    origins?: Origin[]
+    presentation?: VariablePresentation
     updatePeriodDays?: number
 
     // Dataset information
@@ -243,12 +243,12 @@ export interface CoreColumnDef extends ColumnColorScale {
     // DEPRECATED
     unit?: string // DEPRECATED: use an existing column type or create a new one instead.
     shortUnit?: string // DEPRECATED: use an existing column type or create a new one instead.
-    display?: OwidVariableDisplayConfigInterface // DEPRECATED: use an existing column type or create a new one instead, or migrate any properties you need onto this interface.
+    display?: VariableDisplayConfigInterface // DEPRECATED: use an existing column type or create a new one instead, or migrate any properties you need onto this interface.
 }
 
 // Todo: coverage, datasetId, and datasetName can just be on source, right? or should we flatten source onto this?
-export interface OwidColumnDef extends CoreColumnDef {
-    owidVariableId?: number
+export interface ColumnDef extends CoreColumnDef {
+    variableId?: number
     coverage?: string
     datasetId?: number
     datasetName?: string
@@ -257,36 +257,36 @@ export interface OwidColumnDef extends CoreColumnDef {
     nonRedistributable?: boolean
     skipParsing?: boolean
     catalogPath?: string
-    owidProcessingLevel?: OwidProcessingLevel
-    owidSchemaVersion?: number
+    processingLevel?: ProcessingLevel
+    schemaVersion?: number
     shortName?: string
 }
 
-export const OwidEntityNameColumnDef = {
-    name: OwidTableNames.Entity,
-    slug: OwidTableSlugs.entityName,
+export const EntityNameColumnDef = {
+    name: ChartsTableNames.Entity,
+    slug: ChartsTableSlugs.entityName,
     type: ColumnTypeNames.EntityName,
 }
 
-export const OwidEntityIdColumnDef = {
-    slug: OwidTableSlugs.entityId,
+export const EntityIdColumnDef = {
+    slug: ChartsTableSlugs.entityId,
     type: ColumnTypeNames.EntityId,
 }
 
-export const OwidEntityCodeColumnDef = {
-    name: OwidTableNames.Code,
-    slug: OwidTableSlugs.entityCode,
+export const EntityCodeColumnDef = {
+    name: ChartsTableNames.Code,
+    slug: ChartsTableSlugs.entityCode,
     type: ColumnTypeNames.EntityCode,
 }
 
-export const StandardOwidColumnDefs: OwidColumnDef[] = [
-    OwidEntityNameColumnDef,
-    OwidEntityIdColumnDef,
-    OwidEntityCodeColumnDef,
+export const StandardColumnDefs: ColumnDef[] = [
+    EntityNameColumnDef,
+    EntityIdColumnDef,
+    EntityCodeColumnDef,
 ]
 
-// This is a row with the additional columns specific to our OWID data model
-export interface OwidRow extends CoreRow {
+// This is a row with the additional columns specific to our data model
+export interface Row extends CoreRow {
     entityName: EntityName
     time: Time
     entityCode?: EntityCode
@@ -296,7 +296,7 @@ export interface OwidRow extends CoreRow {
     date?: string
 }
 
-export interface OwidVariableRow<ValueType extends PrimitiveType> {
+export interface VariableRow<ValueType extends PrimitiveType> {
     entityName: EntityName
     time: Time
     value: ValueType

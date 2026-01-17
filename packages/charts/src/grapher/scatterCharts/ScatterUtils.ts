@@ -18,7 +18,7 @@ import {
 } from "./ScatterPlotChartConstants"
 import { BASE_FONT_SIZE } from "../core/GrapherConstants.js"
 import { ScatterPlotChartState } from "./ScatterPlotChartState"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 
 export const labelPriority = (label: ScatterLabel): number => {
     let priority = label.fontSize
@@ -257,7 +257,7 @@ export function toSizeRange(
 }
 
 export function computeSizeDomain(
-    table: OwidTable,
+    table: ChartsTable,
     slug: ColumnSlug
 ): ValueRange {
     const sizeValues = table.get(slug).values.filter(_.isNumber)

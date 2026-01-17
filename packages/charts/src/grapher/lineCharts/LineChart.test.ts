@@ -6,7 +6,7 @@ import {
     SynthesizeFruitTableWithNonPositives,
     SynthesizeFruitTableWithStringValues,
     SynthesizeGDPTable,
-    OwidTable,
+    ChartsTable,
     ErrorValueTypes,
 } from "../../core-table/index.js"
 import { ChartManager } from "../chart/ChartManager"
@@ -18,7 +18,7 @@ import {
 } from "../../types/index.js"
 import { SelectionArray } from "../selection/SelectionArray"
 import { LineChartManager } from "./LineChartConstants"
-import { OWID_NO_DATA_GRAY } from "../color/ColorConstants"
+import { NO_DATA_GRAY } from "../color/ColorConstants"
 import { LineChart } from "./LineChart"
 import { LineChartState } from "./LineChartState"
 
@@ -129,7 +129,7 @@ describe("series naming in multi-column mode", () => {
 })
 
 describe("colors", () => {
-    const table = new OwidTable({
+    const table = new ChartsTable({
         entityName: ["usa", "canada", "usa", "canada"],
         year: [2000, 2000, 2001, 2001],
         gdp: [100, 200, 200, 300],
@@ -151,7 +151,7 @@ describe("colors", () => {
     })
 
     it("uses column color selections when series strategy is column", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa"],
                 year: [2000, 2001],
@@ -196,7 +196,7 @@ describe("colors", () => {
     })
 
     it("uses variable colors when only one entity selected (even if multiple can be selected with controls)", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa", "canada"],
                 year: [2000, 2001, 2000],
@@ -227,7 +227,7 @@ describe("colors", () => {
     })
 
     it("doesn't use variable colors if 2 variables have single entities which are different", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa", "canada"],
                 year: [2000, 2001, 2000],
@@ -262,7 +262,7 @@ describe("colors", () => {
 })
 
 it("reverses order of plotted series to plot the first one over the others", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         {
             entityName: ["usa", "usa"],
             year: [2000, 2001],
@@ -326,7 +326,7 @@ describe("externalLegendBins", () => {
 
 describe("color scale", () => {
     it("correctly colors series, with tolerance", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa", "usa", "usa", "usa", "usa"],
                 entityColor: ["#fff", "#fff", "#fff", "#fff", "#fff", "#fff"],
@@ -376,7 +376,7 @@ describe("color scale", () => {
         }
         const chartState = new LineChartState({ manager })
         const chart = new LineChart({ chartState })
-        const noDataColor = OWID_NO_DATA_GRAY
+        const noDataColor = NO_DATA_GRAY
 
         expect(chart.series).toHaveLength(1)
         expect(chart.series[0].color).toEqual(noDataColor)
@@ -399,7 +399,7 @@ describe("color scale", () => {
     })
 
     it("handles y and color being the same column", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa", "usa", "usa", "usa", "usa"],
                 time: [2000, 2001, 2002, 2003, 2004, 2005],

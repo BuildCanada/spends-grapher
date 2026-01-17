@@ -1,7 +1,7 @@
 import { expect, it, describe } from "vitest"
 import {
     TickFormattingOptions,
-    OwidVariableRoundingMode,
+    VariableRoundingMode,
 } from "../types/index.js"
 import { formatValue } from "./formatValue"
 
@@ -199,7 +199,7 @@ describe("rounding to significant figures", () => {
             expect(
                 formatValue(input, {
                     ...options,
-                    roundingMode: OwidVariableRoundingMode.significantFigures,
+                    roundingMode: VariableRoundingMode.significantFigures,
                 })
             ).toBe(output)
         })

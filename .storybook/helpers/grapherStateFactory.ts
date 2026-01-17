@@ -3,7 +3,7 @@ import { GrapherState } from "../../packages/charts/src/grapher/core/GrapherStat
 import {
     LifeExpectancyGrapher,
     CanadaProvinceGrapher,
-} from "../../packages/charts/src/grapher/testData/OwidTestData.sample.js"
+} from "../../packages/charts/src/grapher/testData/TestData.sample.js"
 import type { GrapherProgrammaticInterface } from "../../packages/charts/src/grapher/core/Grapher.js"
 import {
     ColorSchemeName,
@@ -104,7 +104,7 @@ export function createScatterPlotState(
 
 /**
  * Create a GrapherState for a WorldMap story
- * Uses Blues color scheme to match OWID production styling
+ * Uses Blues color scheme for standard styling
  */
 export function createMapChartState(
     overrides: Partial<GrapherProgrammaticInterface> = {}

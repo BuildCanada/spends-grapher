@@ -1,8 +1,8 @@
 import * as _ from "lodash-es"
 import { Region, regions } from "../../utils/index.js"
 import {
-    MultipleOwidVariableDataDimensionsMap,
-    OwidVariableWithSource,
+    MultipleVariableDataDimensionsMap,
+    VariableWithSource,
     EntityCode,
     EntityId,
     EntityName,
@@ -12,7 +12,7 @@ type Entity = { id: EntityId; code?: EntityCode; name?: EntityName }
 type TestDatum = { year: number; entity: Entity; value: string | number }
 
 export type TestData = TestDatum[]
-export type TestMetadata = OwidVariableWithSource
+export type TestMetadata = VariableWithSource
 
 const fakeRegions = regions.map((region: Region, index: number) => ({
     ...region,
@@ -26,12 +26,12 @@ export const fakeEntities = Object.fromEntries(
     ])
 )
 
-export function createOwidTestDataset(
+export function createTestDataset(
     indicators: {
         data: TestData
         metadata: TestMetadata
     }[]
-): MultipleOwidVariableDataDimensionsMap {
+): MultipleVariableDataDimensionsMap {
     return new Map(
         indicators.map(({ data, metadata }) => [
             metadata.id,

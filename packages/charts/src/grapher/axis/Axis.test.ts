@@ -146,7 +146,7 @@ describe("singleValueAxisPointAlign", () => {
 })
 
 describe("tick labels", () => {
-    // see https://github.com/owid/owid-grapher/issues/1267
+    // see # legacy issue 1267
     it("includes sufficient decimal places for small values", () => {
         const config: AxisConfigInterface = {
             min: 0,

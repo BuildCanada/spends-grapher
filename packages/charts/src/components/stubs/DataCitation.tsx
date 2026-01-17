@@ -1,6 +1,6 @@
 /**
  * Stub component for DataCitation.
- * This is a placeholder for OWID data page functionality.
+ * This is a placeholder for data page functionality.
  */
 import React from "react"
 

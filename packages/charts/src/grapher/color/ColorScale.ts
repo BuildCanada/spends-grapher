@@ -6,13 +6,13 @@ import { pairs } from "d3-array"
 import { ColorSchemes } from "../color/ColorSchemes"
 import { ColorScheme } from "../color/ColorScheme"
 import { ColorScaleBin, NumericBin, CategoricalBin } from "./ColorScaleBin"
-import { OWID_NO_DATA_GRAY } from "./ColorConstants"
+import { NO_DATA_GRAY } from "./ColorConstants"
 import {
     ColorScaleConfigInterface,
     ColorSchemeName,
     Color,
     CoreValueType,
-    OwidVariableRoundingMode,
+    VariableRoundingMode,
 } from "../../types/index.js"
 import { CoreColumn } from "../../core-table/index.js"
 import * as R from "remeda"
@@ -95,7 +95,7 @@ export class ColorScale {
     }
 
     @computed private get defaultNoDataColor(): Color {
-        return this.manager.defaultNoDataColor ?? OWID_NO_DATA_GRAY
+        return this.manager.defaultNoDataColor ?? NO_DATA_GRAY
     }
 
     @computed get colorScaleColumn(): CoreColumn | undefined {
@@ -229,7 +229,7 @@ export class ColorScale {
             const label = customNumericLabels[index]
 
             const roundingOptions = {
-                roundingMode: OwidVariableRoundingMode.decimalPlaces,
+                roundingMode: VariableRoundingMode.decimalPlaces,
             }
             const displayMin =
                 this.colorScaleColumn?.formatValueShort(min, roundingOptions) ??

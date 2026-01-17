@@ -1,5 +1,5 @@
 import { PartialBy, PointVector } from "../../utils/index.js"
-import { EntityName, OwidVariableRow } from "../../types/index.js"
+import { EntityName, VariableRow } from "../../types/index.js"
 import { ChartSeries } from "../chart/ChartInterface"
 import { CoreColumn } from "../../core-table/index.js"
 import { ChartManager } from "../chart/ChartManager"
@@ -15,8 +15,8 @@ export interface SlopeChartSeries extends ChartSeries {
     column: CoreColumn
     entityName: EntityName
     displayName: string
-    start: Pick<OwidVariableRow<number>, "value" | "originalTime">
-    end: Pick<OwidVariableRow<number>, "value" | "originalTime">
+    start: Pick<VariableRow<number>, "value" | "originalTime">
+    end: Pick<VariableRow<number>, "value" | "originalTime">
     annotation?: string
     focus: InteractionState
 }

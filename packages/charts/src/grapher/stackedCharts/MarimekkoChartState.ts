@@ -12,7 +12,7 @@ import {
     SimpleChartSeries,
     SimplePoint,
 } from "./MarimekkoChartConstants"
-import { CoreColumn, OwidTable } from "../../core-table/index.js"
+import { CoreColumn, ChartsTable } from "../../core-table/index.js"
 import {
     autoDetectYColumnSlugs,
     getShortNameForEntity,
@@ -24,13 +24,13 @@ import {
     ColorSchemeName,
     EntityName,
     ColorScaleConfigInterface,
-    OwidVariableRow,
+    VariableRow,
     SortConfig,
     SortBy,
     SortOrder,
     ScaleType,
 } from "../../types/index.js"
-import { OWID_NO_DATA_GRAY } from "../color/ColorConstants"
+import { NO_DATA_GRAY } from "../color/ColorConstants"
 import { StackedPoint, StackedSeries } from "./StackedConstants"
 import { ColorScheme } from "../color/ColorScheme"
 import { ColorSchemes } from "../color/ColorSchemes"
@@ -45,7 +45,7 @@ export class MarimekkoChartState implements ChartState, ColorScaleManager {
 
     colorScale: ColorScale
     defaultBaseColorScheme = ColorSchemeName.continents
-    defaultNoDataColor = OWID_NO_DATA_GRAY
+    defaultNoDataColor = NO_DATA_GRAY
 
     constructor({ manager }: { manager: MarimekkoChartManager }) {
         this.manager = manager
@@ -53,16 +53,16 @@ export class MarimekkoChartState implements ChartState, ColorScaleManager {
         makeObservable(this)
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         const { inputTable } = this
         return this.manager.transformedTable ?? this.transformTable(inputTable)
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         const { yColumnSlugs, manager, colorColumnSlug, xColumnSlug } = this
         if (!this.yColumnSlugs.length) return table
 
@@ -179,7 +179,7 @@ export class MarimekkoChartState implements ChartState, ColorScaleManager {
             (this.manager.baseColorScheme
                 ? ColorSchemes.get(this.manager.baseColorScheme)
                 : undefined) ??
-            ColorSchemes.get(ColorSchemeName["owid-distinct"])
+            ColorSchemes.get(ColorSchemeName["distinct"])
         )
     }
 
@@ -198,7 +198,7 @@ export class MarimekkoChartState implements ChartState, ColorScaleManager {
                         color:
                             col.def.color ??
                             colorScheme.getColors(yColumns.length)[i],
-                        points: col.owidRows.map((row) => ({
+                        points: col.dataRows.map((row) => ({
                             time: row.originalTime,
                             position: row.entityName,
                             value: row.value,
@@ -238,7 +238,7 @@ export class MarimekkoChartState implements ChartState, ColorScaleManager {
 
     @computed get xSeries(): SimpleChartSeries | undefined {
         const createStackedXPoints = (
-            rows: OwidVariableRow<any>[]
+            rows: VariableRow<any>[]
         ): SimplePoint[] => {
             const points: SimplePoint[] = []
             for (const row of rows) {
@@ -254,7 +254,7 @@ export class MarimekkoChartState implements ChartState, ColorScaleManager {
         const column = this.xColumn
         return {
             seriesName: column.displayName,
-            points: createStackedXPoints(column.owidRows),
+            points: createStackedXPoints(column.dataRows),
         }
     }
 
@@ -262,7 +262,7 @@ export class MarimekkoChartState implements ChartState, ColorScaleManager {
         const { colorColumn, colorScale, uniqueEntityNames } = this
         const hasColorColumn = !colorColumn.isMissing
         const colorRowsByEntity = hasColorColumn
-            ? colorColumn.owidRowsByEntityName
+            ? colorColumn.dataRowsByEntityName
             : undefined
         const domainColorMap = new Map<string, EntityColorData>()
         if (uniqueEntityNames !== undefined) {

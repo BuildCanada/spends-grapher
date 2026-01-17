@@ -43,7 +43,7 @@ export async function buildExplorerProps(
     }
     const props: ExplorerProps = {
         ...deserializeJSONFromHTML(html, EMBEDDED_EXPLORER_DELIMITER),
-        isEmbeddedInAnOwidPage: true,
+        isEmbeddedInPage: true,
         adminBaseUrl: explorerConstants.adminBaseUrl,
         bakedBaseUrl: explorerConstants.bakedBaseUrl,
         bakedGrapherUrl: explorerConstants.bakedGrapherUrl,

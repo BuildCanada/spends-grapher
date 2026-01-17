@@ -114,7 +114,7 @@ export const ColumnGrammar: Grammar<ColumnCellDef> = {
         ...StringCellDef,
         keyword: "dataPublishedBy",
         description:
-            "For academic papers this should be a complete reference. For institutional projects, detail the project or report. For data we have modified extensively, list OWID as the publishers and provide the name of the person in charge of the calculation.",
+            "For academic papers this should be a complete reference. For institutional projects, detail the project or report. For data modified extensively, list the organization as the publishers and provide the name of the person in charge of the calculation.",
     },
     dataPublisherSource: {
         ...StringCellDef,

@@ -2,7 +2,7 @@
 
 Part of the [Build Canada Design System](https://github.com/BuildCanada/bcds) monorepo.
 
-A configurable data visualization library for creating interactive charts. Extracted from [Our World in Data's](https://ourworldindata.org) Grapher.
+A configurable data visualization library for creating interactive charts.
 
 ## Installation
 
@@ -34,8 +34,8 @@ import {
   GrapherState,
   GRAPHER_CHART_TYPES,
   DimensionProperty,
-  createOwidTestDataset,
-  legacyToOwidTableAndDimensionsWithMandatorySlug,
+  createTestDataset,
+  legacyToChartsTableAndDimensionsWithMandatorySlug,
 } from "@buildcanada/charts"
 import "@buildcanada/charts/styles.css"
 
@@ -48,8 +48,8 @@ const myData = [
 const metadata = { id: 1, display: { name: "My Metric" } }
 const dimensions = [{ variableId: 1, property: DimensionProperty.y }]
 
-const dataset = createOwidTestDataset([{ data: myData, metadata }])
-const table = legacyToOwidTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
+const dataset = createTestDataset([{ data: myData, metadata }])
+const table = legacyToChartsTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
 
 const grapherState = new GrapherState({
   title: "My Chart",

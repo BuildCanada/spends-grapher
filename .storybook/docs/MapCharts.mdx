@@ -203,8 +203,8 @@ import {
   ChartsProvider,
   Grapher,
   GrapherState,
-  createOwidTestDataset,
-  legacyToOwidTableAndDimensionsWithMandatorySlug,
+  createTestDataset,
+  legacyToChartsTableAndDimensionsWithMandatorySlug,
   fakeEntities,
   DimensionProperty,
   MapRegionName,
@@ -235,8 +235,8 @@ const metadata = {
 }
 
 const dimensions = [{ variableId: 1, property: DimensionProperty.y }]
-const dataset = createOwidTestDataset([{ data: lifeExpData, metadata }])
-const table = legacyToOwidTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
+const dataset = createTestDataset([{ data: lifeExpData, metadata }])
+const table = legacyToChartsTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
 
 const grapherState = new GrapherState({
   title: "Life Expectancy by Country (2020)",

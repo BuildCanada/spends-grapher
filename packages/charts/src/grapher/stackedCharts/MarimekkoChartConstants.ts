@@ -8,7 +8,7 @@ import {
     EntityName,
     ColumnSlug,
 } from "../../utils/index.js"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import { StackedPoint } from "./StackedConstants"
 import { DualAxis } from "../axis/Axis"
 import { InteractionState } from "../interaction/InteractionState.js"
@@ -17,7 +17,7 @@ export interface MarimekkoChartManager extends ChartManager {
     endTime?: Time
     matchingEntitiesOnly?: boolean
     xOverrideTime?: number
-    tableAfterAuthorTimelineAndActiveChartTransform?: OwidTable
+    tableAfterAuthorTimelineAndActiveChartTransform?: ChartsTable
     sortConfig?: SortConfig
     hideNoDataArea?: boolean
 }

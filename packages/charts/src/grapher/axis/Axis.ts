@@ -13,7 +13,7 @@ import {
     TickFormattingOptions,
     Tickmark,
     ValueRange,
-    OwidVariableRoundingMode,
+    VariableRoundingMode,
 } from "../../utils/index.js"
 import { ComparisonLineConfig } from "../../types/index.js"
 import { AxisConfig, AxisManager } from "./AxisConfig"
@@ -434,7 +434,7 @@ abstract class AbstractAxis {
     private getTickFormattingOptions(): TickFormattingOptions {
         const options: TickFormattingOptions = {
             ...this.config.tickFormattingOptions,
-            roundingMode: OwidVariableRoundingMode.decimalPlaces,
+            roundingMode: VariableRoundingMode.decimalPlaces,
         }
 
         // The chart's tick formatting function is used by default to format axis ticks. This means
@@ -485,7 +485,7 @@ abstract class AbstractAxis {
             // the value at the middle of the range.
             // We instead want to customize what happens - sometimes we want to place the point
             // at the start of the range instead.
-            // see https://github.com/owid/owid-grapher/pull/1367#issuecomment-1090845181.
+            // see # legacy PR 1367#issuecomment-1090845181.
             //
             // -@marcelgerber, 2022-04-12
             switch (this.config.singleValueAxisPointAlign) {

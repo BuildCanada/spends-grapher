@@ -3,7 +3,7 @@ import { expect, it, test } from "vitest"
 import * as _ from "lodash-es"
 import { Bounds, ColumnTypeNames } from "../../utils/index.js"
 import {
-    OwidTable,
+    ChartsTable,
     SampleColumnSlugs,
     SynthesizeGDPTable,
 } from "../../core-table/index.js"
@@ -49,7 +49,7 @@ it("can display a Marimekko chart correctly", () => {
 2001,medium,4000,4
 2001,big,5000,8
 2001,small,1000,3`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "population", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow2USD", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -172,7 +172,7 @@ it("can display two time series stacked correctly", () => {
 2001,medium,4000,4,8.5
 2001,big,5000,8,20
 2001,small,1000,3,5`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "population", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow2USD", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow10USD", type: ColumnTypeNames.Numeric },
@@ -339,7 +339,7 @@ it("can do sorting", () => {
 2001,AA,4000,4
 2001,BB,5000,8
 2001,CC,1000,3`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "population", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow2USD", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -498,7 +498,7 @@ it("can filter years correctly", () => {
 2001,medium,4000,4
 2001,big,5000,8
 2001,small,1000,3`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "population", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow2USD", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -627,7 +627,7 @@ it("shows no data points at the end", () => {
 2001,medium,4000,
 2001,big,5000,8
 2001,small,1000,3`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "population", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow2USD", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -741,7 +741,7 @@ test("interpolation works as expected", () => {
 2001,medium,4000,4
 2001,big,,8
 2001,small,1000,`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "population", type: ColumnTypeNames.Numeric, tolerance: 1 },
         {
             slug: "percentBelow2USD",
@@ -874,7 +874,7 @@ it("can deal with y columns with missing values", () => {
 2001,medium,4000,4,8
 2001,big,5000,8,
 2001,small,1000,3,6`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "population", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow2USD", type: ColumnTypeNames.Numeric },
         { slug: "percentBelow10USD", type: ColumnTypeNames.Numeric },

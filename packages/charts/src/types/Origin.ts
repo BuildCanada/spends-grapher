@@ -1,12 +1,12 @@
-import { OwidLicense } from "./OwidVariable.js"
-export interface OwidOrigin {
+import { License } from "./Variable.js"
+export interface Origin {
     id?: number
     title?: string
     titleSnapshot?: string
     attribution?: string
     attributionShort?: string
     versionProducer?: string
-    license?: OwidLicense
+    license?: License
     descriptionSnapshot?: string
     description?: string
     producer?: string

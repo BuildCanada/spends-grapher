@@ -27,8 +27,8 @@ export const ExplorerGrammar: Grammar = {
         ...UrlCellDef,
         keyword: "table",
         valuePlaceholder: "",
-        regex: new RegExp(`(${UrlCellDef.regex?.source ?? ""}|^[\\w -()]+$)`), // URL or OWID dataset name
-        description: "A link to a CSV or TSV or the name of an OWID dataset.",
+        regex: new RegExp(`(${UrlCellDef.regex?.source ?? ""}|^[\\w -()]+$)`), // URL or dataset name
+        description: "A link to a CSV or TSV or the name of a dataset.",
         positionalCellDefs: [
             {
                 ...SlugDeclarationCellDef,
@@ -85,7 +85,7 @@ export const ExplorerGrammar: Grammar = {
         keyword: "googleSheet",
         valuePlaceholder: "https://docs.google.com/spreadsheets/d/1qeX...",
         description:
-            "Create a Google Sheet, share it with the OWID Group, then put the link here.",
+            "Create a Google Sheet, share it with your team, then put the link here.",
     },
     downloadDataLink: {
         ...UrlCellDef,

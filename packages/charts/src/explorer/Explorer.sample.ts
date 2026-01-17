@@ -2,13 +2,13 @@ import { DimensionProperty } from "../utils/index.js"
 import { GRAPHER_TAB_CONFIG_OPTIONS } from "../types/index.js"
 import {
     GrapherProgrammaticInterface,
-    legacyToOwidTableAndDimensionsWithMandatorySlug,
+    legacyToChartsTableAndDimensionsWithMandatorySlug,
 } from "../grapher/index.js"
 import { Explorer, ExplorerProps } from "./Explorer.js"
 
 const SampleExplorerOfGraphersProgram = `explorerTitle	CO₂ Data Explorer
 isPublished	false
-explorerSubtitle	Download the complete <i>Our World in Data</i> <a href="https://github.com/owid/co2-data">CO₂ and GHG Emissions Dataset</a>.
+explorerSubtitle	Download the complete CO₂ and GHG Emissions Dataset.
 subNavId	co2
 time	earliest..latest
 selection	China	United States	India	United Kingdom	World
@@ -46,7 +46,7 @@ graphers
 	4244	Nitrous oxide	Production-based		Per capita	false`
 
 // Generate realistic CO2 per capita emissions data (tonnes per person)
-// Based on approximate real-world trends from OWID CO2 data
+// Based on approximate real-world trends from CO2 data
 function generateCO2PerCapitaData() {
     const startYear = 1990
     const endYear = 2024
@@ -93,7 +93,7 @@ function generateCO2PerCapitaData() {
         {
             id: 5,
             name: "World",
-            code: "OWID_WRL",
+            code: "WRL",
             // Global average rose from ~4 to ~4.7 tonnes
             baseValue: 4.0,
             trend: (year: number) =>
@@ -140,7 +140,7 @@ function generateCO2PerCapitaData() {
 export const SampleExplorerOfGraphers = (props?: Partial<ExplorerProps>) => {
     const title = "CO₂ emissions per capita"
     const co2Data = generateCO2PerCapitaData()
-    const owidDataset = new Map([[142609, co2Data]])
+    const dataset = new Map([[142609, co2Data]])
     const dimensions = [
         {
             variableId: 142609,
@@ -153,8 +153,8 @@ export const SampleExplorerOfGraphers = (props?: Partial<ExplorerProps>) => {
         dimensions,
         tab: GRAPHER_TAB_CONFIG_OPTIONS.chart,
     }
-    first.table = legacyToOwidTableAndDimensionsWithMandatorySlug(
-        owidDataset,
+    first.table = legacyToChartsTableAndDimensionsWithMandatorySlug(
+        dataset,
         dimensions,
         {}
     )

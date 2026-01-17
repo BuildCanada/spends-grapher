@@ -658,7 +658,7 @@ export class ChoroplethGlobe extends React.Component<{
     override componentDidMount(): void {
         // rotate to the selected region
         if (isValidGlobeRegionName(this.mapConfig.region)) {
-            this.globeController.jumpToOwidContinent(this.mapConfig.region)
+            this.globeController.jumpToContinent(this.mapConfig.region)
         }
 
         document.addEventListener("touchstart", this.onDocumentClick, {

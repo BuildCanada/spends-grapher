@@ -10,7 +10,7 @@ import {
     LegacyGrapherInterface,
     LegacyGrapherQueryParams,
     GRAPHER_TAB_NAMES,
-    OwidChartDimensionInterface,
+    ChartDimensionInterface,
     GRAPHER_TAB_QUERY_PARAMS,
 } from "../../types/index.js"
 import {
@@ -26,7 +26,7 @@ import {
 import {
     SampleColumnSlugs,
     SynthesizeGDPTable,
-    OwidTable,
+    ChartsTable,
     ErrorValueTypes,
 } from "../../core-table/index.js"
 import { legacyToCurrentGrapherQueryParams } from "./GrapherUrlMigrations"
@@ -34,7 +34,7 @@ import { setSelectedEntityNamesParam } from "./EntityUrlBuilder"
 import { MapConfig } from "../mapCharts/MapConfig"
 import { SelectionArray } from "../selection/SelectionArray"
 import { latestGrapherConfigSchema } from "./GrapherConstants.js"
-import { legacyToOwidTableAndDimensionsWithMandatorySlug } from "./LegacyToOwidTable.js"
+import { legacyToChartsTableAndDimensionsWithMandatorySlug } from "./LegacyToChartsTable.js"
 import { GrapherProgrammaticInterface } from "./Grapher.js"
 import { GrapherState } from "./GrapherState"
 
@@ -141,7 +141,7 @@ const legacyConfig: Omit<LegacyGrapherInterface, "data"> = {
     selectedEntityNames: ["Iceland", "Afghanistan"],
 }
 
-const owidDataset = new Map([
+const dataset = new Map([
     [
         3512,
         {
@@ -153,8 +153,8 @@ const owidDataset = new Map([
 
 it("can apply legacy chart dimension settings", () => {
     const grapher = new GrapherState(legacyConfig)
-    grapher.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-        owidDataset!,
+    grapher.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+        dataset!,
         legacyConfig.dimensions!,
         legacyConfig.selectedEntityColors
     )
@@ -169,8 +169,8 @@ it("correctly identifies changes to passed-in selection", () => {
         ...legacyConfig,
         manager: { selection },
     })
-    grapher.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-        owidDataset,
+    grapher.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+        dataset,
         legacyConfig.dimensions!,
         legacyConfig.selectedEntityColors
     )
@@ -199,8 +199,8 @@ it("can generate a url with country selection even if there is no entity code", 
         selectedEntityNames: [],
     }
     const grapher = new GrapherState(config)
-    grapher.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-        owidDataset,
+    grapher.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+        dataset,
         config.dimensions!,
         config.selectedEntityColors
     )
@@ -216,8 +216,8 @@ it("can generate a url with country selection even if there is no entity code", 
         (entity) => entity.id === 15
     )!.code = undefined as any
     const grapher2 = new GrapherState(config2)
-    grapher2.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-        owidDataset,
+    grapher2.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+        dataset,
         config2.dimensions!,
         config2.selectedEntityColors
     )
@@ -229,8 +229,8 @@ it("can generate a url with country selection even if there is no entity code", 
 describe("hasTimeline", () => {
     it("charts with timeline", () => {
         const grapher = new GrapherState(legacyConfig)
-        grapher.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-            owidDataset,
+        grapher.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+            dataset,
             legacyConfig.dimensions!,
             legacyConfig.selectedEntityColors
         )
@@ -248,8 +248,8 @@ describe("hasTimeline", () => {
 
     it("map tab has timeline even if chart doesn't", () => {
         const grapher = new GrapherState(legacyConfig)
-        grapher.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-            owidDataset,
+        grapher.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+            dataset,
             legacyConfig.dimensions!,
             legacyConfig.selectedEntityColors
         )
@@ -319,7 +319,7 @@ const getGrapher = (): GrapherState => {
         maxTime: 5000,
         hasMapTab: true,
     })
-    state.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
+    state.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
         dataset,
         state.dimensions,
         {}
@@ -481,7 +481,7 @@ describe("urls", () => {
             selectedEntityNames: ["usa", "canada"],
             queryStr: "country=",
         })
-        grapher.inputTable = new OwidTable() // setting the table affects the selection
+        grapher.inputTable = new ChartsTable() // setting the table affects the selection
         expect(grapher.selection.selectedEntityNames).toEqual([])
     })
 
@@ -1004,7 +1004,7 @@ describe("year parameter (applies to map only)", () => {
 
 it("correctly identifies activeColumnSlugs", () => {
     const table =
-        new OwidTable(`entityName,entityId,entityColor,year,gdp,gdp-annotations,child_mortality,population,continent,happiness
+        new ChartsTable(`entityName,entityId,entityColor,year,gdp,gdp-annotations,child_mortality,population,continent,happiness
     Belgium,BEL,#f6f,2010,80000,pretty damn high,1.5,9000000,Europe,81.2
     `)
     const grapher = new GrapherState({
@@ -1026,7 +1026,7 @@ it("correctly identifies activeColumnSlugs", () => {
 })
 
 it("considers map tolerance before using column tolerance", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             ["entityId", "entityCode", "entityName", "year", "gdp"],
             [1, "USA", "United States", 1999, 1],
@@ -1085,7 +1085,7 @@ describe("tableForSelection", () => {
     })
 
     it("should not include entities that cannot be displayed (ScatterPlot)", () => {
-        const table = new OwidTable([
+        const table = new ChartsTable([
             [
                 "entityId",
                 "entityName",
@@ -1118,7 +1118,7 @@ describe("tableForSelection", () => {
 })
 
 it("handles tolerance when there are gaps in ScatterPlot data", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             ["entityName", "year", "x", "y"],
             ["usa", 1998, 1, 1],
@@ -1300,7 +1300,7 @@ describe("tableForSelection", () => {
         const table = SynthesizeGDPTable({
             entityNames: [
                 "France",
-                "Europe", // OWID continent, with member countries defined in regions.json
+                "Europe", // continent, with member countries defined in regions.json
                 "Africa (WHO)", // continent defined by the WHO, with member countries defined in regions.json
                 "Americas", // no information about member countries available
                 "Bananas",
@@ -1385,19 +1385,19 @@ describe("tableForDisplay", () => {
 describe("projectionColumnInfoBySlug", () => {
     const createYDimensionsForSlugs = (
         slugs: string[]
-    ): OwidChartDimensionInterface[] =>
+    ): ChartDimensionInterface[] =>
         slugs.map((slug, i) => ({
             slug,
             property: DimensionProperty.y,
             variableId: 100 + i,
         }))
 
-    const createOwidTableForColumns = (
+    const createChartsTableForColumns = (
         columns: {
             slug: string
             display: { name?: string; isProjection?: boolean }
         }[]
-    ): OwidTable => {
+    ): ChartsTable => {
         const headers = ["entityName", "year", ...columns.map((c) => c.slug)]
         const data = ["France", 2000, ...columns.map(() => 100)]
         const columnDefs = columns.map((c) => ({
@@ -1405,7 +1405,7 @@ describe("projectionColumnInfoBySlug", () => {
             type: ColumnTypeNames.Numeric,
             display: c.display,
         }))
-        return new OwidTable([headers, data], columnDefs)
+        return new ChartsTable([headers, data], columnDefs)
     }
 
     it("returns an empty map when there are no projection columns", () => {
@@ -1418,7 +1418,7 @@ describe("projectionColumnInfoBySlug", () => {
     })
 
     it("matches projection columns with the historical column if there is only one", () => {
-        const table = createOwidTableForColumns([
+        const table = createChartsTableForColumns([
             { slug: "population", display: { name: "Population" } },
             {
                 slug: "population_projection_1",
@@ -1456,7 +1456,7 @@ describe("projectionColumnInfoBySlug", () => {
     })
 
     it("matches projection columns with historical columns by display name", () => {
-        const table = createOwidTableForColumns([
+        const table = createChartsTableForColumns([
             { slug: "population", display: { name: "Population" } },
             { slug: "gdp", display: { name: "GDP" } },
             {
@@ -1488,7 +1488,7 @@ describe("projectionColumnInfoBySlug", () => {
     })
 
     it("returns an empty map when no matching historical column is found", () => {
-        const table = createOwidTableForColumns([
+        const table = createChartsTableForColumns([
             { slug: "gdp", display: { name: "GDP" } },
             { slug: "life_exp", display: { name: "Life Expectancy" } },
             {
@@ -1512,7 +1512,7 @@ describe("projectionColumnInfoBySlug", () => {
 
 describe("tableAfterColorAndSizeToleranceApplication", () => {
     it("applies the specified tolerance to the size column", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             [
                 ["entityName", "year", "x", "y", "size"],
                 ["USA", 2000, 1, 2, 100],
@@ -1541,20 +1541,20 @@ describe("tableAfterColorAndSizeToleranceApplication", () => {
         const result = grapher.tableAfterColorAndSizeToleranceApplication
         const sizeColumn = result.get("size")
 
-        const owidRowsByTime = sizeColumn.owidRowByEntityNameAndTime.get("USA")
-        expect(owidRowsByTime?.get(2001)).toMatchObject({
+        const dataRowsByTime = sizeColumn.dataRowByEntityNameAndTime.get("USA")
+        expect(dataRowsByTime?.get(2001)).toMatchObject({
             value: 100,
             originalTime: 2000,
         })
-        expect(owidRowsByTime?.get(2002)).toBeUndefined() // Outside tolerance
-        expect(owidRowsByTime?.get(2003)).toMatchObject({
+        expect(dataRowsByTime?.get(2002)).toBeUndefined() // Outside tolerance
+        expect(dataRowsByTime?.get(2003)).toMatchObject({
             value: 200,
             originalTime: 2004,
         })
     })
 
     it("uses infinity as default size tolerance", () => {
-        const table = new OwidTable([
+        const table = new ChartsTable([
             ["entityName", "year", "x", "y", "size"],
             ["USA", 2000, 1, 2, 100],
             ["USA", 2001, 1.5, 2.5, null],
@@ -1574,23 +1574,23 @@ describe("tableAfterColorAndSizeToleranceApplication", () => {
         const result = grapher.tableAfterColorAndSizeToleranceApplication
         const sizeColumn = result.get("size")
 
-        const owidRowsByTime = sizeColumn.owidRowByEntityNameAndTime.get("USA")
-        expect(owidRowsByTime?.get(2001)).toMatchObject({
+        const dataRowsByTime = sizeColumn.dataRowByEntityNameAndTime.get("USA")
+        expect(dataRowsByTime?.get(2001)).toMatchObject({
             value: 100,
             originalTime: 2000,
         })
-        expect(owidRowsByTime?.get(2002)).toMatchObject({
+        expect(dataRowsByTime?.get(2002)).toMatchObject({
             value: 200,
             originalTime: 2004,
         })
-        expect(owidRowsByTime?.get(2003)).toMatchObject({
+        expect(dataRowsByTime?.get(2003)).toMatchObject({
             value: 200,
             originalTime: 2004,
         })
     })
 
     it("applies the specified tolerance to a categorical color column", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             [
                 ["entityName", "year", "x", "y", "color"],
                 ["USA", 2000, 1, 2, "Europe"],
@@ -1619,20 +1619,20 @@ describe("tableAfterColorAndSizeToleranceApplication", () => {
         const result = grapher.tableAfterColorAndSizeToleranceApplication
         const colorColumn = result.get("color")
 
-        const owidRowsByTime = colorColumn.owidRowByEntityNameAndTime.get("USA")
-        expect(owidRowsByTime?.get(2001)).toMatchObject({
+        const dataRowsByTime = colorColumn.dataRowByEntityNameAndTime.get("USA")
+        expect(dataRowsByTime?.get(2001)).toMatchObject({
             value: "Europe",
             originalTime: 2000,
         })
-        expect(owidRowsByTime?.get(2002)).toBeUndefined() // Outside tolerance
-        expect(owidRowsByTime?.get(2003)).toMatchObject({
+        expect(dataRowsByTime?.get(2002)).toBeUndefined() // Outside tolerance
+        expect(dataRowsByTime?.get(2003)).toMatchObject({
             value: "Asia",
             originalTime: 2004,
         })
     })
 
     it("uses infinity as default color tolerance", () => {
-        const table = new OwidTable([
+        const table = new ChartsTable([
             ["entityName", "year", "x", "y", "color"],
             ["USA", 2000, 1, 2, 100],
             ["USA", 2001, 1.5, 2.5, null],
@@ -1652,16 +1652,16 @@ describe("tableAfterColorAndSizeToleranceApplication", () => {
         const result = grapher.tableAfterColorAndSizeToleranceApplication
         const colorColumn = result.get("color")
 
-        const owidRowsByTime = colorColumn.owidRowByEntityNameAndTime.get("USA")
-        expect(owidRowsByTime?.get(2001)).toMatchObject({
+        const dataRowsByTime = colorColumn.dataRowByEntityNameAndTime.get("USA")
+        expect(dataRowsByTime?.get(2001)).toMatchObject({
             value: 100,
             originalTime: 2000,
         })
-        expect(owidRowsByTime?.get(2002)).toMatchObject({
+        expect(dataRowsByTime?.get(2002)).toMatchObject({
             value: 200,
             originalTime: 2004,
         })
-        expect(owidRowsByTime?.get(2003)).toMatchObject({
+        expect(dataRowsByTime?.get(2003)).toMatchObject({
             value: 200,
             originalTime: 2004,
         })
@@ -1674,7 +1674,7 @@ describe("tolerance is not applied twice (issue #4891)", () => {
     // filterByTargetTimes applied tolerance a second time. This is normally hidden
     // unless rows are removed between interpolation and filtering (e.g., showNoDataArea=false).
 
-    const createTable = (): OwidTable => {
+    const createTable = (): ChartsTable => {
         const years: number[] = []
         const entityNames: string[] = []
         const testColumnValues: number[] = []
@@ -1694,7 +1694,7 @@ describe("tolerance is not applied twice (issue #4891)", () => {
         entityNames.push("Belarus")
         testColumnValues.push(100)
 
-        return new OwidTable(
+        return new ChartsTable(
             [
                 ["entityName", "year", "testColumn"],
                 ...years.map((year, i) => [

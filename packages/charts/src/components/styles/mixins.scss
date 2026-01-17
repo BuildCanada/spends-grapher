@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@mixin owid-link-90 {
+@mixin link-90 {
     color: $blue-90;
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -13,7 +13,7 @@
     }
 }
 
-@mixin owid-link-60 {
+@mixin link-60 {
     color: $blue-60;
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -26,7 +26,7 @@
     }
 }
 
-@mixin owid-link-40 {
+@mixin link-40 {
     color: $blue-40;
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -70,7 +70,7 @@
         }
 
         a {
-            @include owid-link-90;
+            @include link-90;
         }
     }
 }
@@ -517,7 +517,7 @@
     }
 }
 
-@mixin owid-checkbox {
+@mixin charts-checkbox {
     background: #fff;
     appearance: none;
     width: 16px;

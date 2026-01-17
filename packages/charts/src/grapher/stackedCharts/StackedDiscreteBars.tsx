@@ -28,7 +28,7 @@ import {
 } from "../axis/AxisViews"
 import { AxisConfig } from "../axis/AxisConfig"
 import { ChartInterface } from "../chart/ChartInterface"
-import { OwidTable, CoreColumn } from "../../core-table/index.js"
+import { ChartsTable, CoreColumn } from "../../core-table/index.js"
 import { ChartManager } from "../chart/ChartManager"
 import { TooltipFooterIcon } from "../tooltip/TooltipProps.js"
 import {
@@ -311,7 +311,7 @@ export class StackedDiscreteBars
             : this.renderInteractive()
     }
 
-    @computed private get inputTable(): OwidTable {
+    @computed private get inputTable(): ChartsTable {
         return this.chartState.inputTable
     }
 

@@ -1,11 +1,11 @@
 import { expect, it } from "vitest"
 
 import { ColumnTypeNames } from "../../types/index.js"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import { getNonRedistributableInfo } from "./DownloadModal"
 
-const getTable = (options: { nonRedistributable: boolean }): OwidTable => {
-    return new OwidTable(
+const getTable = (options: { nonRedistributable: boolean }): ChartsTable => {
+    return new ChartsTable(
         [
             ["entityName", "year", "x", "y"],
             ["usa", 1998, 1, 1],

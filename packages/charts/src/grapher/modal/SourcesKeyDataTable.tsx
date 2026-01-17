@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Fragment } from "react"
 import cx from "classnames"
-import { OwidProcessingLevel, excludeNull } from "../../utils/index.js"
+import { ProcessingLevel, excludeNull } from "../../utils/index.js"
 import {
     makeSource,
     makeLastUpdated,
@@ -19,7 +19,7 @@ interface SourcesKeyDataTableProps {
     lastUpdated?: string
     nextUpdate?: string
     unit?: string
-    owidProcessingLevel?: OwidProcessingLevel
+    processingLevel?: ProcessingLevel
     link?: string
     unitConversionFactor?: number
     isEmbeddedInADataPage?: boolean // true by default

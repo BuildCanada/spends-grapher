@@ -5,7 +5,7 @@ import {
     SampleColumnSlugs,
     SynthesizeFruitTableWithStringValues,
     SynthesizeGDPTable,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 import { ChartManager } from "../chart/ChartManager"
 import { SelectionArray } from "../selection/SelectionArray"
@@ -115,7 +115,7 @@ it("should not mark any values as interpolated by default", () => {
     ,2006,france
     2,2000,uk
     3,2004,uk`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "gdp", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
     ])

@@ -2,15 +2,15 @@ import {
     ColumnSlug,
     ColumnTypeNames,
     CoreColumnDef,
-    OwidColumnDef,
-    OwidTableSlugs,
+    ColumnDef,
+    ChartsTableSlugs,
 } from "../types/index.js"
 import { CoreTable } from "./CoreTable.js"
 
 export function timeColumnSlugFromColumnDef(
-    def: OwidColumnDef
-): OwidTableSlugs.day | OwidTableSlugs.year {
-    return def.isDailyMeasurement ? OwidTableSlugs.day : OwidTableSlugs.year
+    def: ColumnDef
+): ChartsTableSlugs.day | ChartsTableSlugs.year {
+    return def.isDailyMeasurement ? ChartsTableSlugs.day : ChartsTableSlugs.year
 }
 
 export function makeOriginalTimeSlugFromColumnSlug(slug: ColumnSlug): string {

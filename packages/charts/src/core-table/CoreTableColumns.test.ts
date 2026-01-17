@@ -3,10 +3,10 @@ import { expect, it, describe } from "vitest"
 import { ColumnTypeNames } from "../types/index.js"
 import { ColumnTypeMap } from "./CoreTableColumns.js"
 import { ErrorValueTypes } from "./ErrorValues.js"
-import { OwidTable } from "./OwidTable.js"
+import { ChartsTable } from "./ChartsTable.js"
 
 describe(ColumnTypeNames.Quarter, () => {
-    const col = new ColumnTypeMap.Numeric(new OwidTable(), { slug: "test" })
+    const col = new ColumnTypeMap.Numeric(new ChartsTable(), { slug: "test" })
 
     it("should format correctly for csv", () => {
         const testValue = 12345678.9
@@ -17,7 +17,7 @@ describe(ColumnTypeNames.Quarter, () => {
 })
 
 describe(ColumnTypeNames.Quarter, () => {
-    const col = new ColumnTypeMap.Quarter(new OwidTable(), { slug: "test" })
+    const col = new ColumnTypeMap.Quarter(new ChartsTable(), { slug: "test" })
 
     it("should parse and format values correctly", () => {
         const testValues = [
@@ -50,7 +50,7 @@ describe(ColumnTypeNames.Quarter, () => {
 })
 
 describe(ColumnTypeMap.NumberOrString, () => {
-    const col = new ColumnTypeMap.NumberOrString(new OwidTable(), {
+    const col = new ColumnTypeMap.NumberOrString(new ChartsTable(), {
         slug: "test",
     })
 

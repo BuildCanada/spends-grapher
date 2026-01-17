@@ -1,7 +1,7 @@
 import {
     Color,
     EntityName,
-    OwidVariableRow,
+    VariableRow,
     SeriesName,
 } from "../../types/index.js"
 import { ChartSeries } from "../chart/ChartInterface"
@@ -80,7 +80,7 @@ export interface StackedRawSeries<
 > {
     seriesName: SeriesName
     isProjection?: boolean
-    rows: OwidVariableRow<PositionType>[]
+    rows: VariableRow<PositionType>[]
     focus: InteractionState
     shortEntityName?: string
 }

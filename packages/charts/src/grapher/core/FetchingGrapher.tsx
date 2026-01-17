@@ -1,8 +1,8 @@
 import {
     GrapherInterface,
-    OwidVariableDataMetadataDimensions,
+    VariableDataMetadataDimensions,
     ArchiveContext,
-    OwidVariableId,
+    VariableId,
 } from "../../types/index.js"
 import React from "react"
 import { Grapher, GrapherProgrammaticInterface } from "./Grapher.js"
@@ -36,8 +36,8 @@ export function FetchingGrapher(
     const grapherState = useMaybeGlobalGrapherStateRef({
         ...props.config,
         additionalDataLoaderFn: (
-            varId: OwidVariableId
-        ): Promise<OwidVariableDataMetadataDimensions> =>
+            varId: VariableId
+        ): Promise<VariableDataMetadataDimensions> =>
             loadVariableDataAndMetadata(varId, props.dataApiUrl, {
                 noCache: props.noCache,
             }),

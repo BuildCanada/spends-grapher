@@ -17,7 +17,7 @@ import {
 } from "./helpers"
 import { GRAPHER_CHART_TYPES } from "../../../types/index.js"
 
-// see https://github.com/owid/owid-grapher/commit/26f2a0d1790c71bdda7e12f284ca552945d2f6ef
+// see # legacy commit 26f2a0d1790c71bdda7e12f284ca552945d2f6ef
 const migrateFrom001To002 = (
     config: AnyConfigWithValidSchema
 ): AnyConfigWithValidSchema => {
@@ -26,7 +26,7 @@ const migrateFrom001To002 = (
     return config
 }
 
-// see https://github.com/owid/owid-grapher/commit/4525ad81fb7064709ffab83677a8b0354b324dfb
+// see # legacy commit 4525ad81fb7064709ffab83677a8b0354b324dfb
 const migrateFrom002To003 = (
     config: AnyConfigWithValidSchema
 ): AnyConfigWithValidSchema => {
@@ -43,7 +43,7 @@ const migrateFrom002To003 = (
     return config
 }
 
-// see https://github.com/owid/owid-grapher/commit/1776721253cf61d7f1e24ebadeaf7a7ca2f43ced
+// see # legacy commit 1776721253cf61d7f1e24ebadeaf7a7ca2f43ced
 const migrateFrom003To004 = (
     config: AnyConfigWithValidSchema
 ): AnyConfigWithValidSchema => {
@@ -52,7 +52,7 @@ const migrateFrom003To004 = (
     return config
 }
 
-// see https://github.com/owid/owid-grapher/commit/1d67de3174764a413bc5055fbdf34efb2b49e079
+// see # legacy commit 1d67de3174764a413bc5055fbdf34efb2b49e079
 const migrateFrom004To005 = (
     config: AnyConfigWithValidSchema
 ): AnyConfigWithValidSchema => {

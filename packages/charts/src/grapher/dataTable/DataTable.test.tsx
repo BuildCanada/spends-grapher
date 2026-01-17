@@ -13,7 +13,7 @@ import {
     GrapherWithIncompleteData,
     GrapherWithMultipleVariablesAndMultipleYears,
 } from "./DataTable.sample"
-import { LifeExpectancyGrapher } from "../testData/OwidTestData.sample.js"
+import { LifeExpectancyGrapher } from "../testData/TestData.sample.js"
 import { DataTable } from "./DataTable.js"
 
 describe("when you render a table", () => {

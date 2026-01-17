@@ -1,4 +1,4 @@
-export interface OwidSource {
+export interface Source {
     id?: number
     name?: string
     dataPublishedBy?: string

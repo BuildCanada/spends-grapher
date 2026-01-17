@@ -30,14 +30,14 @@ import {
     faSpinner,
 } from "@fortawesome/free-solid-svg-icons"
 import {
-    OwidColumnDef,
-    OwidOrigin,
+    ColumnDef,
+    Origin,
     QueryParams,
     type GrapherImageDownloadEvent,
 } from "../../types/index.js"
 import {
-    BlankOwidTable,
-    OwidTable,
+    BlankChartsTable,
+    ChartsTable,
     CoreColumn,
 } from "../../core-table/index.js"
 import { Modal } from "./Modal"
@@ -63,9 +63,9 @@ export interface DownloadModalManager {
     baseUrl?: string
     queryStr?: string
     externalQueryParams?: QueryParams
-    inputTable?: OwidTable
-    transformedTable?: OwidTable
-    filteredTableForDisplay?: OwidTable
+    inputTable?: ChartsTable
+    transformedTable?: ChartsTable
+    filteredTableForDisplay?: ChartsTable
     yColumnsFromDimensionsOrSlugsOrAuto?: CoreColumn[]
     detailsOrderedByReference?: string[]
     activeModal?: GrapherModal
@@ -601,8 +601,8 @@ interface DataDownloadContextClientSide extends DataDownloadContextBase {
     shortColNames: boolean
 
     // Only needed for local CSV generation
-    fullTable: OwidTable
-    filteredTable: OwidTable
+    fullTable: ChartsTable
+    filteredTable: ChartsTable
     activeColumnSlugs: string[] | undefined
 }
 
@@ -653,12 +653,12 @@ const getDownloadUrl = (
 }
 
 export const getNonRedistributableInfo = (
-    table: OwidTable | undefined
+    table: ChartsTable | undefined
 ): { cols: CoreColumn[] | undefined; sourceLinks: string[] | undefined } => {
     if (!table) return { cols: undefined, sourceLinks: undefined }
 
     const nonRedistributableCols = table.columnsAsArray.filter(
-        (col) => (col.def as OwidColumnDef).nonRedistributable
+        (col) => (col.def as ColumnDef).nonRedistributable
     )
 
     if (!nonRedistributableCols.length)
@@ -666,7 +666,7 @@ export const getNonRedistributableInfo = (
 
     const sourceLinks = nonRedistributableCols
         .map((col) => {
-            const def = col.def as OwidColumnDef
+            const def = col.def as ColumnDef
             return def.sourceLink ?? def.origins?.[0]?.urlMain
         })
         .filter((link): link is string => !!link)
@@ -716,7 +716,7 @@ metadata <- fromJSON("${props.metadataUrl}")`,
     )
 }
 
-const SourceAndCitationSection = ({ table }: { table?: OwidTable }) => {
+const SourceAndCitationSection = ({ table }: { table?: ChartsTable }) => {
     // Sources can come either from origins (new format) or from the source field of the column (old format)
     const origins =
         table?.defs
@@ -728,7 +728,7 @@ const SourceAndCitationSection = ({ table }: { table?: OwidTable }) => {
             .map((col) => col.source)
             .filter((s) => s !== undefined && s.dataPublishedBy !== undefined)
             .map(
-                (s): OwidOrigin => ({
+                (s): Origin => ({
                     producer: s.dataPublishedBy,
                     urlMain: s.link,
                 })
@@ -756,19 +756,19 @@ const SourceAndCitationSection = ({ table }: { table?: OwidTable }) => {
     )
 
     // Find the highest processing level of all columns
-    const owidProcessingLevel = table?.columnsAsArray
-        .map((col) => (col.def as OwidColumnDef).owidProcessingLevel)
+    const processingLevel = table?.columnsAsArray
+        .map((col) => (col.def as ColumnDef).processingLevel)
         .reduce((prev, curr) => {
             if (prev === "major" || curr === "major") return "major" as const
             if (prev === "minor" || curr === "minor") return "minor" as const
             return undefined
         }, undefined)
 
-    const sourceIsOwid =
+    const sourceIsExternal =
         attributions.length === 1 &&
         attributions[0].toLowerCase() === "our world in data"
-    const processingLevelPhrase = !sourceIsOwid
-        ? getPhraseForProcessingLevel(owidProcessingLevel)
+    const processingLevelPhrase = !sourceIsExternal
+        ? getPhraseForProcessingLevel(processingLevel)
         : undefined
     const fullProcessingPhrase = processingLevelPhrase ? (
         <>
@@ -802,7 +802,7 @@ const SourceAndCitationSection = ({ table }: { table?: OwidTable }) => {
 
 const ApiAndCodeExamplesSection = (props: {
     downloadCtxBase: DataDownloadContextBase
-    firstYColDef?: OwidColumnDef
+    firstYColDef?: ColumnDef
 }) => {
     const [onlyVisible, setOnlyVisible] = useState(false)
     const [shortColNames, setShortColNames] = useState(true)
@@ -841,12 +841,7 @@ const ApiAndCodeExamplesSection = (props: {
                     <p className="grapher_label-2-regular">
                         Use these URLs to programmatically access this chart's
                         data and configure your requests with the options below.{" "}
-                        <a
-                            href="https://docs.owid.io/projects/etl/api/"
-                            data-track-note="chart_download_modal_api_docs"
-                        >
-                            Our documentation provides more information
-                        </a>{" "}
+                        <span>Documentation provides more information</span>{" "}
                         on how to use the API, and you can find a few code
                         examples below.
                     </p>
@@ -946,11 +941,11 @@ export const DownloadModalDataTab = (props: DownloadModalProps) => {
                 props.manager.baseUrl ??
                 `/grapher/${props.manager.displaySlug}`,
 
-            fullTable: props.manager.inputTable ?? BlankOwidTable(),
+            fullTable: props.manager.inputTable ?? BlankChartsTable(),
             filteredTable:
                 (props.manager.isOnTableTab
                     ? props.manager.filteredTableForDisplay
-                    : props.manager.transformedTable) ?? BlankOwidTable(),
+                    : props.manager.transformedTable) ?? BlankChartsTable(),
             activeColumnSlugs: props.manager.activeColumnSlugs,
         }
     }, [
@@ -1065,7 +1060,7 @@ export const DownloadModalDataTab = (props: DownloadModalProps) => {
         </p>
     )
 
-    const firstYColDef = yColumns?.[0]?.def as OwidColumnDef | undefined
+    const firstYColDef = yColumns?.[0]?.def as ColumnDef | undefined
 
     const fullDataDescription = `Includes all entities and time points`
     const filteredDataDescription = `Includes only the entities and time points currently visible in the chart`

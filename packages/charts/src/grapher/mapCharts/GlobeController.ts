@@ -9,7 +9,7 @@ import {
     excludeUndefined,
     PartialBy,
     PointVector,
-    checkIsOwidContinent,
+    checkIsContinent,
     getCountryNamesForRegion,
     getRegionByName,
     checkHasMembers,
@@ -105,8 +105,8 @@ export class GlobeController {
         void this.rotateTo(target)
     }
 
-    jumpToOwidContinent(continent: GlobeRegionName): void {
-        const target = calculateTargetForOwidContinent(continent)
+    jumpToContinent(continent: GlobeRegionName): void {
+        const target = calculateTargetForContinent(continent)
         this.jumpTo(target)
     }
 
@@ -115,8 +115,8 @@ export class GlobeController {
         if (target) this.showGlobeAndRotateTo(target)
     }
 
-    rotateToOwidContinent(continent: GlobeRegionName): void {
-        const target = calculateTargetForOwidContinent(continent)
+    rotateToContinent(continent: GlobeRegionName): void {
+        const target = calculateTargetForContinent(continent)
         this.showGlobeAndRotateTo(target)
     }
 
@@ -269,7 +269,7 @@ function calculateZoomToFitForBounds(bounds: Bounds): number {
     return zoom
 }
 
-function calculateTargetForOwidContinent(continent: GlobeRegionName): Target {
+function calculateTargetForContinent(continent: GlobeRegionName): Target {
     const viewport = GLOBE_VIEWPORTS[continent]
     return { coords: viewport.rotation, zoom: viewport.zoom }
 }
@@ -296,13 +296,13 @@ function calculateTargetForSelection(
         )
     }
 
-    // if a single owid continent is selected, then rotate to it
+    // if a single continent is selected, then rotate to it
     // (the hard-coded coords/zoom values are nicer than dynamically computing it)
     if (
         selection.selectedRegions.length === 1 &&
-        checkIsOwidContinent(selection.selectedRegions[0])
+        checkIsContinent(selection.selectedRegions[0])
     ) {
-        return calculateTargetForOwidContinent(
+        return calculateTargetForContinent(
             MAP_REGION_NAMES[
                 selection.selectedRegions[0].name
             ] as GlobeRegionName

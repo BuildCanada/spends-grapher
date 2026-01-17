@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project: @buildcanada/charts
 
-A configurable data visualization library for creating interactive charts. Extracted from Our World in Data's Grapher.
+A configurable data visualization library for creating interactive charts.
 
 ## Commands
 
@@ -31,7 +31,7 @@ bun run typecheck        # TypeScript check
 src/
 ├── components/     # Reusable UI components (TextWrap, MarkdownTextWrap, etc.)
 ├── config/         # ChartsProvider context and configuration
-├── core-table/     # Data table handling (OwidTable, CoreTable)
+├── core-table/     # Data table handling (ChartsTable, CoreTable)
 ├── explorer/       # Explorer component (data explorer UI)
 ├── grapher/        # Main charting engine
 │   ├── axis/           # Axis rendering

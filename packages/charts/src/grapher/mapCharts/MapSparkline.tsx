@@ -6,10 +6,10 @@ import {
     AxisConfigInterface,
     ColumnSlug,
     EntityName,
-    OwidVariableRoundingMode,
+    VariableRoundingMode,
     Time,
 } from "../../types/index.js"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import { LineChart } from "../lineCharts/LineChart"
 import { LineChartState } from "../lineCharts/LineChartState"
 import { Bounds, checkIsVeryShortUnit } from "../../utils/index.js"
@@ -28,7 +28,7 @@ const SPARKLINE_NUDGE = 3 // step away from the axis
 export interface MapSparklineManager {
     mapColumnSlug: ColumnSlug
     mapColumnInfo: MapColumnInfo
-    timeSeriesTable: OwidTable
+    timeSeriesTable: ChartsTable
     targetTime?: Time
     entityName: EntityName
     lineColorScale?: ColorScale
@@ -64,7 +64,7 @@ export class MapSparkline extends React.Component<MapSparklineProps> {
         return this.manager.mapColumnSlug
     }
 
-    @computed private get sparklineTable(): OwidTable {
+    @computed private get sparklineTable(): ChartsTable {
         return this.manager.timeSeriesTable
             .filterByEntityNames([this.manager.entityName])
             .columnFilter(
@@ -200,7 +200,7 @@ export class MapSparkline extends React.Component<MapSparklineProps> {
 
         const { mapColumnSlug, formatValueForTooltip } = this.manager
 
-        const roundingMode = OwidVariableRoundingMode.decimalPlaces
+        const roundingMode = VariableRoundingMode.decimalPlaces
         const { yAxisConfig } = this.sparklineManager,
             yColumn = this.sparklineTable.get(mapColumnSlug),
             minVal = _.min([yColumn.minValue, yAxisConfig?.min]) ?? 0,

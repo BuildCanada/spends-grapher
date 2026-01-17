@@ -1,12 +1,12 @@
 // @ts-nocheck
 import * as R from "remeda"
 import {
-    OwidOrigin,
-    OwidVariableWithSource,
-    OwidProcessingLevel,
+    Origin,
+    VariableWithSource,
+    ProcessingLevel,
     DisplaySource,
     IndicatorTitleWithFragments,
-    OwidSource,
+    Source,
 } from "../types/index.js"
 import * as _ from "lodash-es"
 import { excludeUndefined } from "./Util"
@@ -14,7 +14,7 @@ import dayjs from "./dayjs.js"
 import { parseArchivalDate } from "./archival/archivalDate.js"
 
 export function getOriginAttributionFragments(
-    origins: OwidOrigin[] | undefined
+    origins: Origin[] | undefined
 ): string[] {
     return origins
         ? origins.map((origin) => {
@@ -40,7 +40,7 @@ export const splitSourceTextIntoFragments = (
 
 export function getAttributionFragmentsFromVariable(
     variable: Pick<
-        OwidVariableWithSource,
+        VariableWithSource,
         "presentation" | "origins" | "source"
     >
 ): string[] {
@@ -89,7 +89,7 @@ const isDate = (date: string): boolean => {
 }
 
 export const getLastUpdatedFromVariable = (
-    variable: Pick<OwidVariableWithSource, "catalogPath" | "origins">
+    variable: Pick<VariableWithSource, "catalogPath" | "origins">
 ): string | undefined => {
     // if possible, extract date from the catalog path
     const version = getETLPathComponents(variable.catalogPath ?? "")?.version
@@ -110,7 +110,7 @@ export const getLastUpdatedFromVariable = (
 }
 
 export const getNextUpdateFromVariable = (
-    variable: Pick<OwidVariableWithSource, "catalogPath" | "updatePeriodDays">
+    variable: Pick<VariableWithSource, "catalogPath" | "updatePeriodDays">
 ): string | undefined => {
     const lastUpdated = getLastUpdatedFromVariable(variable)
     let nextUpdate = undefined
@@ -126,7 +126,7 @@ export const getNextUpdateFromVariable = (
 }
 
 export const getPhraseForProcessingLevel = (
-    processingLevel: OwidProcessingLevel | undefined
+    processingLevel: ProcessingLevel | undefined
 ): string => {
     switch (processingLevel) {
         case "major":
@@ -138,7 +138,7 @@ export const getPhraseForProcessingLevel = (
     }
 }
 
-const prepareOriginForDisplay = (origin: OwidOrigin): DisplaySource => {
+const prepareOriginForDisplay = (origin: Origin): DisplaySource => {
     let label = origin.producer ?? ""
     if (origin.title && origin.title !== label) {
         label += " – " + origin.title
@@ -154,7 +154,7 @@ const prepareOriginForDisplay = (origin: OwidOrigin): DisplaySource => {
 }
 
 export const prepareSourcesForDisplay = (
-    variable: Pick<OwidVariableWithSource, "origins" | "source">
+    variable: Pick<VariableWithSource, "origins" | "source">
 ): DisplaySource[] => {
     const { origins, source } = variable
 
@@ -181,7 +181,7 @@ export const prepareSourcesForDisplay = (
     return sourcesForDisplay
 }
 
-const getYearSuffixFromOrigin = (o: OwidOrigin): string => {
+const getYearSuffixFromOrigin = (o: Origin): string => {
     const year = o.dateAccessed
         ? dayjs(o.dateAccessed, ["YYYY-MM-DD", "YYYY"]).year()
         : o.datePublished
@@ -192,15 +192,15 @@ const getYearSuffixFromOrigin = (o: OwidOrigin): string => {
 }
 
 export const getCitationShort = (
-    origins: OwidOrigin[],
+    origins: Origin[],
     attributions: string[],
-    owidProcessingLevel: OwidProcessingLevel | undefined
+    processingLevel: ProcessingLevel | undefined
 ): string => {
     const producersWithYear = _.uniq(
         origins.map((o) => `${o.producer}${getYearSuffixFromOrigin(o)}`)
     )
     const processingLevelPhrase =
-        getPhraseForProcessingLevel(owidProcessingLevel)
+        getPhraseForProcessingLevel(processingLevel)
 
     const attributionFragments = attributions ?? producersWithYear
     const attributionPotentiallyShortened =
@@ -226,12 +226,12 @@ export const getPhraseForArchivalDate = (
 
 export const getCitationLong = (
     indicatorTitle: IndicatorTitleWithFragments,
-    origins: OwidOrigin[],
-    source: OwidSource | undefined,
+    origins: Origin[],
+    source: Source | undefined,
     attributions: string[],
     attributionShort: string | undefined,
     titleVariant: string | undefined,
-    owidProcessingLevel: OwidProcessingLevel | undefined,
+    processingLevel: ProcessingLevel | undefined,
     citationUrl: string | undefined,
     archivalDate: string | undefined
 ): string => {
@@ -243,7 +243,7 @@ export const getCitationLong = (
         origins.map((o) => `${o.producer}${getYearSuffixFromOrigin(o)}`)
     )
     const processingLevelPhrase =
-        getPhraseForProcessingLevel(owidProcessingLevel)
+        getPhraseForProcessingLevel(processingLevel)
 
     const attributionFragments = attributions ?? producersWithYear
     const attributionUnshortened = attributionFragments.join("; ")

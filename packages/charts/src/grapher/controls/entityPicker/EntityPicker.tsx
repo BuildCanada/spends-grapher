@@ -22,7 +22,7 @@ import {
     SortOrder,
     EntityName,
     CoreColumnDef,
-    OwidTableSlugs,
+    ChartsTableSlugs,
 } from "../../../utils/index.js"
 import classnames from "classnames"
 import { scaleLinear, ScaleLinear } from "d3-scale"
@@ -34,7 +34,7 @@ import { Dropdown, BasicDropdownOption } from "../Dropdown"
 import {
     ColumnTypeMap,
     CoreColumn,
-    OwidTable,
+    ChartsTable,
 } from "../../../core-table/index.js"
 import { EntityPickerManager } from "./EntityPickerConstants"
 import { SelectionArray } from "../../selection/SelectionArray"
@@ -209,13 +209,13 @@ export class EntityPicker extends React.Component<EntityPickerProps> {
         )
     }
 
-    @computed private get metricTable(): OwidTable | undefined {
+    @computed private get metricTable(): ChartsTable | undefined {
         if (this.metric === undefined) return undefined
 
         // If the slug is "entityName", then try to get it from grapherTable first, because it might
         // not be present in pickerTable (for indicator-powered explorers, for example).
         if (
-            this.metric === OwidTableSlugs.entityName &&
+            this.metric === ChartsTableSlugs.entityName &&
             this.grapherTable?.has(this.metric)
         )
             return this.grapherTable
@@ -242,7 +242,7 @@ export class EntityPicker extends React.Component<EntityPickerProps> {
             const userEntityCodes = [
                 localCountryInfo.code,
                 ...(localCountryInfo.regions ?? []),
-                "OWID_WRL",
+                "WRL",
             ]
 
             const userRegionNames = _.sortBy(
@@ -290,11 +290,11 @@ export class EntityPicker extends React.Component<EntityPickerProps> {
         })
     }
 
-    @computed private get grapherTable(): OwidTable | undefined {
+    @computed private get grapherTable(): ChartsTable | undefined {
         return this.manager.grapherTable
     }
 
-    @computed private get pickerTable(): OwidTable | undefined {
+    @computed private get pickerTable(): ChartsTable | undefined {
         return this.manager.entityPickerTable
     }
 
@@ -546,7 +546,7 @@ export class EntityPicker extends React.Component<EntityPickerProps> {
             // If columnSlug is undefined, we're sorting by relevance, which is (mostly) by country name.
             // If the column is currently missing (not loaded yet), assume it is numeric.
             columnSlug !== undefined &&
-            columnSlug !== OwidTableSlugs.entityName &&
+            columnSlug !== ChartsTableSlugs.entityName &&
             (col === undefined ||
                 col.isMissing ||
                 col instanceof ColumnTypeMap.Numeric)

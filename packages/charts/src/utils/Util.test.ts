@@ -36,7 +36,7 @@ import {
 } from "./Util.js"
 import {
     BlockSize,
-    OwidEnrichedGdocBlock,
+    EnrichedGdocBlock,
     SortOrder,
     TagGraphRoot,
 } from "../types/index.js"
@@ -610,7 +610,7 @@ describe(findGreatestCommonDivisorOfArray, () => {
 })
 
 describe(traverseEnrichedBlock, () => {
-    const enrichedBlocks: OwidEnrichedGdocBlock[] = [
+    const enrichedBlocks: EnrichedGdocBlock[] = [
         {
             type: "prominent-link",
             url: "https://ourworldindata.org",

@@ -28,8 +28,8 @@ import {
     ColumnTypeNames,
     CoreColumnDef,
     JsTypes,
-    OwidTableSlugs,
-    OwidColumnDef,
+    ChartsTableSlugs,
+    ColumnDef,
 } from "../types/index.js"
 import {
     makeAutoTypeFn,
@@ -65,7 +65,7 @@ interface AdvancedOptions {
 }
 
 // The complex generic with default here just enables you to optionally specify a more
-// narrow interface for the input rows. This is helpful for OwidTable.
+// narrow interface for the input rows. This is helpful for ChartsTable.
 export class CoreTable<
     ROW_TYPE extends CoreRow = CoreRow,
     COL_DEF_TYPE extends CoreColumnDef = CoreColumnDef,
@@ -232,7 +232,7 @@ export class CoreTable<
         // If we ever pass Mobx observable arrays, we need to convert them to regular arrays.
         // Otherwise, operations like `.concat()` will break in unexpected ways.
         // See https://github.com/mobxjs/mobx/blob/mobx4and5/docs/best/pitfalls.md
-        // Also, see https://github.com/owid/owid-grapher/issues/2948 for an issue caused by this problem.
+        // Also, see # legacy issue 2948 for an issue caused by this problem.
         type CoreValueArrayThatMayBeMobxProxy = CoreValueType[] & {
             toJS?: () => CoreValueType[]
         }
@@ -468,14 +468,14 @@ export class CoreTable<
         )
     }
 
-    // todo: move this. time methods should not be in CoreTable, in OwidTable instead (which is really TimeSeriesTable).
+    // todo: move this. time methods should not be in CoreTable, in ChartsTable instead (which is really TimeSeriesTable).
     // TODO: remove this. Currently we use this to get the right day/year time formatting. For now a chart is either a "day chart" or a "year chart".
     // But we can have charts with multiple time columns. Ideally each place that needs access to the timeColumn, would get the specific column
     // and not the first time column from the table.
     @imemo get timeColumn(): TimeColumn | MissingColumn {
         // "time" is the canonical time column slug.
-        // See LegacyToOwidTable where this column is injected for all Graphers.
-        const maybeTimeColumn = this.get(OwidTableSlugs.time)
+        // See LegacyToChartsTable where this column is injected for all Graphers.
+        const maybeTimeColumn = this.get(ChartsTableSlugs.time)
         if (maybeTimeColumn instanceof ColumnTypeMap.Time)
             return maybeTimeColumn
         // If a valid "time" column doesn't exist, find _some_ time column to use.
@@ -496,15 +496,15 @@ export class CoreTable<
             maybeTimeColumn) as TimeColumn | MissingColumn
     }
 
-    // todo: should be on owidtable
+    // todo: should be on ChartsTable
     @imemo get entityNameColumn(): CoreColumn {
         return (
             this.getFirstColumnWithType(ColumnTypeNames.EntityName) ??
-            this.get(OwidTableSlugs.entityName)
+            this.get(ChartsTableSlugs.entityName)
         )
     }
 
-    // todo: should be on owidtable
+    // todo: should be on ChartsTable
     @imemo get entityNameSlug(): string {
         return this.entityNameColumn.slug
     }
@@ -854,8 +854,8 @@ export class CoreTable<
             this.columnsAsArray
                 .map((col) =>
                     csvEscape(
-                        useShortNames && (col.def as OwidColumnDef).shortName
-                            ? (col.def as OwidColumnDef).shortName
+                        useShortNames && (col.def as ColumnDef).shortName
+                            ? (col.def as ColumnDef).shortName
                             : col.name
                     )
                 )

@@ -5,7 +5,7 @@ import {
     RawSlopeChartSeries,
     SlopeChartSeries,
 } from "./SlopeChartConstants"
-import { OwidTable, CoreColumn } from "../../core-table/index.js"
+import { ChartsTable, CoreColumn } from "../../core-table/index.js"
 import { SelectionArray } from "../selection/SelectionArray"
 import { FocusArray } from "../focus/FocusArray"
 import {
@@ -44,25 +44,25 @@ import { VerticalAxis } from "../axis/Axis"
 export class SlopeChartState implements ChartState {
     manager: SlopeChartManager
 
-    defaultBaseColorScheme = ColorSchemeName.OwidDistinctLines
+    defaultBaseColorScheme = ColorSchemeName.DistinctLines
 
     constructor({ manager }: { manager: SlopeChartManager }) {
         this.manager = manager
         makeObservable(this)
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTableFromGrapher(): OwidTable {
+    @computed get transformedTableFromGrapher(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
         )
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         let table = this.transformedTableFromGrapher
         // The % growth transform cannot be applied in transformTable() because it will filter out
         // any rows before startTime and change the timeline bounds.
@@ -76,7 +76,7 @@ export class SlopeChartState implements ChartState {
         return table
     }
 
-    transformTable(table: OwidTable) {
+    transformTable(table: ChartsTable) {
         table = table.filterByEntityNames(
             this.selectionArray.selectedEntityNames
         )
@@ -94,7 +94,7 @@ export class SlopeChartState implements ChartState {
         return table
     }
 
-    transformTableForSelection(table: OwidTable): OwidTable {
+    transformTableForSelection(table: ChartsTable): ChartsTable {
         table = table.replaceNonNumericCellsWithErrorValues(this.yColumnSlugs)
 
         this.yColumnSlugs.forEach((slug) => {
@@ -234,9 +234,9 @@ export class SlopeChartState implements ChartState {
             hasMultipleEntitiesSelected,
         })
 
-        const owidRowByTime = column.owidRowByEntityNameAndTime.get(entityName)
-        const start = owidRowByTime?.get(startTime)
-        const end = owidRowByTime?.get(endTime)
+        const dataRowByTime = column.dataRowByEntityNameAndTime.get(entityName)
+        const start = dataRowByTime?.get(startTime)
+        const end = dataRowByTime?.get(endTime)
 
         const colorKey = getColorKey({
             entityName,

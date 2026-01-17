@@ -4,8 +4,8 @@ import {
     reactRenderToStringClientOnly,
 } from "../../components/index.js"
 import {
-    OwidTable,
-    BlankOwidTable,
+    ChartsTable,
+    BlankChartsTable,
     CoreColumn,
     ColumnTypeMap,
 } from "../../core-table/index.js"
@@ -51,13 +51,13 @@ import {
     GRAPHER_MAP_TYPE,
     GrapherVariant,
     SeriesColorMap,
-    OwidChartDimensionInterface,
+    ChartDimensionInterface,
     DimensionProperty,
     DetailsMarker,
     EnrichedDetail,
     ProjectionColumnInfo,
-    OwidColumnDef,
-    OwidVariableRow,
+    ColumnDef,
+    VariableRow,
     SortConfig,
     Color,
     GlobeRegionName,
@@ -95,7 +95,7 @@ import {
     timeBoundToTimeBoundString,
     getRegionByName,
     checkIsCountry,
-    checkIsOwidContinent,
+    checkIsContinent,
     checkIsIncomeGroup,
     checkHasMembers,
     sortNumeric,
@@ -330,17 +330,17 @@ export class GrapherState {
     externalQueryParams: QueryParams = {}
     private framePaddingHorizontal = GRAPHER_FRAME_PADDING_HORIZONTAL
     private framePaddingVertical = GRAPHER_FRAME_PADDING_VERTICAL
-    _inputTable: OwidTable = new OwidTable()
+    _inputTable: ChartsTable = new ChartsTable()
 
     // TODO Daniel: probably obsolete?
     // @observable.ref interpolatedSortColumnsBySlug:
     //     | CoreColumnBySlug
     //     | undefined = {}
-    get inputTable(): OwidTable {
+    get inputTable(): ChartsTable {
         return this._inputTable
     }
 
-    @action set inputTable(table: OwidTable) {
+    @action set inputTable(table: ChartsTable) {
         this._inputTable = table
 
         if (this.manager?.selection?.hasSelection) {
@@ -355,7 +355,7 @@ export class GrapherState {
     @computed get dataTableSlugs(): ColumnSlug[] {
         return this.tableSlugs ? this.tableSlugs.split(" ") : this.newSlugs
     }
-    isEmbeddedInAnOwidPage?: boolean = false
+    isEmbeddedInPage?: boolean = false
     isEmbeddedInADataPage?: boolean = false
 
     // These are explicitly set to `false` if FetchingGrapher or some other
@@ -523,11 +523,11 @@ export class GrapherState {
         }
 
         this._additionalDataLoaderFn = options.additionalDataLoaderFn
-        this.isEmbeddedInAnOwidPage = options.isEmbeddedInAnOwidPage ?? false
+        this.isEmbeddedInPage = options.isEmbeddedInPage ?? false
         this.isEmbeddedInADataPage = options.isEmbeddedInADataPage ?? false
 
         this._inputTable =
-            options.table ?? BlankOwidTable(`initialGrapherTable`)
+            options.table ?? BlankChartsTable(`initialGrapherTable`)
         this.initialOptions = options
         this.analytics = new GrapherAnalytics(this.initialOptions.env ?? "")
         this.selection =
@@ -900,7 +900,7 @@ export class GrapherState {
     }
 
     // table that is used for display in the table tab
-    @computed get tableForDisplay(): OwidTable {
+    @computed get tableForDisplay(): ChartsTable {
         let table = this.table
 
         if (!this.isReady || !this.isOnTableTab) return table
@@ -918,7 +918,7 @@ export class GrapherState {
         return table
     }
 
-    @computed get filteredTableForDisplay(): OwidTable {
+    @computed get filteredTableForDisplay(): ChartsTable {
         let table = this.tableForDisplay
         const { filter } = this.dataTableConfig
 
@@ -945,7 +945,7 @@ export class GrapherState {
         return table
     }
 
-    @computed get tableForSelection(): OwidTable {
+    @computed get tableForSelection(): ChartsTable {
         // This table specifies which entities can be selected in the charts EntitySelectorModal.
         // It should contain all entities that can be selected, and none more.
         // Depending on the chart type, the criteria for being able to select an entity are
@@ -981,7 +981,7 @@ export class GrapherState {
      * since it's more efficient to run them on a table that has been filtered
      * by selected entities.
      */
-    @computed get tableAfterColorAndSizeToleranceApplication(): OwidTable {
+    @computed get tableAfterColorAndSizeToleranceApplication(): ChartsTable {
         let table = this.inputTable
 
         if (this.hasScatter && this.sizeColumnSlug) {
@@ -1010,7 +1010,7 @@ export class GrapherState {
 
     // If an author sets a timeline or entity filter, run it early in the pipeline
     // so to the charts it's as if the filtered times and entities do not exist
-    @computed get tableAfterAuthorTimelineAndEntityFilter(): OwidTable {
+    @computed get tableAfterAuthorTimelineAndEntityFilter(): ChartsTable {
         let table = this.tableAfterColorAndSizeToleranceApplication
 
         // Filter entities
@@ -1032,7 +1032,7 @@ export class GrapherState {
     }
 
     @computed
-    get tableAfterAuthorTimelineAndActiveChartTransform(): OwidTable {
+    get tableAfterAuthorTimelineAndActiveChartTransform(): ChartsTable {
         const table = this.table
         if (!this.isReady || !this.isOnChartOrMapTab) return table
 
@@ -1088,11 +1088,11 @@ export class GrapherState {
         return this.chartState.series.map((series) => series.seriesName)
     }
 
-    @computed get table(): OwidTable {
+    @computed get table(): ChartsTable {
         return this.tableAfterAuthorTimelineAndEntityFilter
     }
     @computed
-    private get tableAfterAllTransformsAndFilters(): OwidTable {
+    private get tableAfterAllTransformsAndFilters(): ChartsTable {
         const { startTime, endTime } = this
         const table = this.tableAfterAuthorTimelineAndActiveChartTransform
 
@@ -1115,7 +1115,7 @@ export class GrapherState {
         return table.filterByTimeRange(startTime, endTime)
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         return this.tableAfterAllTransformsAndFilters
     }
     isExportingToSvgOrPng = false
@@ -1204,11 +1204,11 @@ export class GrapherState {
     }
 
     @computed get isUserLoggedInAsAdmin(): boolean {
-        // This cookie is set by visiting ourworldindata.org/identifyadmin on the static site.
-        // There is an iframe on owid.cloud to trigger a visit to that page.
+        // This cookie is set by visiting an identifyadmin endpoint on the static site.
+        // There is an iframe on the admin site to trigger a visit to that page.
         try {
             // Cookie access can be restricted by iframe sandboxing, in which case the below code will throw an error
-            // see https://github.com/owid/owid-grapher/pull/2452
+            // see # legacy PR 2452
             return !!Cookies.get(CookieKey.isAdmin)
         } catch {
             return false
@@ -1414,9 +1414,9 @@ export class GrapherState {
         )
     }
 
-    @computed get shouldLinkToOwid(): boolean {
+    @computed get shouldLinkToSource(): boolean {
         if (
-            this.isEmbeddedInAnOwidPage ||
+            this.isEmbeddedInPage ||
             this.isExportingToSvgOrPng ||
             !this.isInIFrame
         )
@@ -1425,9 +1425,9 @@ export class GrapherState {
         return true
     }
 
-    @computed get hasOWIDLogo(): boolean {
+    @computed get hasLegacyLogo(): boolean {
         return (
-            !this.hideLogo && (this.logo === undefined || this.logo === "owid")
+            !this.hideLogo && (this.logo === undefined || this.logo === "legacy")
         )
     }
     @computed get hasFatalErrors(): boolean {
@@ -1726,12 +1726,12 @@ export class GrapherState {
     @computed.struct get filledDimensions(): ChartDimension[] {
         return this.isReady ? this.dimensions : []
     }
-    @action.bound addDimension(config: OwidChartDimensionInterface): void {
+    @action.bound addDimension(config: ChartDimensionInterface): void {
         this.dimensions.push(new ChartDimension(config, this))
     }
     @action.bound setDimensionsForProperty(
         property: DimensionProperty,
-        newConfigs: OwidChartDimensionInterface[]
+        newConfigs: ChartDimensionInterface[]
     ): void {
         let newDimensions: ChartDimension[] = []
         this.dimensionSlots.forEach((slot) => {
@@ -1744,7 +1744,7 @@ export class GrapherState {
         this.dimensions = newDimensions
     }
     @action.bound setDimensionsFromConfigs(
-        configs: OwidChartDimensionInterface[]
+        configs: ChartDimensionInterface[]
     ): void {
         this.dimensions = configs.map(
             (config) => new ChartDimension(config, this)
@@ -2187,7 +2187,7 @@ export class GrapherState {
 
         if (xColumnSlug !== undefined) {
             const xColumn = this.inputTable.get(xColumnSlug)
-                .def as OwidColumnDef
+                .def as ColumnDef
             // exclude population variable if it's used as the x dimension in a marimekko
             if (
                 !hasMarimekko ||
@@ -2199,7 +2199,7 @@ export class GrapherState {
         // exclude population variable if it's used as the size dimension in a scatter plot
         if (sizeColumnSlug !== undefined) {
             const sizeColumn = this.inputTable.get(sizeColumnSlug)
-                .def as OwidColumnDef
+                .def as ColumnDef
             if (!isPopulationVariableETLPath(sizeColumn?.catalogPath ?? ""))
                 columnSlugs.push(sizeColumnSlug)
         }
@@ -2272,7 +2272,7 @@ export class GrapherState {
 
         const uniqueDatasetNames = _.uniq(
             excludeUndefined(
-                yColumns.map((col) => (col.def as OwidColumnDef).datasetName)
+                yColumns.map((col) => (col.def as ColumnDef).datasetName)
             )
         )
 
@@ -2500,10 +2500,10 @@ export class GrapherState {
     }
 
     // Filter data to what can be display on the map (across all times)
-    @computed get mappableData(): OwidVariableRow<any>[] {
+    @computed get mappableData(): VariableRow<any>[] {
         return this.inputTable
             .get(this.mapColumnSlug)
-            .owidRows.filter((row) => isOnTheMap(row.entityName))
+            .dataRows.filter((row) => isOnTheMap(row.entityName))
     }
     @computed get isMobile(): boolean {
         return isMobile()
@@ -2566,7 +2566,7 @@ export class GrapherState {
         // For these, defer to the bounds that are set externally
         if (
             this.isEmbeddedInADataPage ||
-            this.isEmbeddedInAnOwidPage ||
+            this.isEmbeddedInPage ||
             this.manager ||
             isInIFrame
         )
@@ -3055,9 +3055,9 @@ export class GrapherState {
     @computed get isRelatedQuestionTargetDifferentFromCurrentPage(): boolean {
         // comparing paths rather than full URLs for this to work as
         // expected on local and staging where the origin (e.g.
-        // hans.owid.cloud) doesn't match the production origin that has
-        // been entered in the related question URL field:
-        // "ourworldindata.org" and yet should still yield a match.
+        // staging.example.com) doesn't match the production origin that has
+        // been entered in the related question URL field, and yet should
+        // still yield a match.
         // - Note that this won't work on production previews (where the
         //   path is /admin/posts/preview/ID)
         const { relatedQuestions = [], hasRelatedQuestion } = this
@@ -3249,7 +3249,7 @@ export class GrapherState {
         let url = Url.fromURL(baseUrl)
         // We want to preserve the tab in the embed URL so that if we change the
         // default view of the chart, it won't change existing embeds.
-        // See https://github.com/owid/owid-grapher/issues/2805
+        // See # legacy issue 2805
         const { tab } = this.allParams
         if (tab && !url.queryParams.tab) {
             url = url.updateQueryParams({ tab })
@@ -3351,12 +3351,12 @@ export class GrapherState {
                 // Rotate to the selected country
                 this.globeController.rotateToCountry(region.name)
                 this.mapConfig.region = MapRegionName.World
-            } else if (checkIsOwidContinent(region)) {
-                // Rotate to the selected owid continent
+            } else if (checkIsContinent(region)) {
+                // Rotate to the selected continent
                 const regionName = MAP_REGION_NAMES[
                     region.name
                 ] as GlobeRegionName
-                this.globeController.rotateToOwidContinent(regionName)
+                this.globeController.rotateToContinent(regionName)
                 this.mapConfig.region = regionName
             } else if (checkIsIncomeGroup(region)) {
                 // Switch back to the 2d map if an income group is selected
@@ -3411,7 +3411,7 @@ export class GrapherState {
             if (!region) return false
 
             // Don't mute the selected continent
-            if (checkIsOwidContinent(region))
+            if (checkIsContinent(region))
                 return region.name !== MAP_REGION_LABELS[this.mapConfig.region]
 
             const countriesInRegion = getCountriesByRegion(
@@ -3517,7 +3517,7 @@ export class GrapherState {
         if (
             this.frameBounds.width > 940 &&
             // don't use the panel if the grapher is embedded
-            ((!this.isInIFrame && !this.isEmbeddedInAnOwidPage) ||
+            ((!this.isInIFrame && !this.isEmbeddedInPage) ||
                 // unless we're in full-screen mode
                 this.isInFullScreenMode)
         )

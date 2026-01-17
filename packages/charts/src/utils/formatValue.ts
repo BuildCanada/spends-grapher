@@ -1,7 +1,7 @@
 import { FormatSpecifier } from "d3-format"
 import { createFormatter } from "./Util.js"
 import {
-    OwidVariableRoundingMode,
+    VariableRoundingMode,
     TickFormattingOptions,
 } from "../types/index.js"
 
@@ -22,11 +22,11 @@ function getTrim({
     roundingMode,
     trailingZeroes,
 }: {
-    roundingMode: OwidVariableRoundingMode
+    roundingMode: VariableRoundingMode
     trailingZeroes: boolean
 }): "~" | "" {
     // always show trailing zeroes when rounding to significant figures
-    return roundingMode === OwidVariableRoundingMode.significantFigures
+    return roundingMode === VariableRoundingMode.significantFigures
         ? ""
         : trailingZeroes
           ? ""
@@ -47,7 +47,7 @@ function getType({
     value,
     unit,
 }: {
-    roundingMode: OwidVariableRoundingMode
+    roundingMode: VariableRoundingMode
     numberAbbreviation: "long" | "short" | false
     value: number
     unit: string
@@ -56,9 +56,9 @@ function getType({
     // r: decimal notation, rounded to significant digits
     // s: decimal notation with an SI prefix, rounded to significant digits
 
-    const typeMap: Record<OwidVariableRoundingMode, "f" | "r"> = {
-        [OwidVariableRoundingMode.decimalPlaces]: "f",
-        [OwidVariableRoundingMode.significantFigures]: "r",
+    const typeMap: Record<VariableRoundingMode, "f" | "r"> = {
+        [VariableRoundingMode.decimalPlaces]: "f",
+        [VariableRoundingMode.significantFigures]: "r",
     }
     const type = typeMap[roundingMode]
 
@@ -85,12 +85,12 @@ function getPrecision({
     type,
 }: {
     value: number
-    roundingMode: OwidVariableRoundingMode
+    roundingMode: VariableRoundingMode
     numDecimalPlaces: number
     numSignificantFigures: number
     type: "f" | "s" | "r"
 }): string {
-    if (roundingMode === OwidVariableRoundingMode.significantFigures) {
+    if (roundingMode === VariableRoundingMode.significantFigures) {
         return `${numSignificantFigures}`
     }
 
@@ -157,7 +157,7 @@ function postprocessString({
     numDecimalPlaces,
 }: {
     string: string
-    roundingMode: OwidVariableRoundingMode
+    roundingMode: VariableRoundingMode
     numberAbbreviation: "long" | "short" | false
     spaceBeforeUnit: boolean
     useNoBreakSpace: boolean
@@ -168,7 +168,7 @@ function postprocessString({
     let output = string
 
     // handling infinitesimal values
-    if (roundingMode !== OwidVariableRoundingMode.significantFigures) {
+    if (roundingMode !== VariableRoundingMode.significantFigures) {
         const tooSmallThreshold = Math.pow(10, -numDecimalPlaces).toPrecision(1)
         if (numberAbbreviation && 0 < value && value < +tooSmallThreshold) {
             output = "<" + output.replace(/0\.?(\d+)?/, tooSmallThreshold)
@@ -194,7 +194,7 @@ function postprocessString({
 export function formatValue(
     value: number,
     {
-        roundingMode = OwidVariableRoundingMode.decimalPlaces,
+        roundingMode = VariableRoundingMode.decimalPlaces,
         trailingZeroes = false, // only applies to fixed-point notation
         unit = "",
         spaceBeforeUnit = !checkIsUnitPercent(unit),

@@ -22,7 +22,7 @@ import {
     DEFAULT_LINE_COLOR,
 } from "./LineChartConstants"
 import {
-    OwidTable,
+    ChartsTable,
     CoreColumn,
     isNotErrorValue,
 } from "../../core-table/index.js"
@@ -37,7 +37,7 @@ import { ColorScheme } from "../color/ColorScheme"
 import { SelectionArray } from "../selection/SelectionArray"
 import { ColorScale, ColorScaleManager } from "../color/ColorScale"
 import { ColorScaleConfig } from "../color/ColorScaleConfig"
-import { OWID_NO_DATA_GRAY } from "../color/ColorConstants"
+import { NO_DATA_GRAY } from "../color/ColorConstants"
 import { CategoricalColorAssigner } from "../color/CategoricalColorAssigner"
 import { getColorKey, getDisplayName, getSeriesName } from "./LineChartHelpers"
 import { FocusArray } from "../focus/FocusArray"
@@ -48,8 +48,8 @@ export class LineChartState implements ChartState, ColorScaleManager {
     manager: LineChartManager
 
     colorScale: ColorScale
-    defaultBaseColorScheme = ColorSchemeName.OwidDistinctLines
-    defaultNoDataColor = OWID_NO_DATA_GRAY
+    defaultBaseColorScheme = ColorSchemeName.DistinctLines
+    defaultNoDataColor = NO_DATA_GRAY
 
     constructor({ manager }: { manager: LineChartManager }) {
         this.manager = manager
@@ -57,18 +57,18 @@ export class LineChartState implements ChartState, ColorScaleManager {
         makeObservable(this)
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTableFromGrapher(): OwidTable {
+    @computed get transformedTableFromGrapher(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
         )
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         let table = this.transformedTableFromGrapher
         // The % growth transform cannot be applied in transformTable() because it will filter out
         // any rows before startHandleTimeBound and change the timeline bounds.
@@ -82,7 +82,7 @@ export class LineChartState implements ChartState, ColorScaleManager {
         return table
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         table = table.filterByEntityNames(
             this.selectionArray.selectedEntityNames
         )
@@ -114,7 +114,7 @@ export class LineChartState implements ChartState, ColorScaleManager {
         return table
     }
 
-    transformTableForSelection(table: OwidTable): OwidTable {
+    transformTableForSelection(table: ChartsTable): ChartsTable {
         // if entities with partial data are not plotted,
         // make sure they don't show up in the entity selector
         if (this.missingDataStrategy === MissingDataStrategy.hide) {

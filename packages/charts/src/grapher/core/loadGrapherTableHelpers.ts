@@ -1,11 +1,11 @@
 import * as _ from "lodash-es"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import {
     ArchiveContext,
-    OwidChartDimensionInterface,
-    OwidVariableDataMetadataDimensions,
+    ChartDimensionInterface,
+    VariableDataMetadataDimensions,
 } from "../../utils/index.js"
-import { legacyToOwidTableAndDimensionsWithMandatorySlug } from "./LegacyToOwidTable.js"
+import { legacyToChartsTableAndDimensionsWithMandatorySlug } from "./LegacyToChartsTable.js"
 import {
     loadVariablesDataSite,
     loadVariableDataAndMetadata,
@@ -13,13 +13,13 @@ import {
 import { toJS } from "mobx"
 
 export type FetchInputTableForConfigFn = (args: {
-    dimensions?: OwidChartDimensionInterface[]
+    dimensions?: ChartDimensionInterface[]
     selectedEntityColors?: { [entityName: string]: string | undefined }
     dataApiUrl: string
     archiveContext?: ArchiveContext
     noCache?: boolean
     loadMetadataOnly?: boolean
-}) => Promise<OwidTable | undefined>
+}) => Promise<ChartsTable | undefined>
 
 export const fetchInputTableForConfig: FetchInputTableForConfigFn = async (
     args
@@ -33,7 +33,7 @@ export const fetchInputTableForConfig: FetchInputTableForConfigFn = async (
         args.noCache,
         args.loadMetadataOnly
     )
-    const inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
+    const inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
         variablesDataMap,
         args.dimensions,
         args.selectedEntityColors
@@ -48,13 +48,13 @@ export function getCachingInputTableFetcher(
     noCache?: boolean,
     loadMetadataOnly?: boolean
 ): (
-    dimensions: OwidChartDimensionInterface[],
+    dimensions: ChartDimensionInterface[],
     selectedEntityColors:
         | { [entityName: string]: string | undefined }
         | undefined
-) => Promise<OwidTable | undefined> {
-    const cache: Map<number, OwidVariableDataMetadataDimensions> = new Map()
-    let previousDimensions: OwidChartDimensionInterface[] = []
+) => Promise<ChartsTable | undefined> {
+    const cache: Map<number, VariableDataMetadataDimensions> = new Map()
+    let previousDimensions: ChartDimensionInterface[] = []
     let previousSelectedEntityColors:
         | {
               [entityName: string]: string | undefined
@@ -62,7 +62,7 @@ export function getCachingInputTableFetcher(
         | undefined = undefined
 
     return async (
-        dimensionsMobx: OwidChartDimensionInterface[],
+        dimensionsMobx: ChartDimensionInterface[],
         selectedEntityColorsMobx:
             | { [entityName: string]: string | undefined }
             | undefined
@@ -105,7 +105,7 @@ export function getCachingInputTableFetcher(
             variables.map((v) => [v, cache.get(v)!])
         )
 
-        const inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
+        const inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
             variablesDataMap,
             dimensions,
             selectedEntityColors

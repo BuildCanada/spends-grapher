@@ -1,4 +1,4 @@
-import { OwidGdocType } from "../gdocTypes/Gdoc.js"
+import { GdocType } from "../gdocTypes/Gdoc.js"
 import { WP_PostType } from "../wordpressTypes/WordpressTypes.js"
 import { RelatedChart } from "../grapherTypes/GrapherTypes.js"
 import { TocHeading } from "./Toc.js"
@@ -15,7 +15,7 @@ export interface FormattedPost extends FullPost {
 export interface IndexPost {
     title: string
     slug: string
-    type?: WP_PostType | OwidGdocType
+    type?: WP_PostType | GdocType
     date: Date
     modifiedDate: Date
     authors: string[]

@@ -7,8 +7,8 @@ import { codeToEntityName, entityNameToCode } from "./EntityCodes"
  *
  * Implemented: May 2020
  *
- * See PR discussion on how we decided on ~ (tilde): https://github.com/owid/owid-grapher/pull/446
- * And the initial issue (Facebook rewriting our URLs): https://github.com/owid/owid-grapher/issues/397
+ * See PR discussion on how we decided on ~ (tilde): # legacy PR 446
+ * And the initial issue (Facebook rewriting our URLs): # legacy issue 397
  *
  * In short:
  *

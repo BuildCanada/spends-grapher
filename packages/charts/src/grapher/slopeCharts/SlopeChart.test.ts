@@ -5,7 +5,7 @@ import { SlopeChart } from "./SlopeChart"
 import { SlopeChartManager } from "./SlopeChartConstants"
 import {
     ErrorValueTypes,
-    OwidTable,
+    ChartsTable,
     SampleColumnSlugs,
     SynthesizeFruitTableWithNonPositives,
     SynthesizeFruitTableWithStringValues,
@@ -128,7 +128,7 @@ describe("series naming in multi-column mode", () => {
 })
 
 describe("colors", () => {
-    const table = new OwidTable({
+    const table = new ChartsTable({
         entityName: ["usa", "canada", "usa", "canada"],
         year: [2000, 2000, 2001, 2001],
         gdp: [100, 200, 200, 300],
@@ -150,7 +150,7 @@ describe("colors", () => {
     })
 
     it("uses column color selections when series strategy is column", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa"],
                 year: [2000, 2001],
@@ -195,7 +195,7 @@ describe("colors", () => {
     })
 
     it("uses variable colors when only one entity selected (even if multiple can be selected with controls)", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa", "canada"],
                 year: [2000, 2001, 2000],
@@ -226,7 +226,7 @@ describe("colors", () => {
     })
 
     it("doesn't use variable colors if 2 variables have single entities which are different", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             {
                 entityName: ["usa", "usa", "canada", "canada"],
                 year: [2000, 2001, 2000, 2001],

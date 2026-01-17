@@ -11,7 +11,7 @@ import {
 import {
     CoreColumn,
     ErrorValueTypes,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 import { match, P } from "ts-pattern"
 import {
@@ -64,7 +64,7 @@ export class MapChartState implements ChartState, ColorScaleManager {
         makeObservable(this)
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         // Drop non-mappable entities from the table
         table = this.dropNonMapEntities(table)
 
@@ -79,12 +79,12 @@ export class MapChartState implements ChartState, ColorScaleManager {
     }
 
     private transformTableForSingleMapColumn(
-        table: OwidTable,
+        table: ChartsTable,
         mapColumnInfo: Extract<
             MapColumnInfo,
             { type: "historical" | "projected" }
         >
-    ): OwidTable {
+    ): ChartsTable {
         return table
             .dropRowsWithErrorValuesForColumn(mapColumnInfo.slug)
             .interpolateColumnWithTolerance(mapColumnInfo.slug, {
@@ -94,9 +94,9 @@ export class MapChartState implements ChartState, ColorScaleManager {
     }
 
     private transformTableForCombinedMapColumn(
-        table: OwidTable,
+        table: ChartsTable,
         mapColumnInfo: Extract<MapColumnInfo, { type: "historical+projected" }>
-    ): OwidTable {
+    ): ChartsTable {
         const { historicalSlug, projectedSlug, combinedSlug } = mapColumnInfo
 
         // Interpolate both columns separately
@@ -121,14 +121,14 @@ export class MapChartState implements ChartState, ColorScaleManager {
         return table
     }
 
-    transformTableForSelection(table: OwidTable): OwidTable {
+    transformTableForSelection(table: ChartsTable): ChartsTable {
         table = this.addMissingMapEntities(table)
         table = this.dropNonMapEntitiesForSelection(table)
         table = this.dropAntarctica(table)
         return table
     }
 
-    private dropAntarctica(table: OwidTable): OwidTable {
+    private dropAntarctica(table: ChartsTable): ChartsTable {
         // We prefer to not offer Antarctica in the entity selector on the map
         // tab to avoid confusion since it's shown on the globe, but not on the map.
         return table.filterByEntityNamesUsingIncludeExcludePattern({
@@ -136,7 +136,7 @@ export class MapChartState implements ChartState, ColorScaleManager {
         })
     }
 
-    private dropNonMapEntities(table: OwidTable): OwidTable {
+    private dropNonMapEntities(table: ChartsTable): ChartsTable {
         // For Canada region, filter by Canadian provinces/territories
         if (this.mapConfig.region === MapRegionName.Canada) {
             const entityNamesToSelect =
@@ -150,12 +150,12 @@ export class MapChartState implements ChartState, ColorScaleManager {
         return table.filterByEntityNames(entityNamesToSelect)
     }
 
-    private dropNonMapEntitiesForSelection(table: OwidTable): OwidTable {
+    private dropNonMapEntitiesForSelection(table: ChartsTable): ChartsTable {
         const { selectionArray, mapConfig } = this
 
         const allMappableCountryNames = mappableCountries.map((c) => c.name)
         const allRegionNames = regions
-            .filter((r) => checkHasMembers(r) && r.code !== "OWID_WRL")
+            .filter((r) => checkHasMembers(r) && r.code !== "WRL")
             .map((r) => r.name)
 
         const mappableCountryNameSet = new Set(allMappableCountryNames)
@@ -204,7 +204,7 @@ export class MapChartState implements ChartState, ColorScaleManager {
         )
     }
 
-    private addMissingMapEntities(table: OwidTable): OwidTable {
+    private addMissingMapEntities(table: ChartsTable): ChartsTable {
         // the given table might not have data for all mappable countries, but
         // on the map tab, we do want every country to be selectable, even if
         // it doesn't have data for any of the years. that's why we add a
@@ -227,7 +227,7 @@ export class MapChartState implements ChartState, ColorScaleManager {
         return table
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         const { mapColumnInfo } = this
         const { table } = this.manager
 
@@ -239,14 +239,14 @@ export class MapChartState implements ChartState, ColorScaleManager {
             : table
     }
 
-    @computed get transformedTableFromGrapher(): OwidTable {
+    @computed get transformedTableFromGrapher(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
         )
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         let table = this.transformedTableFromGrapher
 
         // A target time is set for faceted maps
@@ -364,7 +364,7 @@ export class MapChartState implements ChartState, ColorScaleManager {
         if (mapColumn.isMissing) return []
         if (targetTime === undefined) return []
 
-        return mapColumn.owidRows
+        return mapColumn.dataRows
             .map((row) => {
                 const { entityName, value, originalTime } = row
                 const color =

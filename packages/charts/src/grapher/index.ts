@@ -45,8 +45,8 @@ export { ColorScale } from "./color/ColorScale"
 export { ColorScaleConfig } from "./color/ColorScaleConfig"
 export { ColorScheme } from "./color/ColorScheme"
 export {
-    getColorNameOwidDistinctAndSemanticPalettes,
-    getColorNameOwidDistinctLinesAndSemanticPalettes,
+    getColorNameDistinctAndSemanticPalettes,
+    getColorNameDistinctLinesAndSemanticPalettes,
 } from "./color/CustomSchemes"
 export { ColorSchemes } from "./color/ColorSchemes"
 export { DimensionSlot } from "./chart/DimensionSlot"
@@ -75,9 +75,9 @@ export { GrapherAnalytics } from "./core/GrapherAnalytics"
 export { hydrateGlobalEntitySelectorIfAny } from "./controls/globalEntitySelector/GlobalEntitySelector"
 export { legacyToCurrentGrapherUrl } from "./core/GrapherUrlMigrations"
 export {
-    legacyToOwidTableAndDimensions,
-    legacyToOwidTableAndDimensionsWithMandatorySlug,
-} from "./core/LegacyToOwidTable"
+    legacyToChartsTableAndDimensions,
+    legacyToChartsTableAndDimensionsWithMandatorySlug,
+} from "./core/LegacyToChartsTable"
 export { getErrorMessageRelatedQuestionUrl } from "./core/relatedQuestion"
 export { MapChartState } from "./mapCharts/MapChartState"
 export { MapConfig } from "./mapCharts/MapConfig"
@@ -142,11 +142,11 @@ export type { ChartSeries } from "./chart/ChartInterface"
 // Test data helpers (useful for demos and testing)
 export {
     fakeEntities,
-    createOwidTestDataset,
+    createTestDataset,
     type TestData,
     type TestMetadata,
-} from "./testData/OwidTestData"
-export { LifeExpectancyGrapher } from "./testData/OwidTestData.sample"
+} from "./testData/TestData"
+export { LifeExpectancyGrapher } from "./testData/TestData.sample"
 export type { LineChartState } from "./lineCharts/LineChartState.js"
 export type { SlopeChartState } from "./slopeCharts/SlopeChartState"
 export type { DiscreteBarChartState } from "./barCharts/DiscreteBarChartState.js"

@@ -16,11 +16,11 @@ import {
     SortOrder,
     Time,
     EntityName,
-    OwidTableSlugs,
-    OwidVariableRoundingMode,
-    OwidVariableRow,
+    ChartsTableSlugs,
+    VariableRoundingMode,
+    VariableRow,
 } from "../../types/index.js"
-import { OwidTable, CoreColumn } from "../../core-table/index.js"
+import { ChartsTable, CoreColumn } from "../../core-table/index.js"
 import {
     valuesByEntityAtTimes,
     es6mapValues,
@@ -56,7 +56,7 @@ import {
     PointColumnKey,
     SparklineHighlight,
     TargetTimeMode,
-    MinimalOwidRow,
+    MinimalRow,
     DataTableConfig,
     DataTableSortState,
     DataTableState,
@@ -127,7 +127,7 @@ export class DataTable extends React.Component<DataTableProps> {
         return this.manager.closestTimelineMaxTime
     }
 
-    @computed get table(): OwidTable {
+    @computed get table(): ChartsTable {
         let table = this.manager.filteredTableForDisplay
 
         // make sure the given table doesn't contain any rows outside of the time range
@@ -283,7 +283,7 @@ export class DataTable extends React.Component<DataTableProps> {
             )
         )
 
-        const accessor = (row: MinimalOwidRow): number | undefined =>
+        const accessor = (row: MinimalRow): number | undefined =>
             typeof row.value === "string" ? row.value.length : row.value
         const maxValue = _.maxBy(values, accessor)
         const minValue = _.minBy(values, accessor)
@@ -528,7 +528,7 @@ export class DataTable extends React.Component<DataTableProps> {
 
         return (
             <Sparkline
-                owidRows={valuesForEntity.sparkline}
+                dataRows={valuesForEntity.sparkline}
                 minTime={this.timelineMinTime!}
                 maxTime={this.timelineMaxTime!}
                 highlights={highlights}
@@ -723,7 +723,7 @@ export class DataTable extends React.Component<DataTableProps> {
                 })
                 .filter((col) => col)
 
-        const skips = new Set(Object.keys(OwidTableSlugs))
+        const skips = new Set(Object.keys(ChartsTableSlugs))
         return this.table.columnsAsArray.filter(
             (column) =>
                 !skips.has(column.slug) &&
@@ -771,7 +771,7 @@ export class DataTable extends React.Component<DataTableProps> {
     ): string | undefined {
         if (value === undefined) return undefined
         return column.formatValueShort(value, {
-            roundingMode: OwidVariableRoundingMode.decimalPlaces,
+            roundingMode: VariableRoundingMode.decimalPlaces,
             numberAbbreviation: false,
             trailingZeroes: true,
             useNoBreakSpace: true,
@@ -826,7 +826,7 @@ export class DataTable extends React.Component<DataTableProps> {
             if (this.columnHasSparkline(coreTableColumn)) {
                 for (const [entityName, values] of valuesByEntityName) {
                     values.sparkline =
-                        coreTableColumn.owidRowsByEntityName.get(entityName)
+                        coreTableColumn.dataRowsByEntityName.get(entityName)
                 }
             }
 
@@ -934,7 +934,7 @@ export class DataTable extends React.Component<DataTableProps> {
             // There is always a column, but not always a data value (in the delta column the
             // value needs to be calculated)
             if (targetTimeMode === TargetTimeMode.range) {
-                const [start, end]: (MinimalOwidRow | undefined)[] = dvs
+                const [start, end]: (MinimalRow | undefined)[] = dvs
                 const result: RangeValuesForEntity = {
                     start: {
                         ...start,
@@ -1155,7 +1155,7 @@ function ClosestTimeNotice({
     columnDefinition,
     formatTime,
 }: {
-    value: MinimalOwidRow
+    value: MinimalRow
     columnDefinition: DataTableColumnDefinition
     formatTime: (time: Time) => string
 }): React.ReactElement | null {
@@ -1196,7 +1196,7 @@ function ClosestTimeNotice({
 function Sparkline({
     width = 75,
     height = 18,
-    owidRows,
+    dataRows,
     minTime,
     maxTime,
     highlights = [],
@@ -1206,7 +1206,7 @@ function Sparkline({
 }: {
     width?: number
     height?: number
-    owidRows: OwidVariableRow<number>[]
+    dataRows: VariableRow<number>[]
     minTime: number
     maxTime: number
     highlights?: SparklineHighlight[]
@@ -1214,7 +1214,7 @@ function Sparkline({
     color?: string
     strokeStyle?: "solid" | "dotted"
 }): React.ReactElement | null {
-    if (owidRows.length <= 1) return null
+    if (dataRows.length <= 1) return null
 
     // add a little padding so the dots don't overflow
     const bounds = new Bounds(0, 0, width, height).padWidth(dotSize)
@@ -1226,16 +1226,16 @@ function Sparkline({
         .range([bounds.left, bounds.right])
 
     // calculate y-scale
-    const yDomain = extent(owidRows.map((row) => row.value)) as [number, number]
+    const yDomain = extent(dataRows.map((row) => row.value)) as [number, number]
     const yScale = scaleLinear()
         .domain(yDomain)
         .range([bounds.bottom, bounds.top])
 
-    const makePath = line<OwidVariableRow<number>>()
+    const makePath = line<VariableRow<number>>()
         .x((row) => xScale(row.originalTime))
         .y((row) => yScale(row.value))
 
-    const path = makePath(owidRows)
+    const path = makePath(dataRows)
     if (!path) return null
 
     const strokeDasharray = strokeStyle === "dotted" ? "2,3" : undefined
@@ -1290,11 +1290,11 @@ function Sparkline({
 function getValueForEntityByKey(
     dimensionValue: DataTableValuesForEntity,
     columnKey: DataTableColumnKey
-): MinimalOwidRow | undefined {
+): MinimalRow | undefined {
     if (isSingleValue(dimensionValue)) {
-        return dimensionValue[columnKey as PointColumnKey] as MinimalOwidRow
+        return dimensionValue[columnKey as PointColumnKey] as MinimalRow
     } else if (isRangeValue(dimensionValue)) {
-        return dimensionValue[columnKey as RangeColumnKey] as MinimalOwidRow
+        return dimensionValue[columnKey as RangeColumnKey] as MinimalRow
     }
     return undefined
 }

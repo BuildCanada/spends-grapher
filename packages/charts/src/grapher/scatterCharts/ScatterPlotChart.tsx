@@ -23,7 +23,7 @@ import {
     DEFAULT_GRAPHER_BOUNDS,
 } from "../core/GrapherConstants"
 import {
-    OwidTable,
+    ChartsTable,
     isNotErrorValue,
     CoreColumn,
 } from "../../core-table/index.js"
@@ -120,7 +120,7 @@ export class ScatterPlotChart
         return this.chartState.colorScale
     }
 
-    @computed private get transformedTable(): OwidTable {
+    @computed private get transformedTable(): ChartsTable {
         return this.chartState.transformedTable
     }
 

@@ -4,7 +4,7 @@ import { observer } from "mobx-react"
 import { Dropdown } from "./Dropdown"
 import { EntityName } from "../../utils/index.js"
 import { DataTableConfig } from "../dataTable/DataTableConstants"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import { SelectionArray } from "../selection/SelectionArray"
 import { makeSelectionArray } from "../chart/ChartUtils"
 import {
@@ -14,7 +14,7 @@ import {
 
 export interface DataTableFilterDropdownManager {
     dataTableConfig: DataTableConfig
-    tableForDisplay: OwidTable
+    tableForDisplay: ChartsTable
     isOnTableTab?: boolean
     dataTableSelection?: SelectionArray | EntityName[]
     canChangeAddOrHighlightEntities?: boolean

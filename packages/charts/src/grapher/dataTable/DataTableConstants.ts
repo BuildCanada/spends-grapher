@@ -1,9 +1,9 @@
-import { CoreColumn, OwidTable } from "../../core-table/index.js"
+import { CoreColumn, ChartsTable } from "../../core-table/index.js"
 import {
     ColumnSlug,
     EntityName,
     IndicatorTitleWithFragments,
-    OwidVariableRow,
+    VariableRow,
     SortOrder,
     Time,
 } from "../../types/index.js"
@@ -24,8 +24,8 @@ import { TimelineDragTarget } from "../timeline/TimelineController"
 //   columns
 
 export interface DataTableManager {
-    table: OwidTable // not used here, but required in type `ChartManager`
-    filteredTableForDisplay: OwidTable
+    table: ChartsTable // not used here, but required in type `ChartManager`
+    filteredTableForDisplay: ChartsTable
     entityType?: string
     endTime?: Time
     startTime?: Time
@@ -131,8 +131,8 @@ export enum RangeColumnKey {
  * when TargetTimeMode is set to 'point' (single time selection).
  */
 export type PointValuesForEntity = Partial<
-    Record<PointColumnKey, MinimalOwidRow> &
-        Record<SparklineKey, OwidVariableRow<number>[]>
+    Record<PointColumnKey, MinimalRow> &
+        Record<SparklineKey, VariableRow<number>[]>
 >
 
 /**
@@ -141,8 +141,8 @@ export type PointValuesForEntity = Partial<
  * start and end values and absolute and relative change columns.
  */
 export type RangeValuesForEntity = Partial<
-    Record<RangeColumnKey, MinimalOwidRow> &
-        Record<SparklineKey, OwidVariableRow<number>[]>
+    Record<RangeColumnKey, MinimalRow> &
+        Record<SparklineKey, VariableRow<number>[]>
 >
 
 export type DataTableValuesForEntity =
@@ -151,7 +151,7 @@ export type DataTableValuesForEntity =
 
 export type DataTableColumnKey = PointColumnKey | RangeColumnKey | SparklineKey
 
-export interface MinimalOwidRow {
+export interface MinimalRow {
     value?: string | number
     displayValue?: string
     time?: Time

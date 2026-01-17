@@ -9,7 +9,7 @@ import {
 import {
     CoreColumn,
     isNotErrorValue,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 import { ColorScale, ColorScaleManager } from "../color/ColorScale"
 import { SelectionArray } from "../selection/SelectionArray"
@@ -35,7 +35,7 @@ import {
     SortConfig,
     SortOrder,
 } from "../../types/index.js"
-import { OWID_ERROR_COLOR, OWID_NO_DATA_GRAY } from "../color/ColorConstants"
+import { ERROR_COLOR, NO_DATA_GRAY } from "../color/ColorConstants"
 import { ColorScheme } from "../color/ColorScheme"
 import { ColorSchemes } from "../color/ColorSchemes"
 import { ColorScaleConfig } from "../color/ColorScaleConfig"
@@ -46,7 +46,7 @@ export class DiscreteBarChartState implements ChartState, ColorScaleManager {
 
     colorScale: ColorScale
     defaultBaseColorScheme = ColorSchemeName.SingleColorDenim
-    defaultNoDataColor = OWID_NO_DATA_GRAY
+    defaultNoDataColor = NO_DATA_GRAY
 
     constructor({ manager }: { manager: DiscreteBarChartManager }) {
         this.manager = manager
@@ -54,18 +54,18 @@ export class DiscreteBarChartState implements ChartState, ColorScaleManager {
         makeObservable(this)
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
         )
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         if (!this.yColumnSlugs.length) return table
 
         table = table.filterByEntityNames(
@@ -135,7 +135,7 @@ export class DiscreteBarChartState implements ChartState, ColorScaleManager {
         const defaultColorScheme = this.defaultBaseColorScheme
         const colorScheme = this.manager.baseColorScheme ?? defaultColorScheme
 
-        // Don't reuse the line chart's color scheme (typically owid-distinct)
+        // Don't reuse the line chart's color scheme (typically distinct)
         // and use the default color scheme instead (single color)
         return this.manager.hasLineChart || this.manager.hasSlopeChart
             ? ColorSchemes.get(defaultColorScheme)
@@ -305,7 +305,7 @@ export class DiscreteBarChartState implements ChartState, ColorScaleManager {
                 color:
                     color ??
                     this.valuesToColorsMap.get(value) ??
-                    OWID_ERROR_COLOR,
+                    ERROR_COLOR,
                 focus: this.focusArray.state(seriesName),
             }
             return series
