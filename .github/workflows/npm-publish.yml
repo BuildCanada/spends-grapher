@@ -34,14 +34,18 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
             - uses: actions/setup-node@v4
               with:
                   node-version: "22"
                   registry-url: "https://registry.npmjs.org"
 
-            - run: npm ci
+            - run: bun install --frozen-lockfile
 
-            - run: npm test
+            - run: bun test
               working-directory: packages/charts
 
             - run: npm publish --access public ${{ env.DRY_RUN }}
@@ -53,14 +57,18 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
             - uses: actions/setup-node@v4
               with:
                   node-version: "22"
                   registry-url: "https://registry.npmjs.org"
 
-            - run: npm ci
+            - run: bun install --frozen-lockfile
 
-            - run: npm run build
+            - run: bun run build
               working-directory: packages/colours
 
             - run: npm publish --access public ${{ env.DRY_RUN }}
