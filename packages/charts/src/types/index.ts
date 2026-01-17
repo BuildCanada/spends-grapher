@@ -300,7 +300,7 @@ export interface TagGraphNode {
 
 export const TagGraphRootName = "tag-graph-root" as const
 
-export type TagGraphRoot = TagGraphNode & {
+export interface TagGraphRoot {
     children: TagGraphNode[]
     id: number
     isTopic: false

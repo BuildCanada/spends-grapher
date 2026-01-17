@@ -46,7 +46,7 @@ export interface TagGraphNode {
     weight: number
 }
 
-export type TagGraphRoot = TagGraphNode & {
+export interface TagGraphRoot {
     children: TagGraphNode[]
     id: number
     isTopic: false

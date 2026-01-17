@@ -66,7 +66,7 @@ export function toRenderSlopeChartSeries(
     // Sort by interaction state so that foreground series
     // are drawn on top of background series
     if (isHoverModeActive || isFocusModeActive) {
-        return _.sortBy(series, byHoverThenFocusState)
+        return _.sortBy<RenderSlopeChartSeries>(series, byHoverThenFocusState)
     }
 
     return series

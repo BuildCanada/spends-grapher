@@ -177,7 +177,7 @@ export function toRenderLineChartSeries(
     // sort by interaction state so that foreground series
     // are drawn on top of background series
     if (isFocusModeActive || isHoverModeActive) {
-        series = _.sortBy(series, byHoverThenFocusState)
+        series = _.sortBy<RenderLineChartSeries>(series, byHoverThenFocusState)
     }
 
     return series

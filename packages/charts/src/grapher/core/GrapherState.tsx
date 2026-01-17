@@ -1641,10 +1641,7 @@ export class GrapherState {
             if (!slot.allowMultiple)
                 validDimensions = _.uniqWith(
                     validDimensions,
-                    (
-                        a: OwidChartDimensionInterface,
-                        b: OwidChartDimensionInterface
-                    ) =>
+                    (a, b) =>
                         a.property === slot.property &&
                         a.property === b.property
                 )

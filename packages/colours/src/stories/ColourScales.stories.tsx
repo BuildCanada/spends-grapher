@@ -54,11 +54,12 @@ function getContrastColor(hexColor: string | undefined): string {
 
 interface SwatchProps {
     shade: string
-    hex: string
+    hex: string | undefined
     scaleName: string
 }
 
 function Swatch({ shade, hex, scaleName }: SwatchProps) {
+    if (!hex) return null
     const textColor = getContrastColor(hex)
     const cssVar = `--color-${scaleName}-${shade}`
 

@@ -205,7 +205,7 @@ const EXTERNAL_SORT_INDICATOR_DEFINITIONS = [
             // then check the label
             const label = getTitleForSortColumnLabel(column)
             // matches "gdp per capita" and content within parentheses
-            const potentialMatches =
+            const potentialMatches: string[] =
                 label.match(/\(.*?\)|(\bgdp per capita\b)/gi) ?? []
             // filter for "gdp per capita" matches that are not within parentheses
             const matches = potentialMatches.filter(
