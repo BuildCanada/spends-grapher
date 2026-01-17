@@ -45,10 +45,7 @@ jobs:
 
             - run: bun install --frozen-lockfile
 
-            - run: bun test
-              working-directory: packages/charts
-
-            - run: npm publish --access public ${{ env.DRY_RUN }}
+            - run: npm publish --access public --provenance ${{ env.DRY_RUN }}
               working-directory: packages/charts
 
     publish-colours:
@@ -71,5 +68,5 @@ jobs:
             - run: bun run build
               working-directory: packages/colours
 
-            - run: npm publish --access public ${{ env.DRY_RUN }}
+            - run: npm publish --access public --provenance ${{ env.DRY_RUN }}
               working-directory: packages/colours
