@@ -1,6 +1,6 @@
 import { useState } from "react"
 import type { Meta, StoryObj } from "@storybook/react"
-import { within, userEvent, expect } from "@storybook/test"
+import { useArgs } from "@storybook/preview-api"
 
 import { PopupForm } from "./PopupForm"
 import { Button } from "../../primitives/Button"
@@ -65,7 +65,32 @@ function MyComponent() {
             },
         },
     },
+    args: {
+        open: true,
+        title: "Form Title",
+        description: "",
+        position: "bottom-right",
+        offset: 16,
+        submitText: "Submit",
+        cancelText: "Cancel",
+        showCancel: true,
+        isSubmitting: false,
+        submitDisabled: false,
+        closeOnEscape: true,
+    },
     argTypes: {
+        open: {
+            control: "boolean",
+            description: "Whether the form is open",
+        },
+        title: {
+            control: "text",
+            description: "Title displayed in the form header",
+        },
+        description: {
+            control: "text",
+            description: "Optional description below the title",
+        },
         position: {
             control: "select",
             options: ["top-left", "top-right", "bottom-left", "bottom-right", "center"],
@@ -95,7 +120,19 @@ function MyComponent() {
             control: "boolean",
             description: "Whether the submit button is disabled",
         },
+        closeOnEscape: {
+            control: "boolean",
+            description: "Whether pressing Escape closes the form",
+        },
     },
+    decorators: [
+        (Story) => (
+            <div style={{ minHeight: "400px" }}>
+                <PageContent />
+                <Story />
+            </div>
+        ),
+    ],
 }
 
 export default meta
@@ -108,7 +145,9 @@ function PageContent() {
             <h1>Page Content</h1>
             <p>This content remains interactive when the form is open.</p>
             <p>
-                <Button text="Clickable Button" onClick={() => alert("Button clicked!")} />
+                <button onClick={() => alert("Button clicked!")} style={{ padding: "8px 16px" }}>
+                    Clickable Button
+                </button>
             </p>
             <p>
                 <input
@@ -121,245 +160,143 @@ function PageContent() {
     )
 }
 
-// Wrapper component to manage popup state
-function PopupFormDemo({
-    title = "Form Title",
-    description,
-    position = "bottom-right",
-    offset,
-    submitText = "Submit",
-    cancelText = "Cancel",
-    showCancel = true,
-    children,
-}: {
-    title?: string
-    description?: string
-    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center"
-    offset?: number
-    submitText?: string
-    cancelText?: string
-    showCancel?: boolean
-    children?: React.ReactNode
-}) {
-    const [open, setOpen] = useState(false)
-
-    const handleSubmit = () => {
-        console.log("Form submitted")
-        setOpen(false)
-    }
+// Template that syncs with Storybook args
+function PopupFormTemplate(args: React.ComponentProps<typeof PopupForm> & { children?: React.ReactNode }) {
+    const [, setArgs] = useArgs()
 
     return (
-        <>
-            <PageContent />
-            <div style={{ position: "fixed", top: "24px", right: "24px", zIndex: 1 }}>
-                <Button text="Open Form" onClick={() => setOpen(true)} />
-            </div>
-            <PopupForm
-                open={open}
-                onClose={() => setOpen(false)}
-                onSubmit={handleSubmit}
-                title={title}
-                description={description}
-                position={position}
-                offset={offset}
-                submitText={submitText}
-                cancelText={cancelText}
-                showCancel={showCancel}
-            >
-                {children}
-            </PopupForm>
-        </>
+        <PopupForm
+            {...args}
+            onClose={() => setArgs({ open: false })}
+            onSubmit={() => {
+                console.log("Form submitted")
+                setArgs({ open: false })
+            }}
+        >
+            {args.children || (
+                <>
+                    <TextField label="Name" placeholder="Your name" />
+                    <TextField label="Email" type="email" placeholder="you@example.com" />
+                </>
+            )}
+        </PopupForm>
     )
 }
 
 export const Default: Story = {
-    render: () => (
-        <PopupFormDemo title="Contact Us" description="We'd love to hear from you.">
-            <TextField label="Name" placeholder="Your name" required />
-            <TextField label="Email" type="email" placeholder="you@example.com" required />
-        </PopupFormDemo>
-    ),
+    render: (args) => <PopupFormTemplate {...args} />,
+}
+
+export const WithDescription: Story = {
+    args: {
+        title: "Contact Us",
+        description: "We'd love to hear from you.",
+    },
+    render: (args) => <PopupFormTemplate {...args} />,
 }
 
 export const NewsletterSignup: Story = {
-    render: () => (
-        <PopupFormDemo
-            title="Subscribe"
-            description="Get updates delivered to your inbox."
-            submitText="Subscribe"
-        >
-            <TextField
-                label="Email Address"
-                type="email"
-                placeholder="you@example.com"
-                required
-            />
+    args: {
+        title: "Subscribe",
+        description: "Get updates delivered to your inbox.",
+        submitText: "Subscribe",
+    },
+    render: (args) => (
+        <PopupFormTemplate {...args}>
+            <TextField label="Email Address" type="email" placeholder="you@example.com" />
             <Checkbox label="I agree to receive emails" />
-        </PopupFormDemo>
+        </PopupFormTemplate>
     ),
 }
 
 export const TopLeftPosition: Story = {
-    render: () => (
-        <PopupFormDemo
-            title="Quick Feedback"
-            position="top-left"
-            submitText="Send"
-        >
+    args: {
+        title: "Quick Feedback",
+        position: "top-left",
+        submitText: "Send",
+    },
+    render: (args) => (
+        <PopupFormTemplate {...args}>
             <TextField label="Your feedback" placeholder="Tell us what you think..." />
-        </PopupFormDemo>
+        </PopupFormTemplate>
     ),
 }
 
 export const CenteredPosition: Story = {
-    render: () => (
-        <PopupFormDemo
-            title="Sign In"
-            position="center"
-            submitText="Sign In"
-            showCancel={false}
-        >
-            <TextField label="Email" type="email" placeholder="you@example.com" required />
-            <TextField label="Password" type="password" placeholder="Enter password" required />
+    args: {
+        title: "Sign In",
+        position: "center",
+        submitText: "Sign In",
+        showCancel: false,
+    },
+    render: (args) => (
+        <PopupFormTemplate {...args}>
+            <TextField label="Email" type="email" placeholder="you@example.com" />
+            <TextField label="Password" type="password" placeholder="Enter password" />
             <Checkbox label="Remember me" />
-        </PopupFormDemo>
+        </PopupFormTemplate>
     ),
 }
 
 export const NoCancel: Story = {
-    render: () => (
-        <PopupFormDemo
-            title="Required Action"
-            description="Please complete this form to continue."
-            submitText="Continue"
-            showCancel={false}
-        >
+    args: {
+        title: "Required Action",
+        description: "Please complete this form to continue.",
+        submitText: "Continue",
+        showCancel: false,
+    },
+    render: (args) => (
+        <PopupFormTemplate {...args}>
             <Checkbox label="I accept the terms and conditions" />
-        </PopupFormDemo>
+        </PopupFormTemplate>
     ),
 }
 
 export const CustomOffset: Story = {
-    render: () => (
-        <PopupFormDemo
-            title="Settings"
-            offset={48}
-            submitText="Save"
-        >
+    args: {
+        title: "Settings",
+        offset: 48,
+        submitText: "Save",
+    },
+    render: (args) => (
+        <PopupFormTemplate {...args}>
             <TextField label="Display Name" placeholder="Enter name" />
             <Checkbox label="Enable notifications" />
-        </PopupFormDemo>
+        </PopupFormTemplate>
     ),
 }
 
-// Controlled example with submitting state
-function SubmittingDemo() {
-    const [open, setOpen] = useState(false)
-    const [isSubmitting, setIsSubmitting] = useState(false)
-
-    const handleSubmit = async () => {
-        setIsSubmitting(true)
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-        setIsSubmitting(false)
-        setOpen(false)
-    }
-
-    return (
-        <>
-            <PageContent />
-            <div style={{ position: "fixed", top: "24px", right: "24px", zIndex: 1 }}>
-                <Button text="Open Form" onClick={() => setOpen(true)} />
-            </div>
-            <PopupForm
-                open={open}
-                onClose={() => setOpen(false)}
-                onSubmit={handleSubmit}
-                title="Save Changes"
-                submitText="Save"
-                isSubmitting={isSubmitting}
-            >
-                <TextField label="Name" defaultValue="John Doe" />
-                <TextField label="Email" type="email" defaultValue="john@example.com" />
-            </PopupForm>
-        </>
-    )
-}
-
-export const WithSubmittingState: Story = {
-    render: () => <SubmittingDemo />,
-}
-
-// Controlled example with validation
-function ValidationDemo() {
-    const [open, setOpen] = useState(false)
-    const [email, setEmail] = useState("")
-    const [error, setError] = useState("")
-
-    const handleSubmit = () => {
-        if (!email.includes("@")) {
-            setError("Please enter a valid email address")
-            return
-        }
-        setOpen(false)
-        setEmail("")
-        setError("")
-    }
-
-    return (
-        <>
-            <PageContent />
-            <div style={{ position: "fixed", top: "24px", right: "24px", zIndex: 1 }}>
-                <Button text="Open Form" onClick={() => setOpen(true)} />
-            </div>
-            <PopupForm
-                open={open}
-                onClose={() => {
-                    setOpen(false)
-                    setError("")
-                }}
-                onSubmit={handleSubmit}
-                title="Subscribe"
-                submitText="Subscribe"
-                submitDisabled={!email}
-            >
-                <TextField
-                    label="Email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value)
-                        setError("")
-                    }}
-                    error={error}
-                    required
-                />
-            </PopupForm>
-        </>
-    )
-}
-
-export const WithValidation: Story = {
-    render: () => <ValidationDemo />,
-}
-
-// Interactive test
-export const InteractiveTest: Story = {
-    render: () => (
-        <PopupFormDemo title="Test Form">
-            <TextField label="Test Field" placeholder="Enter text" />
-        </PopupFormDemo>
-    ),
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement)
-
-        const openButton = canvas.getByRole("button", { name: /open form/i })
-        await expect(openButton).toBeInTheDocument()
-        await userEvent.click(openButton)
+export const SubmittingState: Story = {
+    args: {
+        title: "Save Changes",
+        submitText: "Save",
+        isSubmitting: true,
     },
+    render: (args) => (
+        <PopupFormTemplate {...args}>
+            <TextField label="Name" defaultValue="John Doe" />
+            <TextField label="Email" type="email" defaultValue="john@example.com" />
+        </PopupFormTemplate>
+    ),
+}
+
+export const DisabledSubmit: Story = {
+    args: {
+        title: "Subscribe",
+        submitText: "Subscribe",
+        submitDisabled: true,
+    },
+    render: (args) => (
+        <PopupFormTemplate {...args}>
+            <TextField label="Email" type="email" placeholder="Enter email to enable submit" />
+        </PopupFormTemplate>
+    ),
 }
 
 export const AllPositions: Story = {
+    parameters: {
+        controls: { disable: true },
+    },
     render: function AllPositionsDemo() {
         const [openForm, setOpenForm] = useState<string | null>(null)
 
@@ -373,7 +310,6 @@ export const AllPositions: Story = {
 
         return (
             <>
-                <PageContent />
                 <div style={{
                     position: "fixed",
                     top: "24px",
@@ -387,7 +323,7 @@ export const AllPositions: Story = {
                         <Button
                             key={key}
                             text={label}
-                            onClick={() => setOpenForm(key)}
+                            onClick={() => setOpenForm(openForm === key ? null : key)}
                             variant={openForm === key ? "solid-auburn" : "outline-charcoal"}
                         />
                     ))}

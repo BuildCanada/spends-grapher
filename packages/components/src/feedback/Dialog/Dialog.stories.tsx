@@ -1,8 +1,8 @@
 import { useState } from "react"
 import type { Meta, StoryObj } from "@storybook/react"
-import { within, userEvent, expect } from "@storybook/test"
+import { useArgs } from "@storybook/preview-api"
 
-import { Dialog } from "./Dialog"
+import { Dialog, type DialogPosition } from "./Dialog"
 import { Button } from "../../primitives/Button"
 
 const meta: Meta<typeof Dialog> = {
@@ -61,7 +61,28 @@ Use the \`offset\` prop to control distance from screen edges (default: 16px).
             },
         },
     },
+    args: {
+        open: true,
+        title: "Dialog Title",
+        description: "",
+        position: "bottom-right",
+        offset: 16,
+        closeOnEscape: true,
+        showCloseButton: true,
+    },
     argTypes: {
+        open: {
+            control: "boolean",
+            description: "Whether the dialog is open",
+        },
+        title: {
+            control: "text",
+            description: "Title displayed in the dialog header",
+        },
+        description: {
+            control: "text",
+            description: "Optional description below the title",
+        },
         position: {
             control: "select",
             options: ["top-left", "top-right", "bottom-left", "bottom-right", "center"],
@@ -80,6 +101,14 @@ Use the \`offset\` prop to control distance from screen edges (default: 16px).
             description: "Whether to show the close button",
         },
     },
+    decorators: [
+        (Story) => (
+            <div style={{ minHeight: "400px" }}>
+                <PageContent />
+                <Story />
+            </div>
+        ),
+    ],
 }
 
 export default meta
@@ -92,7 +121,9 @@ function PageContent() {
             <h1>Page Content</h1>
             <p>This content remains interactive when the dialog is open.</p>
             <p>
-                <Button text="Clickable Button" onClick={() => alert("Button clicked!")} />
+                <button onClick={() => alert("Button clicked!")} style={{ padding: "8px 16px" }}>
+                    Clickable Button
+                </button>
             </p>
             <p>
                 <input
@@ -101,178 +132,116 @@ function PageContent() {
                     style={{ padding: "8px", width: "300px" }}
                 />
             </p>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
         </div>
     )
 }
 
-// Wrapper component to manage dialog state
-function DialogDemo({
-    position = "bottom-right",
-    title = "Dialog Title",
-    description,
-    offset,
-    closeOnEscape = true,
-    showCloseButton = true,
-    children,
-    buttonText = "Open Dialog",
-}: {
-    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center"
-    title?: string
-    description?: string
-    offset?: number
-    closeOnEscape?: boolean
-    showCloseButton?: boolean
-    children?: React.ReactNode
-    buttonText?: string
-}) {
-    const [open, setOpen] = useState(false)
+// Template that syncs with Storybook args
+function DialogTemplate(args: React.ComponentProps<typeof Dialog>) {
+    const [, setArgs] = useArgs()
 
     return (
-        <>
-            <PageContent />
-            <div style={{ position: "fixed", top: "24px", right: "24px", zIndex: 1 }}>
-                <Button text={buttonText} onClick={() => setOpen(true)} />
-            </div>
-            <Dialog
-                open={open}
-                onClose={() => setOpen(false)}
-                title={title}
-                description={description}
-                position={position}
-                offset={offset}
-                closeOnEscape={closeOnEscape}
-                showCloseButton={showCloseButton}
-            >
-                {children || (
-                    <p style={{ fontFamily: "sans-serif", margin: 0, maxWidth: "280px" }}>
-                        This dialog doesn't block interaction with the page behind it.
-                    </p>
-                )}
-            </Dialog>
-        </>
+        <Dialog
+            {...args}
+            onClose={() => setArgs({ open: false })}
+        >
+            <p style={{ fontFamily: "sans-serif", margin: 0, maxWidth: "280px" }}>
+                This dialog doesn't block interaction with the page behind it.
+            </p>
+        </Dialog>
     )
 }
 
 export const Default: Story = {
-    render: () => <DialogDemo />,
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const TopLeft: Story = {
-    render: () => (
-        <DialogDemo position="top-left" title="Top Left">
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                Positioned in the top-left corner.
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        position: "top-left",
+        title: "Top Left",
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const TopRight: Story = {
-    render: () => (
-        <DialogDemo position="top-right" title="Top Right">
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                Positioned in the top-right corner.
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        position: "top-right",
+        title: "Top Right",
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const BottomLeft: Story = {
-    render: () => (
-        <DialogDemo position="bottom-left" title="Bottom Left">
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                Positioned in the bottom-left corner.
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        position: "bottom-left",
+        title: "Bottom Left",
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const BottomRight: Story = {
-    render: () => (
-        <DialogDemo position="bottom-right" title="Bottom Right">
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                Positioned in the bottom-right corner (default).
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        position: "bottom-right",
+        title: "Bottom Right",
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const Centered: Story = {
-    render: () => (
-        <DialogDemo position="center" title="Centered">
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                Centered on the screen.
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        position: "center",
+        title: "Centered",
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const WithDescription: Story = {
-    render: () => (
-        <DialogDemo
-            title="Notifications"
-            description="You have 3 unread messages."
-        >
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                Check your inbox for details.
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        title: "Notifications",
+        description: "You have 3 unread messages.",
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const CustomOffset: Story = {
-    render: () => (
-        <DialogDemo position="bottom-right" title="Custom Offset" offset={48}>
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                This dialog has a 48px offset from the edges.
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        title: "Custom Offset",
+        offset: 48,
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const NoCloseButton: Story = {
-    render: () => (
-        <DialogDemo
-            title="No Close Button"
-            showCloseButton={false}
-            description="Press Escape to close."
-        >
-            <p style={{ fontFamily: "sans-serif", margin: 0 }}>
-                This dialog has no close button in the header.
-            </p>
-        </DialogDemo>
-    ),
+    args: {
+        title: "No Close Button",
+        showCloseButton: false,
+        description: "Press Escape to close.",
+    },
+    render: (args) => <DialogTemplate {...args} />,
 }
 
 export const WideContent: Story = {
-    render: () => (
-        <DialogDemo title="Wide Content">
-            <div style={{ fontFamily: "sans-serif", width: "400px" }}>
-                <p>This dialog has wider content and will size accordingly.</p>
-                <p>The dialog always sizes to fit its contents.</p>
-            </div>
-        </DialogDemo>
-    ),
-}
-
-// Interactive test
-export const InteractiveTest: Story = {
-    render: () => <DialogDemo title="Test Dialog" />,
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement)
-
-        // Find and click the open button
-        const openButton = canvas.getByRole("button", { name: /open dialog/i })
-        await expect(openButton).toBeInTheDocument()
-        await userEvent.click(openButton)
+    args: {
+        title: "Wide Content",
+    },
+    render: (args) => {
+        const [, setArgs] = useArgs()
+        return (
+            <Dialog {...args} onClose={() => setArgs({ open: false })}>
+                <div style={{ fontFamily: "sans-serif", width: "400px" }}>
+                    <p>This dialog has wider content and will size accordingly.</p>
+                    <p>The dialog always sizes to fit its contents.</p>
+                </div>
+            </Dialog>
+        )
     },
 }
 
 export const AllPositions: Story = {
+    parameters: {
+        controls: { disable: true },
+    },
     render: function AllPositionsDemo() {
         const [openDialog, setOpenDialog] = useState<string | null>(null)
 
@@ -286,7 +255,6 @@ export const AllPositions: Story = {
 
         return (
             <>
-                <PageContent />
                 <div style={{
                     position: "fixed",
                     top: "24px",
@@ -300,7 +268,7 @@ export const AllPositions: Story = {
                         <Button
                             key={key}
                             text={label}
-                            onClick={() => setOpenDialog(key)}
+                            onClick={() => setOpenDialog(openDialog === key ? null : key)}
                             variant={openDialog === key ? "solid-auburn" : "outline-charcoal"}
                         />
                     ))}
