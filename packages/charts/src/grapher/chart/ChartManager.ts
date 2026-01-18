@@ -15,7 +15,7 @@ import {
     GrapherVariant,
 } from "../../types/index.js"
 import { TooltipManager } from "../tooltip/TooltipProps"
-import { OwidTable, CoreColumn } from "../../core-table/index.js"
+import { ChartsTable, CoreColumn } from "../../core-table/index.js"
 
 import { SelectionArray } from "../selection/SelectionArray"
 import { ColumnSlug, SortConfig, TimeBound } from "../../utils/index.js"
@@ -29,8 +29,8 @@ export interface ChartManager {
     base?: React.RefObject<SVGGElement | HTMLDivElement | null>
     fontSize?: number
 
-    table: OwidTable
-    transformedTable?: OwidTable
+    table: ChartsTable
+    transformedTable?: ChartsTable
 
     variant?: GrapherVariant
     isDisplayedAlongsideComplementaryTable?: boolean

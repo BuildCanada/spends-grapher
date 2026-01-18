@@ -7,10 +7,10 @@ import { render, fireEvent, screen } from "@testing-library/react"
 import { Grapher } from "../core/Grapher.js"
 import { GrapherState } from "../core/GrapherState.js"
 import { legacyMapGrapher, legacyMapGrapherData } from "./MapChart.sample.js"
-import { legacyToOwidTableAndDimensionsWithMandatorySlug } from "../core/LegacyToOwidTable.js"
+import { legacyToChartsTableAndDimensionsWithMandatorySlug } from "../core/LegacyToChartsTable.js"
 
 const state = new GrapherState({ ...legacyMapGrapher })
-state.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
+state.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
     legacyMapGrapherData,
     legacyMapGrapher.dimensions!,
     legacyMapGrapher.selectedEntityColors

@@ -6,7 +6,7 @@ GridLang is a library for building 2-dimensional domain specific languages desig
 
 Unlike traditional computer languages that parse tokens in-order, tokens in GridLanguages are parsed in a lazy, non-linear manner, based upon there position in a 2-d matrix.
 
-Our "Explorer"—a DSL for building OWID explorers and Graphers—is a GridLang.
+Our "Explorer"—a DSL for building data explorers and Graphers—is a GridLang.
 
 GridLangs are also intrinsically "patchable"—a great way for perserving user state.
 

@@ -427,7 +427,7 @@ export const isTextToken = (token: IRToken): token is IRText | IRWhitespace =>
  * translated.
  * This is to be run _just before_ rendering to HTML, because it loses some
  * information and is not easily reversible.
- * See also https://github.com/owid/owid-grapher/issues/1785
+ * See also # legacy issue 1785
  */
 export const recursiveMergeTextTokens = (
     tokens: IRToken[],

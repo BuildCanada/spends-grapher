@@ -194,20 +194,20 @@ export {
 
 // Legacy conversion
 export {
-    legacyToOwidTableAndDimensions,
-    legacyToOwidTableAndDimensionsWithMandatorySlug,
-} from "./grapher/core/LegacyToOwidTable.js"
+    legacyToChartsTableAndDimensions,
+    legacyToChartsTableAndDimensionsWithMandatorySlug,
+} from "./grapher/core/LegacyToChartsTable.js"
 
 export { legacyToCurrentGrapherUrl } from "./grapher/core/GrapherUrlMigrations.js"
 
 // Test data helpers (useful for demos and testing)
 export {
     fakeEntities,
-    createOwidTestDataset,
+    createTestDataset,
     type TestData,
     type TestMetadata,
-} from "./grapher/testData/OwidTestData.js"
-export { LifeExpectancyGrapher } from "./grapher/testData/OwidTestData.sample.js"
+} from "./grapher/testData/TestData.js"
+export { LifeExpectancyGrapher } from "./grapher/testData/TestData.sample.js"
 
 // Types commonly needed for data loading
 export {
@@ -223,4 +223,4 @@ export {
 
 // Utilities for data loading
 export { Bounds } from "./utils/index.js"
-export { parseDelimited, OwidTable, BlankOwidTable } from "./core-table/index.js"
+export { parseDelimited, ChartsTable, BlankChartsTable } from "./core-table/index.js"

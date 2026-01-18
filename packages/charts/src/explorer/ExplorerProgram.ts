@@ -4,7 +4,7 @@ import {
     CoreMatrix,
     ColumnTypeNames,
     CoreTableInputOption,
-    OwidColumnDef,
+    ColumnDef,
     TableSlug,
     SubNavId,
     FacetAxisDomain,
@@ -14,7 +14,7 @@ import {
 } from "../types/index.js"
 import {
     CoreTable,
-    OwidTable,
+    ChartsTable,
     isNotErrorValue,
 } from "../core-table/index.js"
 import {
@@ -49,7 +49,7 @@ export const EXPLORER_FILE_SUFFIX = ".explorer.tsv"
 
 export interface TableDef {
     url?: string
-    columnDefinitions?: OwidColumnDef[]
+    columnDefinitions?: ColumnDef[]
     inlineData?: string[][]
     slug?: TableSlug
 }
@@ -291,8 +291,8 @@ export class ExplorerProgram extends GridProgram {
         return ""
     }
 
-    get columnDefsByTableSlug(): Map<TableSlug | undefined, OwidColumnDef[]> {
-        const columnDefs = new Map<TableSlug | undefined, OwidColumnDef[]>()
+    get columnDefsByTableSlug(): Map<TableSlug | undefined, ColumnDef[]> {
+        const columnDefs = new Map<TableSlug | undefined, ColumnDef[]>()
         const colDefsRows = this.getAllRowsMatchingWords(
             ExplorerGrammar.columns.keyword
         )
@@ -311,7 +311,7 @@ export class ExplorerProgram extends GridProgram {
         return columnDefs
     }
 
-    get columnDefsWithoutTableSlug(): OwidColumnDef[] {
+    get columnDefsWithoutTableSlug(): ColumnDef[] {
         return this.columnDefsByTableSlug.get(undefined) ?? []
     }
 
@@ -447,14 +447,14 @@ export class ExplorerProgram extends GridProgram {
         }
     )
 
-    async constructTable(tableSlug?: TableSlug): Promise<OwidTable> {
+    async constructTable(tableSlug?: TableSlug): Promise<ChartsTable> {
         const tableDef = this.getTableDef(tableSlug)
         if (!tableDef) {
             throw new Error(`Table definitions not found for '${tableSlug}'`)
         }
 
         if (tableDef.inlineData) {
-            return new OwidTable(
+            return new ChartsTable(
                 tableDef.inlineData,
                 tableDef.columnDefinitions,
                 {
@@ -466,7 +466,7 @@ export class ExplorerProgram extends GridProgram {
             const input = await ExplorerProgram.tableDataLoader.get(
                 tableDef.url
             )
-            return new OwidTable(input, tableDef.columnDefinitions, {
+            return new ChartsTable(input, tableDef.columnDefinitions, {
                 tableDescription: `Loaded from ${tableDef.url}`,
             })
         }
@@ -485,12 +485,15 @@ export class ExplorerProgram extends GridProgram {
         const inlineData = this.getBlock(tableDefRow)
         let url = inlineData ? undefined : this.lines[tableDefRow][1]
 
+        // If URL doesn't contain protocol, it's treated as a dataset slug
+        // Note: This legacy feature requires a full URL to be configured
         if (url && !url.includes("://")) {
-            const owidDatasetSlug = encodeURIComponent(url)
-            url = `https://raw.githubusercontent.com/owid/owid-datasets/master/datasets/${owidDatasetSlug}/${owidDatasetSlug}.csv`
+            console.warn(
+                `Dataset slug "${url}" provided without full URL. Please provide a complete URL.`
+            )
         }
 
-        const columnDefinitions: OwidColumnDef[] | undefined =
+        const columnDefinitions: ColumnDef[] | undefined =
             this.columnDefsByTableSlug.get(tableSlug)
 
         return {
@@ -523,14 +526,14 @@ export const trimAndParseObject = (config: any, grammar: Grammar) => {
     return trimmedRow
 }
 
-const parseColumnDefs = (block: string[][]): OwidColumnDef[] => {
+const parseColumnDefs = (block: string[][]): ColumnDef[] => {
     /**
      * A column def line can have:
      * - a column named `variableId`, which contains a variable id
      * - a column named `slug`, which is the referenced column in its data file
      *
      * We want to filter out any rows that contain neither of those, and we also
-     * want to rename `variableId` to `owidVariableId`.
+     * want to rename `variableId` to `variableId`.
      */
     const columnsTable = new CoreTable(block)
         .appendColumnsIfNew([
@@ -541,16 +544,16 @@ const parseColumnDefs = (block: string[][]): OwidColumnDef[] => {
                 name: "variableId",
             },
         ])
-        .renameColumn("variableId", "owidVariableId")
-        // Filter out rows that neither have a slug nor an owidVariableId
+        .renameColumn("variableId", "variableId")
+        // Filter out rows that neither have a slug nor an variableId
         .rowFilter(
-            (row) => !!(row.slug || typeof row.owidVariableId === "number"),
+            (row) => !!(row.slug || typeof row.variableId === "number"),
             "Keep only column defs with a slug or variable id"
         )
     return columnsTable.rows.map((row) => {
         // ignore slug if a variable id is given
         const hasValidVariableId =
-            row.owidVariableId && isNotErrorValue(row.owidVariableId)
+            row.variableId && isNotErrorValue(row.variableId)
         if (hasValidVariableId && row.slug) delete row.slug
 
         for (const field in row) {

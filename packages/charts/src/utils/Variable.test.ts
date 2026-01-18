@@ -1,9 +1,9 @@
 import { expect, it } from "vitest"
 
-import { OwidVariableDisplayConfig } from "./OwidVariable.js"
+import { VariableDisplayConfig } from "./Variable.js"
 
 it("can create and save display settings", () => {
-    const settings = new OwidVariableDisplayConfig()
+    const settings = new VariableDisplayConfig()
     expect(settings.toObject()).toEqual({})
 
     settings.shortUnit = "kwh"

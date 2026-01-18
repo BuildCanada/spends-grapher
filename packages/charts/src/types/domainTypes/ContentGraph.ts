@@ -1,5 +1,5 @@
 import { DbPlainTag } from "../dbTypes/Tags.js"
-import { OwidGdocType } from "../gdocTypes/Gdoc.js"
+import { GdocType } from "../gdocTypes/Gdoc.js"
 
 export interface EntryMeta {
     slug: string
@@ -61,7 +61,7 @@ export interface PostReference {
     title: string
     slug: string
     url: string
-    type: OwidGdocType
+    type: GdocType
 }
 
 export enum ContentGraphLinkType {

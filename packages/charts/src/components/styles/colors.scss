@@ -105,7 +105,7 @@ $sdgColors: (
 );
 
 :root {
-    // See also owidTypes.ts > OwidGdocPostContent > cover-color
+    // See also gdocTypes/Gdoc.ts > GdocPostContent > cover-color
     --amber: #{$amber};
     @each $i, $sdgColor in $sdgColors {
         --sdg-color-#{$i}: #{$sdgColor};

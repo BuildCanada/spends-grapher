@@ -22,7 +22,7 @@ export interface FooterBranding {
 export interface FooterManager extends TooltipManager, ActionButtonsManager {
     sourcesLine?: string
     note?: string
-    hasOWIDLogo?: boolean
+    hasLegacyLogo?: boolean
     originUrlWithProtocol?: string
     detailsOrderedByReference?: string[]
     shouldIncludeDetailsInStaticExport?: boolean
@@ -32,7 +32,7 @@ export interface FooterManager extends TooltipManager, ActionButtonsManager {
     useBaseFontSize?: boolean
     fontSize?: number
     isInFullScreenMode?: boolean
-    isEmbeddedInAnOwidPage?: boolean
+    isEmbeddedInPage?: boolean
     isEmbeddedInADataPage?: boolean
     hideNote?: boolean
     hideOriginUrl?: boolean

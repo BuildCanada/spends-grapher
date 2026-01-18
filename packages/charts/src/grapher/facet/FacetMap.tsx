@@ -33,7 +33,7 @@ import {
     FacetMapProps,
     PlacedMapFacetSeries,
 } from "./FacetMapConstants"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import {
     HorizontalCategoricalColorLegend,
     HorizontalColorLegendManager,
@@ -76,15 +76,15 @@ export class FacetMap
         })
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         return table
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
@@ -95,11 +95,11 @@ export class FacetMap
         return this.props.manager
     }
 
-    @computed private get table(): OwidTable {
+    @computed private get table(): ChartsTable {
         return this.manager.table
     }
 
-    @computed private get transformedTableFromGrapher(): OwidTable | undefined {
+    @computed private get transformedTableFromGrapher(): ChartsTable | undefined {
         return this.manager.transformedTable
     }
 

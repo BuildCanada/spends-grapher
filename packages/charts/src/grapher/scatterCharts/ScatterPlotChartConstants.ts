@@ -1,6 +1,6 @@
 import { ScaleLinear } from "d3-scale"
 import { Quadtree } from "d3-quadtree"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import { DualAxis } from "../axis/Axis"
 import { ChartManager } from "../chart/ChartManager"
 import { NoDataModalManager } from "../noDataModal/NoDataModal"
@@ -29,7 +29,7 @@ export interface ScatterPlotManager extends ChartManager {
     scatterPointLabelStrategy?: ScatterPointLabelStrategy
     addCountryMode?: EntitySelectionMode
     xOverrideTime?: Time | undefined
-    tableAfterAuthorTimelineAndActiveChartTransform?: OwidTable
+    tableAfterAuthorTimelineAndActiveChartTransform?: ChartsTable
     startTime?: Time
     endTime?: Time
     hasTimeline?: boolean

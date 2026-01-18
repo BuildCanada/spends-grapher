@@ -4,7 +4,7 @@ import {
     CoreColumn,
     defaultIfErrorValue,
     isNotErrorValue,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 import { ChartState } from "../chart/ChartInterface"
 import { ColorScale, ColorScaleManager } from "../color/ColorScale"
@@ -36,7 +36,7 @@ import {
     lowerCaseFirstLetterUnlessAbbreviation,
 } from "../../utils/index.js"
 import { ColorScaleConfig } from "../color/ColorScaleConfig"
-import { OWID_NO_DATA_GRAY } from "../color/ColorConstants"
+import { NO_DATA_GRAY } from "../color/ColorConstants"
 import { AxisConfig } from "../axis/AxisConfig"
 import { BASE_FONT_SIZE } from "../core/GrapherConstants"
 import { SelectionArray } from "../selection/SelectionArray"
@@ -49,7 +49,7 @@ export class ScatterPlotChartState implements ChartState, ColorScaleManager {
 
     colorScale: ColorScale
     defaultBaseColorScheme = ColorSchemeName.continents
-    defaultNoDataColor = OWID_NO_DATA_GRAY
+    defaultNoDataColor = NO_DATA_GRAY
 
     constructor({ manager }: { manager: ScatterPlotManager }) {
         this.manager = manager
@@ -57,11 +57,11 @@ export class ScatterPlotChartState implements ChartState, ColorScaleManager {
         makeObservable(this)
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTableFromGrapher(): OwidTable {
+    @computed get transformedTableFromGrapher(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
@@ -69,7 +69,7 @@ export class ScatterPlotChartState implements ChartState, ColorScaleManager {
     }
 
     // TODO chunk this up into multiple computeds for better performance?
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         let table = this.transformedTableFromGrapher
         // We don't want to apply this transform when relative mode is also enabled, it has a
         // slightly different endpoints logic that drops initial zeroes to avoid DivideByZero error.
@@ -85,7 +85,7 @@ export class ScatterPlotChartState implements ChartState, ColorScaleManager {
         return table
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         // Drop all entities that have no data in either the X or Y column.
         // For some charts, this can drop more than 50% of rows, so we do it first.
         // If there's no data at all for an entity, then tolerance can also not "recover" any data, so this is safe to do.
@@ -153,7 +153,7 @@ export class ScatterPlotChartState implements ChartState, ColorScaleManager {
         return table
     }
 
-    transformTableForDisplay(table: OwidTable): OwidTable {
+    transformTableForDisplay(table: ChartsTable): ChartsTable {
         // Drop any rows which have non-number values for X or Y.
         table = table
             .columnFilter(

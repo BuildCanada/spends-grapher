@@ -17,7 +17,7 @@ import {
     StackedSeries,
 } from "./StackedConstants.js"
 import {
-    OwidTable,
+    ChartsTable,
     CoreColumn,
     isNotErrorValueOrEmptyCell,
 } from "../../core-table/index.js"
@@ -57,18 +57,18 @@ export abstract class AbstractStackedChartState implements ChartState {
         makeObservable(this)
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
         )
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         table = table.filterByEntityNames(
             this.selectionArray.selectedEntityNames
         )
@@ -103,7 +103,7 @@ export abstract class AbstractStackedChartState implements ChartState {
         return table
     }
 
-    transformTableForSelection(table: OwidTable): OwidTable {
+    transformTableForSelection(table: ChartsTable): ChartsTable {
         // if entities with partial data are not plotted,
         // make sure they don't show up in the entity selector
         if (this.missingDataStrategy !== MissingDataStrategy.show) {
@@ -151,7 +151,7 @@ export abstract class AbstractStackedChartState implements ChartState {
                 return {
                     isProjection: column.isProjection,
                     seriesName: column.displayName,
-                    rows: column.owidRows,
+                    rows: column.dataRows,
                     focus: this.focusArray.state(column.displayName),
                 }
             })
@@ -162,14 +162,14 @@ export abstract class AbstractStackedChartState implements ChartState {
     get entitiesAsSeries(): readonly StackedRawSeries<number>[] {
         if (!this.yColumns.length) return []
 
-        const { isProjection, owidRowsByEntityName } = this.yColumns[0]
+        const { isProjection, dataRowsByEntityName } = this.yColumns[0]
         return this.selectionArray.selectedEntityNames
             .map((entityName) => {
                 return {
                     isProjection,
                     seriesName: entityName,
                     shortEntityName: getShortNameForEntity(entityName),
-                    rows: owidRowsByEntityName.get(entityName) || [],
+                    rows: dataRowsByEntityName.get(entityName) || [],
                     focus: this.focusArray.state(entityName),
                 }
             })

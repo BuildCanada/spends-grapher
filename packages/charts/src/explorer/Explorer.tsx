@@ -6,7 +6,7 @@ import {
     ArchiveContext,
     ColumnTypeNames,
     CoreColumnDef,
-    OwidColumnDef,
+    ColumnDef,
     SortOrder,
     TableSlug,
     GrapherInterface,
@@ -15,8 +15,8 @@ import {
     GRAPHER_TAB_QUERY_PARAMS,
 } from "../types/index.js"
 import {
-    OwidTable,
-    BlankOwidTable,
+    ChartsTable,
+    BlankChartsTable,
     extractPotentialDataSlugsFromTransform,
 } from "../core-table/index.js"
 import {
@@ -82,7 +82,7 @@ export interface ExplorerProps extends SerializedGridProgram {
     grapherConfigs?: GrapherInterface[]
     partialGrapherConfigs?: GrapherInterface[]
     queryStr?: string
-    isEmbeddedInAnOwidPage?: boolean
+    isEmbeddedInPage?: boolean
     isInStandalonePage?: boolean
     isPreview?: boolean
     canonicalUrl?: string
@@ -204,7 +204,7 @@ export class Explorer
     analytics = new GrapherAnalytics()
     grapherState: GrapherState
     isOnArchivalPage: boolean
-    inputTableTransformer = (table: OwidTable) => table
+    inputTableTransformer = (table: ChartsTable) => table
 
     constructor(props: ExplorerProps) {
         super(props)
@@ -240,7 +240,7 @@ export class Explorer
             bounds: props.bounds,
             enableKeyboardShortcuts: this.props.isInStandalonePage,
             manager: this,
-            isEmbeddedInAnOwidPage: this.props.isEmbeddedInAnOwidPage,
+            isEmbeddedInPage: this.props.isEmbeddedInPage,
             adminBaseUrl: this.adminBaseUrl,
             canHideExternalControlsInEmbed: true,
             archiveContext: props.archiveContext,
@@ -272,7 +272,7 @@ export class Explorer
             ...explorerConstants,
             grapherConfigs,
             partialGrapherConfigs,
-            isEmbeddedInAnOwidPage: false,
+            isEmbeddedInPage: false,
             isInStandalonePage: true,
             archiveContext,
         }
@@ -535,7 +535,7 @@ export class Explorer
         )
     }
 
-    @action.bound private setGrapherTable(table: OwidTable) {
+    @action.bound private setGrapherTable(table: ChartsTable) {
         this.grapherState.inputTable = this.inputTableTransformer(table)
     }
 
@@ -548,7 +548,7 @@ export class Explorer
         return !this.isNarrow
     }
 
-    private futureGrapherTable = new PromiseSwitcher<OwidTable>({
+    private futureGrapherTable = new PromiseSwitcher<ChartsTable>({
         onResolve: (table) => this.setGrapherTable(table),
         onReject: (error) => this.grapher?.setError(error),
     })
@@ -570,12 +570,12 @@ export class Explorer
 
     @computed private get columnDefsWithoutTableSlugByIdOrSlug(): Record<
         number | string,
-        OwidColumnDef
+        ColumnDef
     > {
         const { columnDefsWithoutTableSlug } = this.explorerProgram
         return _.keyBy(
             columnDefsWithoutTableSlug,
-            (def: OwidColumnDef) => def.owidVariableId ?? def.slug
+            (def: ColumnDef) => def.variableId ?? def.slug
         )
     }
 
@@ -606,7 +606,7 @@ export class Explorer
         const baseVariableIdsAndColumnSlugs =
             this.getBaseColumnsForColumnWithTransform(slug)
         const slugsInColumnBlock: string[] = columnDefsWithoutTableSlug
-            .filter((def) => !def.owidVariableId)
+            .filter((def) => !def.variableId)
             .map((def) => def.slug)
         return baseVariableIdsAndColumnSlugs.filter(
             (variableIdOrColumnSlug) =>
@@ -645,7 +645,7 @@ export class Explorer
 
         grapherState.setAuthoredVersion(config)
         grapherState.reset()
-        grapherState.inputTable = BlankOwidTable()
+        grapherState.inputTable = BlankChartsTable()
         grapherState.updateFromObject(config)
         if (!config.table) {
             const loadFn =
@@ -657,7 +657,7 @@ export class Explorer
                 archiveContext: this.props.archiveContext,
                 noCache: this.props.isPreview,
                 loadMetadataOnly: this.props.loadMetadataOnly,
-            }).then((owidTable) => (owidTable ? owidTable : BlankOwidTable()))
+            }).then((dataTable) => (dataTable ? dataTable : BlankChartsTable()))
             // We use the PromiseSwitcher here to make sure that only the last
             // of several user triggered load operations in quick succession
             // will actually set the table.
@@ -788,7 +788,7 @@ export class Explorer
         config.dimensions = dimensions
         if (ySlugs && yVariableIds) config.ySlugs = ySlugs + " " + yVariableIds
 
-        this.inputTableTransformer = (table: OwidTable) => {
+        this.inputTableTransformer = (table: ChartsTable) => {
             // add transformed (and intermediate) columns to the grapher table
             if (uniqueSlugsInGrapherRow.length) {
                 const allColumnSlugs = _.uniq(
@@ -811,7 +811,7 @@ export class Explorer
             }
 
             // update column definitions with manually provided properties
-            table = table.updateDefs((def: OwidColumnDef) => {
+            table = table.updateDefs((def: ColumnDef) => {
                 const manuallyProvidedDef =
                     this.columnDefsWithoutTableSlugByIdOrSlug[def.slug] ?? {}
                 const mergedDef = { ...def, ...manuallyProvidedDef }
@@ -836,7 +836,7 @@ export class Explorer
         if (dimensions.length === 0) {
             // If dimensions are empty, explicitly set the table to an empty table
             // so we don't end up confusingly showing stale data from a previous chart
-            grapherState.inputTable = BlankOwidTable()
+            grapherState.inputTable = BlankChartsTable()
         } else {
             const loadFn =
                 this.props.loadInputTableForConfig ?? fetchInputTableForConfig
@@ -847,7 +847,7 @@ export class Explorer
                 dataApiUrl: this.props.dataApiUrl,
                 noCache: this.props.isPreview,
                 loadMetadataOnly: this.props.loadMetadataOnly,
-            }).then((owidTable) => (owidTable ? owidTable : BlankOwidTable()))
+            }).then((dataTable) => (dataTable ? dataTable : BlankChartsTable()))
             // We use the PromiseSwitcher here to make sure that only the last
             // of several user triggered load operations in quick succession
             // will actually set the table.
@@ -880,7 +880,7 @@ export class Explorer
         this.grapher?.clearErrors()
         // Set a table immediately. A BlankTable shows a loading animation.
         this.setGrapherTable(
-            BlankOwidTable(tableSlug, `Loading table '${tableSlug}'`)
+            BlankChartsTable(tableSlug, `Loading table '${tableSlug}'`)
         )
         // We use the PromiseSwitcher here to make sure that only the last
         // of several user triggered load operations in quick succession
@@ -1007,7 +1007,7 @@ export class Explorer
     }
 
     @computed private get showExplorerControls() {
-        if (!this.props.isEmbeddedInAnOwidPage && !this.isInIFrame) return true
+        if (!this.props.isEmbeddedInPage && !this.isInIFrame) return true
         // Only allow hiding controls on embedded pages
         return !(
             this.explorerProgram.hideControls ||
@@ -1120,7 +1120,7 @@ export class Explorer
                     Explorer: true,
                     "mobile-explorer": this.isNarrow,
                     HideControls: !showExplorerControls,
-                    "is-embed": this.props.isEmbeddedInAnOwidPage,
+                    "is-embed": this.props.isEmbeddedInPage,
                 })}
             >
                 {showHeaderElement && this.renderHeaderElement()}
@@ -1169,10 +1169,10 @@ export class Explorer
         this.initialQueryParams.pickerMetric
     entityPickerSort: SortOrder | undefined = this.initialQueryParams.pickerSort
 
-    entityPickerTable: OwidTable | undefined = undefined
+    entityPickerTable: ChartsTable | undefined = undefined
     entityPickerTableIsLoading: boolean = false
 
-    private futureEntityPickerTable = new PromiseSwitcher<OwidTable>({
+    private futureEntityPickerTable = new PromiseSwitcher<ChartsTable>({
         onResolve: (table) => {
             this.entityPickerTable = table
             this.entityPickerTableIsLoading = false

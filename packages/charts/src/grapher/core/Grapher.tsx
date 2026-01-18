@@ -15,7 +15,7 @@ import {
     sampleFrom,
     exposeInstanceOnWindow,
     QueryParams,
-    MultipleOwidVariableDataDimensionsMap,
+    MultipleVariableDataDimensionsMap,
     Bounds,
     strToQueryParams,
     queryParamsToStr,
@@ -35,7 +35,7 @@ import {
     GrapherVariant,
     Time,
 } from "../../types/index.js"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import {
     GRAPHER_LOADED_EVENT_NAME,
     GrapherModal,
@@ -54,7 +54,7 @@ import { Command, CommandPalette } from "../controls/CommandPalette"
 import { EmbedModal } from "../modal/EmbedModal"
 import Mousetrap from "mousetrap"
 import { SelectionArray } from "../selection/SelectionArray"
-import { legacyToOwidTableAndDimensionsWithMandatorySlug } from "./LegacyToOwidTable"
+import { legacyToChartsTableAndDimensionsWithMandatorySlug } from "./LegacyToChartsTable"
 import classnames from "classnames"
 import { SidePanel } from "../sidePanel/SidePanel"
 import { EntitySelector } from "../entitySelector/EntitySelector"
@@ -77,7 +77,7 @@ export const DEFAULT_MS_PER_TICK = 100
 export interface GrapherProgrammaticInterface extends GrapherInterface {
     queryStr?: string
     bounds?: Bounds
-    table?: OwidTable
+    table?: ChartsTable
     baseUrl?: string
     bakedGrapherURL?: string
     adminBaseUrl?: string
@@ -104,7 +104,7 @@ export interface GrapherProgrammaticInterface extends GrapherInterface {
 
     enableKeyboardShortcuts?: boolean
     bindUrlToWindow?: boolean
-    isEmbeddedInAnOwidPage?: boolean
+    isEmbeddedInPage?: boolean
     isEmbeddedInADataPage?: boolean
     isConfigReady?: boolean
     isDataReady?: boolean
@@ -152,7 +152,7 @@ export class Grapher extends React.Component<GrapherProps> {
     // stored on Grapher so state is preserved when switching to full-screen mode
 
     private legacyVariableDataJson:
-        | MultipleOwidVariableDataDimensionsMap
+        | MultipleVariableDataDimensionsMap
         | undefined = undefined
     private hasLoggedGAViewEvent = false
     private hasBeenVisible = false
@@ -177,26 +177,26 @@ export class Grapher extends React.Component<GrapherProps> {
     }
 
     @action.bound private _setInputTable(
-        json: MultipleOwidVariableDataDimensionsMap,
+        json: MultipleVariableDataDimensionsMap,
         legacyConfig: Partial<LegacyGrapherInterface>
     ): void {
         // TODO grapher model: switch this to downloading multiple data and metadata files
 
         const startMark = performance.now()
-        const tableWithColors = legacyToOwidTableAndDimensionsWithMandatorySlug(
+        const tableWithColors = legacyToChartsTableAndDimensionsWithMandatorySlug(
             json,
             legacyConfig.dimensions ?? [],
             legacyConfig.selectedEntityColors
         )
         this.grapherState.createPerformanceMeasurement(
-            "legacyToOwidTableAndDimensions",
+            "legacyToChartsTableAndDimensions",
             startMark
         )
 
         this.grapherState.inputTable = tableWithColors
     }
 
-    @action rebuildInputOwidTable(): void {
+    @action rebuildInputChartsTable(): void {
         // TODO grapher model: switch this to downloading multiple data and metadata files
         if (!this.legacyVariableDataJson) return
         this._setInputTable(

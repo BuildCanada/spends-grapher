@@ -2,7 +2,7 @@ import { expect, it, describe } from "vitest"
 
 import * as _ from "lodash-es"
 import { FacetChart } from "./FacetChart"
-import { SynthesizeGDPTable, OwidTable } from "../../core-table/index.js"
+import { SynthesizeGDPTable, ChartsTable } from "../../core-table/index.js"
 import { ChartManager } from "../chart/ChartManager"
 import {
     GRAPHER_CHART_TYPES,
@@ -217,7 +217,7 @@ describe("global legend", () => {
 2,1,2000,france
 3,2,2001,france
 4,3,2001,germany`
-        const table = new OwidTable(csv, [
+        const table = new ChartsTable(csv, [
             { slug: "gdp", type: ColumnTypeNames.Numeric },
             { slug: "co2", type: ColumnTypeNames.Numeric },
             { slug: "year", type: ColumnTypeNames.Year },

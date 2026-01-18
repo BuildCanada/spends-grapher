@@ -17,17 +17,17 @@ import {
     VerticalAlign,
     type GridParameters,
     HorizontalAlign,
-    type OwidEnrichedGdocBlock,
+    type EnrichedGdocBlock,
     type EnrichedBlockKeyInsightsSlide,
     type EnrichedTopicPageIntroRelatedTopic,
     type EnrichedTopicPageIntroDownloadButton,
     type EnrichedHybridLink,
-    type OwidGdocPostInterface,
-    type OwidGdocDataInsightInterface,
-    type OwidGdocAuthorInterface,
-    type OwidGdoc,
-    OwidGdocType,
-    type OwidGdocJSON,
+    type GdocPostInterface,
+    type GdocDataInsightInterface,
+    type GdocAuthorInterface,
+    type Gdoc,
+    GdocType,
+    type GdocJSON,
     type Span,
     UserCountryInformation,
     Time,
@@ -40,8 +40,8 @@ import {
     GRAPHER_CHART_TYPES,
     DbPlainTag,
     AssetMap,
-    OwidGdocAboutInterface,
-    OwidGdocHomepageInterface,
+    GdocAboutInterface,
+    GdocHomepageInterface,
     PrimitiveType,
     GrapherTrendArrowDirection,
     TocHeadingWithTitleSupertitle,
@@ -533,10 +533,15 @@ export async function fetchWithTimeout(
     })
 }
 
+// Country detection service URL - can be configured for custom deployments
+// This service should return JSON with a "country" object containing "code" and "name"
+const COUNTRY_DETECTION_URL =
+    process.env.COUNTRY_DETECTION_URL ?? "https://detect-country.example.com"
+
 const _getUserCountryInformation = async (): Promise<
     UserCountryInformation | undefined
 > =>
-    await fetchWithRetry("https://detect-country.owid.io")
+    await fetchWithRetry(COUNTRY_DETECTION_URL)
         .then((res) => res.json())
         .then((res) => res.country)
         .catch(() => undefined)
@@ -1251,7 +1256,7 @@ export const formatDate = (date: Date): string => {
  * write a custom JSON parser to handle that automatically for all keys. At this
  * stage, the manual approach is probably simpler.
  */
-export const getOwidGdocFromJSON = (json: OwidGdocJSON): OwidGdoc => {
+export const getGdocFromJSON = (json: GdocJSON): Gdoc => {
     return {
         ...json,
         createdAt: new Date(json.createdAt),
@@ -1263,7 +1268,7 @@ export const getOwidGdocFromJSON = (json: OwidGdocJSON): OwidGdoc => {
 // We want to infer the return type from the existing types instead of having to
 // manually specify it.
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
-export function extractGdocPageData(gdoc: OwidGdoc) {
+export function extractGdocPageData(gdoc: Gdoc) {
     // Generic properties every gdoc has
     const gdocProps = R.pick(gdoc, [
         "id",
@@ -1327,10 +1332,10 @@ export function extractGdocPageData(gdoc: OwidGdoc) {
         .otherwise(() => commonProps)
 }
 
-export type OwidGdocPageProps = ReturnType<typeof extractGdocPageData>
+export type GdocPageProps = ReturnType<typeof extractGdocPageData>
 
-export type OwidGdocPageData = Omit<
-    OwidGdocPageProps,
+export type GdocPageData = Omit<
+    GdocPageProps,
     "createdAt" | "publishedAt" | "updatedAt"
 > & {
     createdAt: string
@@ -1338,11 +1343,11 @@ export type OwidGdocPageData = Omit<
     updatedAt: string | null
 }
 
-export function deserializeOwidGdocPageData(
-    json: OwidGdocPageData
-): OwidGdocPageProps {
+export function deserializeGdocPageData(
+    json: GdocPageData
+): GdocPageProps {
     // NOTE: We have to do manual type casting around the content.type property
-    // because it can be undefined in OwidGdocPostContent. That makes sense
+    // because it can be undefined in GdocPostContent. That makes sense
     // during the gdoc creation, where we do manual validation for various
     // properties. But at some point we should only pass around a valid gdoc
     // where content.type can't be undefined anymore. So we should likely create
@@ -1353,7 +1358,7 @@ export function deserializeOwidGdocPageData(
         createdAt: new Date(json.createdAt),
         publishedAt: json.publishedAt ? new Date(json.publishedAt) : null,
         updatedAt: json.updatedAt ? new Date(json.updatedAt) : null,
-    } as OwidGdocPageProps
+    } as GdocPageProps
 }
 
 // Checking whether we have clipboard write access is surprisingly complicated.
@@ -1516,7 +1521,7 @@ export function bind<This, Args extends any[], Return>(
 // It's more than just the EnrichedBlocks and Spans, because some EnrichedBlocks have nested children
 // that contain URLs/filenames
 export type NodeWithUrl =
-    | OwidEnrichedGdocBlock
+    | EnrichedGdocBlock
     | Span
     | EnrichedHybridLink
     | EnrichedTopicPageIntroRelatedTopic
@@ -1593,13 +1598,13 @@ export function traverseEnrichedSpan(
         .exhaustive()
 }
 
-// If your node is a OwidEnrichedGdocBlock, the callback will apply to it
+// If your node is a EnrichedGdocBlock, the callback will apply to it
 // If your node has children that are Spans, the spanCallback will apply to them
-// If your node has children that aren't OwidEnrichedGdocBlocks or Spans
+// If your node has children that aren't EnrichedGdocBlocks or Spans
 // you'll have to handle those children yourself in your callback
 export function traverseEnrichedBlock(
-    node: OwidEnrichedGdocBlock,
-    callback: (x: OwidEnrichedGdocBlock) => void,
+    node: EnrichedGdocBlock,
+    callback: (x: EnrichedGdocBlock) => void,
     spanCallback?: (x: Span) => void
 ): void {
     match(node)
@@ -1860,7 +1865,7 @@ export function spansToUnformattedPlainText(spans: Span[]): string {
 }
 
 export function generateToc(
-    body: OwidEnrichedGdocBlock[] | undefined,
+    body: EnrichedGdocBlock[] | undefined,
     isTocForLinearTopicPage: boolean = false
 ): TocHeadingWithTitleSupertitle[] {
     if (!body) return []
@@ -1930,10 +1935,10 @@ export function generateToc(
     return toc
 }
 
-export function checkIsOwidGdocType(
+export function checkIsGdocType(
     gdocType: unknown
-): gdocType is OwidGdocType {
-    return Object.values(OwidGdocType).includes(gdocType as any)
+): gdocType is GdocType {
+    return Object.values(GdocType).includes(gdocType as any)
 }
 
 export function isArrayOfNumbers(arr: unknown[]): arr is number[] {
@@ -1977,16 +1982,16 @@ export function extractDetailsFromSyntax(str: string): string[] {
 
 /**
  * If you're using this type guard, make sure you're okay with Fragments
- * See https://github.com/owid/owid-grapher/issues/3426
+ * See # legacy issue 3426
  */
-export function checkIsGdocPost(x: unknown): x is OwidGdocPostInterface {
-    const type = _.get(x, "content.type") as OwidGdocType | undefined
+export function checkIsGdocPost(x: unknown): x is GdocPostInterface {
+    const type = _.get(x, "content.type") as GdocType | undefined
     return [
-        OwidGdocType.Article,
-        OwidGdocType.TopicPage,
-        OwidGdocType.LinearTopicPage,
-        OwidGdocType.Fragment,
-        OwidGdocType.AboutPage,
+        GdocType.Article,
+        GdocType.TopicPage,
+        GdocType.LinearTopicPage,
+        GdocType.Fragment,
+        GdocType.AboutPage,
     ].includes(type as any)
 }
 
@@ -1994,40 +1999,40 @@ export function checkIsGdocPost(x: unknown): x is OwidGdocPostInterface {
  * Fragments were developed before we had a robust gdoc type system in place
  * Use this function when you want to be sure you're dealing with published editorial content
  * and not just content that has the right shape
- * See https://github.com/owid/owid-grapher/issues/3426
+ * See # legacy issue 3426
  */
 export function checkIsGdocPostExcludingFragments(
     x: unknown
-): x is OwidGdocPostInterface {
-    const type = _.get(x, "content.type") as OwidGdocType | undefined
+): x is GdocPostInterface {
+    const type = _.get(x, "content.type") as GdocType | undefined
     return [
-        OwidGdocType.Article,
-        OwidGdocType.TopicPage,
-        OwidGdocType.LinearTopicPage,
-        OwidGdocType.AboutPage,
+        GdocType.Article,
+        GdocType.TopicPage,
+        GdocType.LinearTopicPage,
+        GdocType.AboutPage,
     ].includes(type as any)
 }
 
 export function checkIsDataInsight(
-    gdoc: OwidGdoc
-): gdoc is OwidGdocDataInsightInterface {
-    return gdoc.content.type === OwidGdocType.DataInsight
+    gdoc: Gdoc
+): gdoc is GdocDataInsightInterface {
+    return gdoc.content.type === GdocType.DataInsight
 }
 
 export function checkIsAboutPage(
-    gdoc: OwidGdoc
-): gdoc is OwidGdocAboutInterface {
-    return gdoc.content.type === OwidGdocType.AboutPage
+    gdoc: Gdoc
+): gdoc is GdocAboutInterface {
+    return gdoc.content.type === GdocType.AboutPage
 }
 
-export function checkIsAuthor(gdoc: OwidGdoc): gdoc is OwidGdocAuthorInterface {
-    return gdoc.content.type === OwidGdocType.Author
+export function checkIsAuthor(gdoc: Gdoc): gdoc is GdocAuthorInterface {
+    return gdoc.content.type === GdocType.Author
 }
 
 export function checkIsHomepage(
-    gdoc: OwidGdoc
-): gdoc is OwidGdocHomepageInterface {
-    return gdoc.content.type === OwidGdocType.Homepage
+    gdoc: Gdoc
+): gdoc is GdocHomepageInterface {
+    return gdoc.content.type === GdocType.Homepage
 }
 
 /**

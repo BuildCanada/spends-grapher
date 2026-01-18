@@ -70,13 +70,13 @@ abstract class AbstractHeader<
     @computed get logo(): Logo | undefined {
         const { manager } = this
         if (manager.hideLogo) return undefined
-        const isOwidLogo = !manager.logo || manager.logo === LogoOption.owid
+        const isDefaultLogo = !manager.logo || manager.logo === LogoOption.legacy
         return new Logo({
             logo: manager.logo as any,
-            isLink: !!manager.shouldLinkToOwid,
-            // if it's the OWID logo, use the small version; otherwise, decrease the size
-            heightScale: manager.isSmall && !isOwidLogo ? 0.775 : 1,
-            useSmallVersion: manager.isSmall && isOwidLogo,
+            isLink: !!manager.shouldLinkToSource,
+            // if it's the legacy logo, use the small version; otherwise, decrease the size
+            heightScale: manager.isSmall && !isDefaultLogo ? 0.775 : 1,
+            useSmallVersion: manager.isSmall && isDefaultLogo,
         })
     }
 

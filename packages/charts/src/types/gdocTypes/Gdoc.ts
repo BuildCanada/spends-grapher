@@ -1,6 +1,6 @@
 /**
  * Stub types for Google Docs integration.
- * These are simplified versions of the full OWID gdocTypes.
+ * These are simplified versions of the full gdocTypes.
  * Most Google Docs CMS functionality is not needed for the standalone charts library,
  * but the types are required for compilation.
  */
@@ -9,9 +9,9 @@ import { QueryParams } from "../domainTypes/Various.js"
 import { ArchivedPageVersion } from "../domainTypes/Archive.js"
 
 /**
- * Document types in the OWID CMS.
+ * Document types in the CMS.
  */
-export enum OwidGdocType {
+export enum GdocType {
     Article = "article",
     TopicPage = "topic-page",
     LinearTopicPage = "linear-topic-page",
@@ -69,10 +69,10 @@ export interface UserCountryInformation {
 /**
  * Base interface for Gdoc content.
  */
-export interface OwidGdocBaseInterface {
+export interface GdocBaseInterface {
     id: string
     slug: string
-    content: OwidGdocContent
+    content: GdocContent
     published: boolean
     createdAt: Date
     publishedAt: Date | null
@@ -100,30 +100,30 @@ export interface OwidGdocBaseInterface {
 /**
  * Gdoc content type.
  */
-export interface OwidGdocContent {
-    type: OwidGdocType
+export interface GdocContent {
+    type: GdocType
     title?: string
-    body?: OwidEnrichedGdocBlock[]
+    body?: EnrichedGdocBlock[]
     [key: string]: unknown
 }
 
 /**
  * Generic Gdoc interface.
  */
-export type OwidGdoc =
-    | OwidGdocPostInterface
-    | OwidGdocDataInsightInterface
-    | OwidGdocAuthorInterface
-    | OwidGdocAboutInterface
-    | OwidGdocHomepageInterface
+export type Gdoc =
+    | GdocPostInterface
+    | GdocDataInsightInterface
+    | GdocAuthorInterface
+    | GdocAboutInterface
+    | GdocHomepageInterface
 
 /**
  * JSON representation of a Gdoc.
  */
-export interface OwidGdocJSON {
+export interface GdocJSON {
     id: string
     slug: string
-    content: OwidGdocContent
+    content: GdocContent
     published: boolean
     createdAt: string
     publishedAt: string | null
@@ -134,61 +134,61 @@ export interface OwidGdocJSON {
 /**
  * Post (article/topic page) interface.
  */
-export interface OwidGdocPostInterface extends OwidGdocBaseInterface {
-    content: OwidGdocPostContent
+export interface GdocPostInterface extends GdocBaseInterface {
+    content: GdocPostContent
 }
 
-export interface OwidGdocPostContent extends OwidGdocContent {
+export interface GdocPostContent extends GdocContent {
     type:
-        | OwidGdocType.Article
-        | OwidGdocType.TopicPage
-        | OwidGdocType.LinearTopicPage
-        | OwidGdocType.Fragment
-        | OwidGdocType.AboutPage
+        | GdocType.Article
+        | GdocType.TopicPage
+        | GdocType.LinearTopicPage
+        | GdocType.Fragment
+        | GdocType.AboutPage
 }
 
 /**
  * Data insight interface.
  */
-export interface OwidGdocDataInsightInterface extends OwidGdocBaseInterface {
-    content: OwidGdocDataInsightContent
+export interface GdocDataInsightInterface extends GdocBaseInterface {
+    content: GdocDataInsightContent
 }
 
-export interface OwidGdocDataInsightContent extends OwidGdocContent {
-    type: OwidGdocType.DataInsight
+export interface GdocDataInsightContent extends GdocContent {
+    type: GdocType.DataInsight
 }
 
 /**
  * Author interface.
  */
-export interface OwidGdocAuthorInterface extends OwidGdocBaseInterface {
-    content: OwidGdocAuthorContent
+export interface GdocAuthorInterface extends GdocBaseInterface {
+    content: GdocAuthorContent
 }
 
-export interface OwidGdocAuthorContent extends OwidGdocContent {
-    type: OwidGdocType.Author
+export interface GdocAuthorContent extends GdocContent {
+    type: GdocType.Author
 }
 
 /**
  * About page interface.
  */
-export interface OwidGdocAboutInterface extends OwidGdocBaseInterface {
-    content: OwidGdocAboutContent
+export interface GdocAboutInterface extends GdocBaseInterface {
+    content: GdocAboutContent
 }
 
-export interface OwidGdocAboutContent extends OwidGdocContent {
-    type: OwidGdocType.AboutPage
+export interface GdocAboutContent extends GdocContent {
+    type: GdocType.AboutPage
 }
 
 /**
  * Homepage interface.
  */
-export interface OwidGdocHomepageInterface extends OwidGdocBaseInterface {
-    content: OwidGdocHomepageContent
+export interface GdocHomepageInterface extends GdocBaseInterface {
+    content: GdocHomepageContent
 }
 
-export interface OwidGdocHomepageContent extends OwidGdocContent {
-    type: OwidGdocType.Homepage
+export interface GdocHomepageContent extends GdocContent {
+    type: GdocType.Homepage
 }
 
 // =====================================================
@@ -198,7 +198,7 @@ export interface OwidGdocHomepageContent extends OwidGdocContent {
 /**
  * Base interface for enriched Gdoc blocks.
  */
-export interface OwidEnrichedGdocBlock {
+export interface EnrichedGdocBlock {
     type: string
     parseErrors?: unknown[]
     [key: string]: unknown
@@ -216,7 +216,7 @@ export interface Span {
 /**
  * Key insights slide block.
  */
-export interface EnrichedBlockKeyInsightsSlide extends OwidEnrichedGdocBlock {
+export interface EnrichedBlockKeyInsightsSlide extends EnrichedGdocBlock {
     type: "key-insights-slide"
     title?: string
     [key: string]: unknown

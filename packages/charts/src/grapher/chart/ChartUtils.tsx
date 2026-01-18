@@ -35,7 +35,7 @@ import { ChartSeries } from "./ChartInterface"
 import {
     ErrorValueTypes,
     isNotErrorValueOrEmptyCell,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 import { GRAPHER_BACKGROUND_DEFAULT } from "../color/ColorConstants"
 import { InteractionState } from "../interaction/InteractionState"
@@ -255,10 +255,10 @@ export const isMapTab = (tab: GrapherTabName): boolean =>
     tab === GRAPHER_TAB_NAMES.WorldMap
 
 export function combineHistoricalAndProjectionColumns(
-    table: OwidTable,
+    table: ChartsTable,
     info: ProjectionColumnInfo,
     options?: { shouldAddIsProjectionColumn: boolean }
-): OwidTable {
+): ChartsTable {
     const {
         historicalSlug,
         projectedSlug,

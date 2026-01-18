@@ -1,6 +1,6 @@
 /**
  * Stub functions for IndicatorKeyData.
- * These are placeholders for OWID data page functionality.
+ * These are placeholders for data page functionality.
  */
 import React from "react"
 

@@ -224,7 +224,7 @@
                 }
 
                 a {
-                    @include owid-link-90;
+                    @include link-90;
                     color: $gray-80;
                 }
             }
@@ -257,7 +257,7 @@
         }
 
         a {
-            @include owid-link-60;
+            @include link-60;
             text-underline-offset: 2px;
         }
     }
@@ -287,7 +287,7 @@
         }
 
         a {
-            @include owid-link-90;
+            @include link-90;
             color: $gray-70;
         }
     }

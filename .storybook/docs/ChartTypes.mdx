@@ -90,7 +90,7 @@ const grapherState = new GrapherState({
 Best for showing relationships between two variables. Requires both X and Y dimensions.
 
 ```tsx
-import { createOwidTestDataset, legacyToOwidTableAndDimensionsWithMandatorySlug } from "@buildcanada/charts"
+import { createTestDataset, legacyToChartsTableAndDimensionsWithMandatorySlug } from "@buildcanada/charts"
 
 // Define two variables
 const gdpData = [
@@ -108,12 +108,12 @@ const dimensions = [
   { variableId: 2, property: DimensionProperty.y },
 ]
 
-const dataset = createOwidTestDataset([
+const dataset = createTestDataset([
   { data: gdpData, metadata: { id: 1, display: { name: "GDP per capita" } } },
   { data: lifeExpData, metadata: { id: 2, display: { name: "Life expectancy" } } },
 ])
 
-const table = legacyToOwidTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
+const table = legacyToChartsTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
 
 const grapherState = new GrapherState({
   title: "GDP vs Life Expectancy",

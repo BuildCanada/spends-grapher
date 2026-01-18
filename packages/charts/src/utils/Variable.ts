@@ -8,18 +8,18 @@ import {
     deleteRuntimeAndUnchangedProps,
 } from "./persistable/Persistable.js"
 import {
-    OwidVariableDataTableConfigInterface,
-    OwidVariableDisplayConfigInterface,
-    OwidVariableRoundingMode,
+    VariableDataTableConfigInterface,
+    VariableDisplayConfigInterface,
+    VariableRoundingMode,
 } from "../types/index.js"
 
-class OwidVariableDisplayConfigDefaults {
+class VariableDisplayConfigDefaults {
     name: string | undefined = undefined
     unit: string | undefined = undefined
     shortUnit: string | undefined = undefined
     isProjection: boolean | undefined = undefined
     conversionFactor: number | undefined = undefined
-    roundingMode: OwidVariableRoundingMode | undefined = undefined
+    roundingMode: VariableRoundingMode | undefined = undefined
     numDecimalPlaces: number | undefined = undefined
     numSignificantFigures: number | undefined = undefined
     tolerance: number | undefined = undefined
@@ -27,7 +27,7 @@ class OwidVariableDisplayConfigDefaults {
     zeroDay: string | undefined = undefined
     entityAnnotationsMap: string | undefined = undefined
     includeInTable: boolean | undefined = true
-    tableDisplay: OwidVariableDataTableConfigInterface | undefined = undefined
+    tableDisplay: VariableDataTableConfigInterface | undefined = undefined
     color: string | undefined = undefined
     plotMarkersOnlyInLineChart: boolean | undefined = undefined
 
@@ -53,30 +53,30 @@ class OwidVariableDisplayConfigDefaults {
     }
 }
 
-export class OwidVariableDisplayConfig
-    extends OwidVariableDisplayConfigDefaults
+export class VariableDisplayConfig
+    extends VariableDisplayConfigDefaults
     implements Persistable
 {
-    updateFromObject(obj?: Partial<OwidVariableDisplayConfigInterface>): void {
+    updateFromObject(obj?: Partial<VariableDisplayConfigInterface>): void {
         if (obj) updatePersistables(this, obj)
     }
 
-    toObject(): OwidVariableDisplayConfigDefaults {
+    toObject(): VariableDisplayConfigDefaults {
         return deleteRuntimeAndUnchangedProps(
             objectWithPersistablesToObject(this),
-            new OwidVariableDisplayConfigDefaults()
+            new VariableDisplayConfigDefaults()
         )
     }
 
-    constructor(obj?: Partial<OwidVariableDisplayConfigInterface>) {
+    constructor(obj?: Partial<VariableDisplayConfigInterface>) {
         super()
         if (obj) this.updateFromObject(obj)
     }
 }
 
-// export interface OwidVariablesAndEntityKey {
+// export interface VariablesAndEntityKey {
 //     variables: {
-//         [id: string]: OwidVariableWithDataAndSource
+//         [id: string]: VariableWithDataAndSource
 //     }
-//     entityKey: OwidEntityKey
+//     entityKey: EntityKey
 // }

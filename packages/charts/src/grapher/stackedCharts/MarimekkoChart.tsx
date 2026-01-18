@@ -30,7 +30,7 @@ import {
     VerticalAlign,
     ColorScaleConfigInterface,
 } from "../../types/index.js"
-import { OwidTable, CoreColumn } from "../../core-table/index.js"
+import { ChartsTable, CoreColumn } from "../../core-table/index.js"
 import { getShortNameForEntity } from "../chart/ChartUtils"
 import {
     LEGEND_STYLE_FOR_STACKED_CHARTS,
@@ -111,7 +111,7 @@ export class MarimekkoChart
         return this.chartState.manager
     }
 
-    @computed private get inputTable(): OwidTable {
+    @computed private get inputTable(): ChartsTable {
         return this.chartState.inputTable
     }
 
@@ -144,7 +144,7 @@ export class MarimekkoChart
         return times ? R.last(times) : undefined
     }
     @computed private get tableAtLatestTimelineTimepoint():
-        | OwidTable
+        | ChartsTable
         | undefined {
         if (this.latestTime)
             return this.manager.tableAfterAuthorTimelineAndActiveChartTransform?.filterByTargetTimes(
@@ -714,7 +714,7 @@ export class MarimekkoChart
         // we want this for the last year to pick all labels there - sortedItems
         // changes with the time point the user selects
         const ySizeMap: Map<string, number> = new Map(
-            yColumnsAtLastTimePoint[0].owidRows.map((row) => [
+            yColumnsAtLastTimePoint[0].dataRows.map((row) => [
                 row.entityName,
                 row.value,
             ])
@@ -728,7 +728,7 @@ export class MarimekkoChart
             : yColumnsAtLastTimePoint[0]
 
         let labelCandidates: LabelCandidate[] =
-            labelCandidateSource.owidRows.map((row) =>
+            labelCandidateSource.dataRows.map((row) =>
                 MarimekkoChart.labelCandidateFromItem(
                     {
                         entityName: row.entityName,

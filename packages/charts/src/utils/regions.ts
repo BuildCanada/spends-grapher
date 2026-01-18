@@ -38,14 +38,14 @@ export interface Aggregate extends BaseRegion {
 }
 
 export interface Continent extends BaseRegion {
-    name: OwidContinentName
+    name: ContinentName
     regionType: RegionType.Continent
     translationCodes?: string[]
     members: string[]
 }
 
 export interface IncomeGroup extends BaseRegion {
-    name: OwidIncomeGroupName
+    name: IncomeGroupName
     regionType: RegionType.IncomeGroup
     members: string[]
 }
@@ -61,7 +61,7 @@ export type Region = Country | Aggregate | Continent | IncomeGroup | Province
 
 export const regions: Region[] = entities as Region[]
 
-type OwidContinentName =
+type ContinentName =
     | "Africa"
     | "Asia"
     | "Europe"
@@ -69,7 +69,7 @@ type OwidContinentName =
     | "Oceania"
     | "South America"
 
-export type OwidIncomeGroupName =
+export type IncomeGroupName =
     | "OWID_LIC"
     | "OWID_LMC"
     | "OWID_UMC"
@@ -85,9 +85,9 @@ export const aggregateSources = [
 ] as const
 export type AggregateSource = (typeof aggregateSources)[number]
 
-export function checkIsOwidIncomeGroupName(
+export function checkIsIncomeGroupName(
     name: string
-): name is OwidIncomeGroupName {
+): name is IncomeGroupName {
     return (
         name === "OWID_LIC" ||
         name === "OWID_LMC" ||
@@ -103,7 +103,7 @@ export function checkIsCountry(region: Region): region is Country {
     )
 }
 
-export function checkIsOwidContinent(region: Region): region is Continent {
+export function checkIsContinent(region: Region): region is Continent {
     return region.regionType === RegionType.Continent
 }
 
@@ -199,9 +199,9 @@ export const incomeGroupsByName = lazy(
     () =>
         Object.fromEntries(
             regions
-                .filter((region) => checkIsOwidIncomeGroupName(region.code))
+                .filter((region) => checkIsIncomeGroupName(region.code))
                 .map((region) => [region.code, region])
-        ) as Record<OwidIncomeGroupName, IncomeGroup>
+        ) as Record<IncomeGroupName, IncomeGroup>
 )
 
 const countriesBySlug = lazy(() =>

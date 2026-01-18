@@ -6,26 +6,26 @@ import {
     trimObject,
     ColumnSlug,
     DimensionProperty,
-    OwidVariableId,
+    VariableId,
     Persistable,
     deleteRuntimeAndUnchangedProps,
     updatePersistables,
-    OwidVariableDisplayConfig,
-    OwidChartDimensionInterface,
+    VariableDisplayConfig,
+    ChartDimensionInterface,
     Time,
-    OwidChartDimensionInterfaceWithMandatorySlug,
+    ChartDimensionInterfaceWithMandatorySlug,
 } from "../../utils/index.js"
-import { OwidTable, CoreColumn } from "../../core-table/index.js"
+import { ChartsTable, CoreColumn } from "../../core-table/index.js"
 
 // A chart "dimension" represents a binding between a chart
 // and a particular variable that it requests as data
-class ChartDimensionDefaults implements OwidChartDimensionInterface {
+class ChartDimensionDefaults implements ChartDimensionInterface {
     property!: DimensionProperty
-    variableId!: OwidVariableId
+    variableId!: VariableId
 
     // check on: malaria-deaths-comparisons and computing-efficiency
 
-    display = new OwidVariableDisplayConfig() // todo: make persistable
+    display = new VariableDisplayConfig() // todo: make persistable
 
     // XXX move this somewhere else, it's only used for scatter x override and Marimekko override
     targetYear: Time | undefined = undefined
@@ -42,11 +42,11 @@ class ChartDimensionDefaults implements OwidChartDimensionInterface {
 
 // todo: remove when we remove dimensions
 export interface LegacyDimensionsManager {
-    table: OwidTable
+    table: ChartsTable
 }
 
 export function getDimensionColumnSlug(
-    variableId: OwidVariableId,
+    variableId: VariableId,
     targetYear: Time | undefined
 ): ColumnSlug {
     if (targetYear) return `${variableId}-${targetYear}`
@@ -55,12 +55,12 @@ export function getDimensionColumnSlug(
 
 export class ChartDimension
     extends ChartDimensionDefaults
-    implements Persistable, OwidChartDimensionInterfaceWithMandatorySlug
+    implements Persistable, ChartDimensionInterfaceWithMandatorySlug
 {
     private manager: LegacyDimensionsManager
 
     constructor(
-        obj: OwidChartDimensionInterface,
+        obj: ChartDimensionInterface,
         manager: LegacyDimensionsManager
     ) {
         super()
@@ -72,11 +72,11 @@ export class ChartDimension
         if (obj) this.updateFromObject(obj)
     }
 
-    @computed private get table(): OwidTable {
+    @computed private get table(): ChartsTable {
         return this.manager.table
     }
 
-    updateFromObject(obj: OwidChartDimensionInterface): void {
+    updateFromObject(obj: ChartDimensionInterface): void {
         if (obj.display) updatePersistables(this, { display: obj.display })
 
         this.targetYear = obj.targetYear
@@ -85,7 +85,7 @@ export class ChartDimension
         this.slug = obj.slug
     }
 
-    toObject(): OwidChartDimensionInterface {
+    toObject(): ChartDimensionInterface {
         return trimObject(
             deleteRuntimeAndUnchangedProps(
                 {

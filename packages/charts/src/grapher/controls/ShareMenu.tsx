@@ -70,7 +70,7 @@ const canUseShareApi = (manager: ShareApiManager): boolean => {
 // So, on Android and iOS, we want to just show the system-level share dialog
 // immediately when the user clicks the share button, rather than showing our
 // own menu.
-// See https://github.com/owid/owid-grapher/issues/3446
+// See # legacy issue 3446
 // -@marcelgerber, 2024-04-24
 export const shouldShareUsingShareApi = (manager: ShareApiManager): boolean =>
     (isAndroid() || isIOS()) && canUseShareApi(manager)

@@ -73,7 +73,7 @@ export class MapSelectionArray extends SelectionArray {
     @computed get selectedRegions(): (Continent | Aggregate | IncomeGroup)[] {
         return this.selectedEntitiesWithRegionInfo.filter(
             (region): region is Continent | Aggregate | IncomeGroup =>
-                checkHasMembers(region) && region.code !== "OWID_WRL"
+                checkHasMembers(region) && region.code !== "WRL"
         )
     }
 

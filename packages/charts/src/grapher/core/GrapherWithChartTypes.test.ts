@@ -12,12 +12,12 @@ import {
     legacyMapGrapherData,
 } from "../mapCharts/MapChart.sample"
 import { GRAPHER_CHART_TYPES } from "../../types/index.js"
-import { legacyToOwidTableAndDimensionsWithMandatorySlug } from "./LegacyToOwidTable.js"
+import { legacyToChartsTableAndDimensionsWithMandatorySlug } from "./LegacyToChartsTable.js"
 import { MapChartState } from "../mapCharts/MapChartState"
 
 describe("grapher and map charts", () => {
     describe("map time tolerance plus query string works with a map chart", () => {
-        const inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
+        const inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
             legacyMapGrapherData,
             legacyMapGrapher.dimensions!,
             legacyMapGrapher.selectedEntityColors
@@ -41,7 +41,7 @@ describe("grapher and map charts", () => {
 
     it("can change time and see more points", () => {
         const manager = new GrapherState(legacyMapGrapher)
-        manager.inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
+        manager.inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
             legacyMapGrapherData,
             legacyMapGrapher.dimensions!,
             legacyMapGrapher.selectedEntityColors

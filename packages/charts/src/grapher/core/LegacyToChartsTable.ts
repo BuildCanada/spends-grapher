@@ -1,21 +1,21 @@
-// todo: Remove this file when we've migrated OWID data and OWID charts to next version
+// todo: Remove this file when we've migrated legacy data and charts to next version
 
 import * as _ from "lodash-es"
 import {
     ColumnTypeNames,
     CoreColumnDef,
-    StandardOwidColumnDefs,
-    OwidTableSlugs,
-    OwidColumnDef,
-    OwidVariableDimensions,
-    OwidVariableDataMetadataDimensions,
+    StandardColumnDefs,
+    ChartsTableSlugs,
+    ColumnDef,
+    VariableDimensions,
+    VariableDataMetadataDimensions,
     ErrorValue,
-    OwidChartDimensionInterfaceWithMandatorySlug,
-    OwidChartDimensionInterface,
+    ChartDimensionInterfaceWithMandatorySlug,
+    ChartDimensionInterface,
     EntityName,
 } from "../../types/index.js"
 import {
-    OwidTable,
+    ChartsTable,
     ErrorValueTypes,
     makeKeyFn,
 } from "../../core-table/index.js"
@@ -25,59 +25,59 @@ import {
     intersection,
     makeAnnotationsSlug,
     trimObject,
-    OwidEntityKey,
-    MultipleOwidVariableDataDimensionsMap,
-    OwidVariableWithSource,
-    OwidVariableMixedData,
-    OwidVariableWithSourceAndDimension,
+    EntityKey,
+    MultipleVariableDataDimensionsMap,
+    VariableWithSource,
+    VariableMixedData,
+    VariableWithSourceAndDimension,
     ColumnSlug,
     EPOCH_DATE,
-    OwidVariableType,
+    VariableType,
 } from "../../utils/index.js"
 import { isContinentsVariableId } from "./GrapherConstants"
 import * as R from "remeda"
 import { getDimensionColumnSlug } from "../chart/ChartDimension.js"
 
-export const legacyToOwidTableAndDimensionsWithMandatorySlug = (
-    json: MultipleOwidVariableDataDimensionsMap,
-    dimensions: OwidChartDimensionInterface[],
+export const legacyToChartsTableAndDimensionsWithMandatorySlug = (
+    json: MultipleVariableDataDimensionsMap,
+    dimensions: ChartDimensionInterface[],
     selectedEntityColors:
         | { [entityName: string]: string | undefined }
         | undefined
-): OwidTable => {
+): ChartsTable => {
     const dimensionsWithSlug = dimensions?.map((dimension) => ({
         ...dimension,
         slug:
             dimension.slug ??
             getDimensionColumnSlug(dimension.variableId, dimension.targetYear),
     }))
-    return legacyToOwidTableAndDimensions(
+    return legacyToChartsTableAndDimensions(
         json,
         dimensionsWithSlug,
         selectedEntityColors
     )
 }
 
-export const legacyToOwidTableAndDimensions = (
-    json: MultipleOwidVariableDataDimensionsMap,
-    dimensions: OwidChartDimensionInterfaceWithMandatorySlug[],
+export const legacyToChartsTableAndDimensions = (
+    json: MultipleVariableDataDimensionsMap,
+    dimensions: ChartDimensionInterfaceWithMandatorySlug[],
     selectedEntityColors:
         | { [entityName: string]: string | undefined }
         | undefined
-): OwidTable => {
+): ChartsTable => {
     // Entity meta map
 
     const entityMeta = [...json.values()].flatMap(
         (value) => value.metadata.dimensions.entities.values
     )
-    const entityMetaById: OwidEntityKey = Object.fromEntries(
+    const entityMetaById: EntityKey = Object.fromEntries(
         entityMeta.map((entity) => [entity.id.toString(), entity])
     )
 
     // Base column defs, shared by all variable tables
 
     const baseColumnDefs: Map<ColumnSlug, CoreColumnDef> = new Map()
-    StandardOwidColumnDefs.forEach((def) => {
+    StandardColumnDefs.forEach((def) => {
         baseColumnDefs.set(def.slug, def)
     })
 
@@ -85,9 +85,9 @@ export const legacyToOwidTableAndDimensions = (
     // multiple columns for a single variable.
     const dimensionColumns = _.uniqBy(dimensions, (dim) => dim.slug)
 
-    const variableTablesToJoinByYear: OwidTable[] = []
-    const variableTablesToJoinByDay: OwidTable[] = []
-    const variableTablesWithYearToJoinByEntityOnly: OwidTable[] = []
+    const variableTablesToJoinByYear: ChartsTable[] = []
+    const variableTablesToJoinByDay: ChartsTable[] = []
+    const variableTablesWithYearToJoinByEntityOnly: ChartsTable[] = []
     for (const dimension of dimensionColumns) {
         const variable = json.get(dimension.variableId)
 
@@ -99,11 +99,11 @@ export const legacyToOwidTableAndDimensions = (
         const columnDefs = new Map(baseColumnDefs)
 
         // Time column
-        const timeColumnDef = timeColumnDefFromOwidVariable(variable.metadata)
+        const timeColumnDef = timeColumnDefFromVariable(variable.metadata)
         columnDefs.set(timeColumnDef.slug, timeColumnDef)
 
         // Value column
-        const valueColumnDef = columnDefFromOwidVariable(variable.metadata)
+        const valueColumnDef = columnDefFromVariable(variable.metadata)
         const valueColumnColor = dimension.display?.color
         // Ensure the column slug is unique by copying it from the dimensions
         // (there can be two columns of the same variable with different targetTimes)
@@ -127,11 +127,11 @@ export const legacyToOwidTableAndDimensions = (
 
         // Annotations column
         const [annotationMap, annotationColumnDef] =
-            annotationMapAndDefFromOwidVariable(variable.metadata)
+            annotationMapAndDefFromVariable(variable.metadata)
 
         // Column values
 
-        const times = timeColumnValuesFromOwidVariable(
+        const times = timeColumnValuesFromVariable(
             variable.metadata,
             variable.data
         )
@@ -164,9 +164,9 @@ export const legacyToOwidTableAndDimensions = (
         }
 
         const columnStore: { [key: string]: any[] } = {
-            [OwidTableSlugs.entityId]: entityIds,
-            [OwidTableSlugs.entityCode]: entityCodes,
-            [OwidTableSlugs.entityName]: entityNames,
+            [ChartsTableSlugs.entityId]: entityIds,
+            [ChartsTableSlugs.entityCode]: entityCodes,
+            [ChartsTableSlugs.entityName]: entityNames,
             [timeColumnDef.slug]: times,
             [valueColumnDef.slug]: values,
         }
@@ -179,7 +179,7 @@ export const legacyToOwidTableAndDimensions = (
         }
         // Build the tables
 
-        let variableTable = new OwidTable(
+        let variableTable = new ChartsTable(
             columnStore,
             Array.from(columnDefs.values())
         )
@@ -241,11 +241,11 @@ export const legacyToOwidTableAndDimensions = (
 
     // Merge all day based variables together (returns an empty table if there are none)
     const variablesJoinedByDay = fullJoinTables(variableTablesToJoinByDay, [
-        OwidTableSlugs.day,
-        OwidTableSlugs.entityId,
+        ChartsTableSlugs.day,
+        ChartsTableSlugs.entityId,
     ])
 
-    let joinedVariablesTable: OwidTable
+    let joinedVariablesTable: ChartsTable
     // If we have both day and year based variables we need to do some special logic as described above
     if (
         variableTablesToJoinByYear.length > 0 &&
@@ -253,7 +253,7 @@ export const legacyToOwidTableAndDimensions = (
     ) {
         // Derive the year from the day column and add it to the joined days table
         const daysColumn = variablesJoinedByDay.getColumns([
-            OwidTableSlugs.day,
+            ChartsTableSlugs.day,
         ])[0]
         const getYearFromISOStringMemoized = _.memoize((dayValue: number) =>
             getYearFromISOStringAndDayOffset(EPOCH_DATE, dayValue)
@@ -264,10 +264,10 @@ export const legacyToOwidTableAndDimensions = (
 
         const newYearColumn = {
             ...daysColumn,
-            slug: OwidTableSlugs.year,
-            name: OwidTableSlugs.year,
+            slug: ChartsTableSlugs.year,
+            name: ChartsTableSlugs.year,
             values: yearsForDaysValues,
-        } as OwidColumnDef
+        } as ColumnDef
         const variablesJoinedByDayWithYearFilled =
             variablesJoinedByDay.appendColumns([newYearColumn])
 
@@ -278,10 +278,10 @@ export const legacyToOwidTableAndDimensions = (
         // trying to merge first by day+entity, then year+entity and finally entity only
         joinedVariablesTable = fullJoinTables(
             [variablesJoinedByDayWithYearFilled, ...variableTablesToJoinByYear],
-            [OwidTableSlugs.day, OwidTableSlugs.entityId],
+            [ChartsTableSlugs.day, ChartsTableSlugs.entityId],
             [
-                [OwidTableSlugs.year, OwidTableSlugs.entityId],
-                [OwidTableSlugs.entityId],
+                [ChartsTableSlugs.year, ChartsTableSlugs.entityId],
+                [ChartsTableSlugs.entityId],
             ]
         )
         // If we have scatter/marimekko variables that had a targetTime set
@@ -292,15 +292,15 @@ export const legacyToOwidTableAndDimensions = (
                     joinedVariablesTable,
                     ...variableTablesWithYearToJoinByEntityOnly,
                 ],
-                [OwidTableSlugs.day, OwidTableSlugs.entityId],
-                [[OwidTableSlugs.entityId]]
+                [ChartsTableSlugs.day, ChartsTableSlugs.entityId],
+                [[ChartsTableSlugs.entityId]]
             )
     } else if (variableTablesToJoinByYear.length > 0) {
         // If we only have year based variables then life is easy and we just join
         // those together without any special cases
         joinedVariablesTable = fullJoinTables(variableTablesToJoinByYear, [
-            OwidTableSlugs.year,
-            OwidTableSlugs.entityId,
+            ChartsTableSlugs.year,
+            ChartsTableSlugs.entityId,
         ])
 
         // If we have scatter/marimekko variables that had a targetTime set
@@ -311,8 +311,8 @@ export const legacyToOwidTableAndDimensions = (
                     joinedVariablesTable,
                     ...variableTablesWithYearToJoinByEntityOnly,
                 ],
-                [OwidTableSlugs.year, OwidTableSlugs.entityId],
-                [[OwidTableSlugs.entityId]]
+                [ChartsTableSlugs.year, ChartsTableSlugs.entityId],
+                [[ChartsTableSlugs.entityId]]
             )
     } else {
         // If we only have day variables life is also easy but this case is rare
@@ -326,20 +326,20 @@ export const legacyToOwidTableAndDimensions = (
                     joinedVariablesTable,
                     ...variableTablesWithYearToJoinByEntityOnly,
                 ],
-                [OwidTableSlugs.day, OwidTableSlugs.entityId],
-                [[OwidTableSlugs.entityId]]
+                [ChartsTableSlugs.day, ChartsTableSlugs.entityId],
+                [[ChartsTableSlugs.entityId]]
             )
     }
 
     // Inject a common "time" column that is used as the main time column for the table
     // e.g. for the timeline.
-    for (const dayOrYearSlug of [OwidTableSlugs.day, OwidTableSlugs.year]) {
+    for (const dayOrYearSlug of [ChartsTableSlugs.day, ChartsTableSlugs.year]) {
         if (joinedVariablesTable.columnSlugs.includes(dayOrYearSlug)) {
             joinedVariablesTable = joinedVariablesTable.duplicateColumn(
                 dayOrYearSlug,
                 {
-                    slug: OwidTableSlugs.time,
-                    name: OwidTableSlugs.time,
+                    slug: ChartsTableSlugs.time,
+                    name: ChartsTableSlugs.time,
                 }
             )
             // Do not inject multiple columns, terminate after one is successful
@@ -349,7 +349,7 @@ export const legacyToOwidTableAndDimensions = (
 
     // Append the entity color column if we have selected entity colors
     if (!_.isEmpty(selectedEntityColors)) {
-        const entityColorColumnSlug = OwidTableSlugs.entityColor
+        const entityColorColumnSlug = ChartsTableSlugs.entityColor
 
         const valueFn = (
             entityName: EntityName | undefined
@@ -379,11 +379,11 @@ export const legacyToOwidTableAndDimensions = (
 }
 
 const fullJoinTables = (
-    tables: OwidTable[],
-    indexColumnNames: OwidTableSlugs[],
-    mergeFallbackLookupColumns?: OwidTableSlugs[][]
-): OwidTable => {
-    // This function merges a number of OwidTables together using a given list of columns
+    tables: ChartsTable[],
+    indexColumnNames: ChartsTableSlugs[],
+    mergeFallbackLookupColumns?: ChartsTableSlugs[][]
+): ChartsTable => {
+    // This function merges a number of ChartsTables together using a given list of columns
     // to be used as the merge key. The merge key columns are used to construct a full set
     // of index values from the various tables - all tables are enumerated, we create
     // a merged string value from the index column values for each row and then we create
@@ -403,7 +403,7 @@ const fullJoinTables = (
     // matching the day from the population variable (year+entity lookup) but for variables that don't
     // have overlapping years (e.g. continents that only has 2015 as the single year) we want to fall back
     // to merging by entity alone as a last resort
-    if (tables.length === 0) return new OwidTable()
+    if (tables.length === 0) return new ChartsTable()
     else if (tables.length === 1) return tables[0]
 
     // Get all the index values per table and then figure out the full set of all stringified index values
@@ -451,7 +451,7 @@ const fullJoinTables = (
     // try other tables for these shared columns if the given row index does
     // not exist in the first table
     const firstTableDuplicateForIndices: [
-        OwidTable | undefined,
+        ChartsTable | undefined,
         string[] | undefined,
     ] = [tables[0], sharedColumnNames]
     const defsToAddPerTable = [firstTableDuplicateForIndices]
@@ -464,7 +464,7 @@ const fullJoinTables = (
                         const def = { ...col.def }
                         def.values = []
                         return def
-                    }) as OwidColumnDef[]
+                    }) as ColumnDef[]
         )
     // Now loop over all unique index values and for each assemble as full a row as we can manage by looking
     // up the values in the different source tables
@@ -572,13 +572,13 @@ const fullJoinTables = (
             }
         }
     }
-    return new OwidTable(
+    return new ChartsTable(
         [],
         defsToAddPerTable.flatMap((defs) => defs)
     )
 }
 
-const variableTypeToColumnType = (type: OwidVariableType): ColumnTypeNames => {
+const variableTypeToColumnType = (type: VariableType): ColumnTypeNames => {
     switch (type) {
         case "ordinal":
             return ColumnTypeNames.Ordinal
@@ -595,7 +595,7 @@ const variableTypeToColumnType = (type: OwidVariableType): ColumnTypeNames => {
 }
 
 const getSortFromDimensions = (
-    dimensions: OwidVariableDimensions
+    dimensions: VariableDimensions
 ): string[] | undefined => {
     const values = dimensions.values?.values
     if (!values) return
@@ -609,9 +609,9 @@ const getSortFromDimensions = (
     return sort
 }
 
-const columnDefFromOwidVariable = (
-    variable: OwidVariableWithSourceAndDimension
-): OwidColumnDef => {
+const columnDefFromVariable = (
+    variable: VariableWithSourceAndDimension
+): ColumnDef => {
     const slug = variable.id.toString() // For now, the variableId will be the column slug
     const {
         unit,
@@ -682,34 +682,34 @@ const columnDefFromOwidVariable = (
         presentation,
         catalogPath,
         updatePeriodDays,
-        owidVariableId: variable.id,
-        owidProcessingLevel: variable.processingLevel,
-        owidSchemaVersion: variable.schemaVersion,
+        variableId: variable.id,
+        processingLevel: variable.processingLevel,
+        schemaVersion: variable.schemaVersion,
         type,
         sort,
         shortName,
     }
 }
 
-const timeColumnDefFromOwidVariable = (
-    variableMetadata: OwidVariableWithSource
-): OwidColumnDef => {
+const timeColumnDefFromVariable = (
+    variableMetadata: VariableWithSource
+): ColumnDef => {
     return variableMetadata.display?.yearIsDay
         ? {
-              slug: OwidTableSlugs.day,
+              slug: ChartsTableSlugs.day,
               type: ColumnTypeNames.Day,
               name: "Day",
           }
         : {
-              slug: OwidTableSlugs.year,
+              slug: ChartsTableSlugs.year,
               type: ColumnTypeNames.Year,
               name: "Year",
           }
 }
 
-const timeColumnValuesFromOwidVariable = (
-    variableMetadata: OwidVariableWithSource,
-    variableData: OwidVariableMixedData
+const timeColumnValuesFromVariable = (
+    variableMetadata: VariableWithSource,
+    variableData: VariableMixedData
 ): number[] => {
     const { display } = variableMetadata
     const { years } = variableData
@@ -734,9 +734,9 @@ const convertLegacyYears = (years: number[], zeroDay: string): number[] => {
     return years.map((y) => y + diff)
 }
 
-const annotationMapAndDefFromOwidVariable = (
-    variable: OwidVariableWithSourceAndDimension
-): [Map<string, string>, OwidColumnDef] | [] => {
+const annotationMapAndDefFromVariable = (
+    variable: VariableWithSourceAndDimension
+): [Map<string, string>, ColumnDef] | [] => {
     if (variable.display?.entityAnnotationsMap) {
         const slug = makeAnnotationsSlug(variable.id.toString())
         const annotationMap = annotationsToMap(
@@ -767,29 +767,29 @@ const annotationsToMap = (annotations: string): Map<string, string> => {
 }
 
 /**
- * Loads a single variable into an OwidTable.
+ * Loads a single variable into an ChartsTable.
  */
 export function buildVariableTable(
-    variable: OwidVariableDataMetadataDimensions
-): OwidTable {
+    variable: VariableDataMetadataDimensions
+): ChartsTable {
     const entityMeta = variable.metadata.dimensions.entities.values
-    const entityMetaById: OwidEntityKey = Object.fromEntries(
+    const entityMetaById: EntityKey = Object.fromEntries(
         entityMeta.map((entity) => [entity.id.toString(), entity])
     )
 
-    // Base column defs, present in all OwidTables
+    // Base column defs, present in all ChartsTables
     const baseColumnDefs: Map<ColumnSlug, CoreColumnDef> = new Map(
-        StandardOwidColumnDefs.map((def) => [def.slug, def])
+        StandardColumnDefs.map((def) => [def.slug, def])
     )
 
     const columnDefs = new Map(baseColumnDefs)
 
     // Time column
-    const timeColumnDef = timeColumnDefFromOwidVariable(variable.metadata)
+    const timeColumnDef = timeColumnDefFromVariable(variable.metadata)
     columnDefs.set(timeColumnDef.slug, timeColumnDef)
 
     // Value column
-    const valueColumnDef = columnDefFromOwidVariable(variable.metadata)
+    const valueColumnDef = columnDefFromVariable(variable.metadata)
     // Because database columns can contain mixed types, we want to avoid
     // parsing for Grapher data until we fix that.
     valueColumnDef.skipParsing = true
@@ -797,7 +797,7 @@ export function buildVariableTable(
 
     // Column values
 
-    const times = timeColumnValuesFromOwidVariable(
+    const times = timeColumnValuesFromVariable(
         variable.metadata,
         variable.data
     )
@@ -830,12 +830,12 @@ export function buildVariableTable(
     }
 
     const columnStore: { [key: string]: any[] } = {
-        [OwidTableSlugs.entityId]: entityIds,
-        [OwidTableSlugs.entityCode]: entityCodes,
-        [OwidTableSlugs.entityName]: entityNames,
+        [ChartsTableSlugs.entityId]: entityIds,
+        [ChartsTableSlugs.entityCode]: entityCodes,
+        [ChartsTableSlugs.entityName]: entityNames,
         [timeColumnDef.slug]: times,
         [valueColumnDef.slug]: values,
     }
 
-    return new OwidTable(columnStore, Array.from(columnDefs.values()))
+    return new ChartsTable(columnStore, Array.from(columnDefs.values()))
 }

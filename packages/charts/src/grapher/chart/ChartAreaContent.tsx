@@ -145,7 +145,7 @@ export class ChartAreaContent extends React.Component<ChartAreaContentProps> {
 
     renderStatic(): React.ReactElement | null {
         // We cannot render a table to svg, but would rather display nothing at all to avoid issues.
-        // See https://github.com/owid/owid-grapher/issues/3283
+        // See # legacy issue 3283
         if (this.manager.isOnTableTab) return null
 
         return (

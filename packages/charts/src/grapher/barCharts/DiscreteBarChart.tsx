@@ -44,7 +44,7 @@ import {
     makeProjectedDataPatternId,
     enrichSeriesWithLabels,
 } from "./DiscreteBarChartHelpers"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import { HorizontalAxis } from "../axis/Axis"
 import { GRAPHER_DARK_TEXT } from "../color/ColorConstants"
 import type { BaseType, Selection } from "d3-selection"
@@ -362,7 +362,7 @@ export class DiscreteBarChart
         let timeString = ""
         if (showYearLabels) {
             const { timeColumn } = this.chartState.transformedTable
-            const preposition = OwidTable.getPreposition(timeColumn)
+            const preposition = ChartsTable.getPreposition(timeColumn)
             timeString = ` ${preposition} ${timeColumn.formatTime(series.time)}`
         }
 

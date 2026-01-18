@@ -7,7 +7,7 @@ import {
     MissingDataStrategy,
 } from "../../utils/index.js"
 import {
-    OwidTable,
+    ChartsTable,
     SampleColumnSlugs,
     SynthesizeFruitTable,
 } from "../../core-table/index.js"
@@ -41,7 +41,7 @@ it("can display a StackedDiscreteBar chart in relative mode", () => {
     const csv = `coal,gas,year,entityName
     20,30,2000,France
     6,14,2000,Spain`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "coal", type: ColumnTypeNames.Numeric },
         { slug: "gas", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -96,7 +96,7 @@ it("can display a chart with missing variable data for some entities", () => {
     const csv = `coal,gas,year,entityName
     20,,2000,France
     ,14,2000,Spain`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "coal", type: ColumnTypeNames.Numeric },
         { slug: "gas", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -155,7 +155,7 @@ it("can display a chart with missing variable data for some entities, while hidi
     20,,2000,France
     10,20,2000,Italy
     ,14,2000,Spain`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "coal", type: ColumnTypeNames.Numeric },
         { slug: "gas", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -201,7 +201,7 @@ it("can display a chart with missing variable data for some entities, while hidi
     20,,2000,France
     10,30,2000,Italy
     ,14,2000,Spain`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "coal", type: ColumnTypeNames.Numeric },
         { slug: "gas", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -246,7 +246,7 @@ it("can display chart with negative values", () => {
     const csv = `coal,gas,year,entityName
 -20,30,2000,France
 40,10,2000,Spain`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "coal", type: ColumnTypeNames.Numeric },
         { slug: "gas", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
@@ -339,7 +339,7 @@ describe("sorting", () => {
         { slug: "gas", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
     ]
-    const table = new OwidTable(csv, columnDef)
+    const table = new ChartsTable(csv, columnDef)
 
     const baseManager: ChartManager = {
         table,
@@ -455,7 +455,7 @@ describe("sorting", () => {
     ,2,2000,Spain
     9,8,2000,Germany
     11,,2000,Belgium`
-        const table = new OwidTable(csv, columnDef)
+        const table = new ChartsTable(csv, columnDef)
 
         const chartState = new StackedDiscreteBarChartState({
             manager: {

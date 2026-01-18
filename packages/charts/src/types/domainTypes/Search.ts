@@ -4,14 +4,14 @@ import type {
     Hit,
     HitHighlightResult,
 } from "instantsearch.js"
-import { OwidGdocType } from "../gdocTypes/Gdoc.js"
+import { GdocType } from "../gdocTypes/Gdoc.js"
 import { GrapherTabName } from "../grapherTypes/GrapherTypes.js"
 import * as z from "zod/mini"
 
 export const PagesIndexRecordSchema = z.object({
     objectID: z.string(),
     importance: z.number(),
-    type: z.enum(OwidGdocType),
+    type: z.enum(GdocType),
     slug: z.string(),
     title: z.string(),
     content: z.string(),
@@ -176,7 +176,7 @@ export type DataInsightHit = {
     thumbnailUrl: string
     date: string
     slug: string
-    type: OwidGdocType.DataInsight
+    type: GdocType.DataInsight
     objectID: string
     __position: number
 }
@@ -188,7 +188,7 @@ export type FlatArticleHit = {
     thumbnailUrl: string
     date: string
     slug: string
-    type: OwidGdocType.Article | OwidGdocType.AboutPage
+    type: GdocType.Article | GdocType.AboutPage
     content: string
     authors: string[]
     objectID: string
@@ -199,7 +199,7 @@ export type StackedArticleHit = {
     title: string
     thumbnailUrl: string
     slug: string
-    type: OwidGdocType.Article | OwidGdocType.AboutPage
+    type: GdocType.Article | GdocType.AboutPage
     content: string
     objectID: string
     __position: number
@@ -210,7 +210,7 @@ export type SearchFlatArticleResponse = SearchResponse<FlatArticleHit>
 
 export type TopicPageHit = {
     title: string
-    type: OwidGdocType.TopicPage | OwidGdocType.LinearTopicPage
+    type: GdocType.TopicPage | GdocType.LinearTopicPage
     slug: string
     excerpt: string
     excerptLong?: string[]

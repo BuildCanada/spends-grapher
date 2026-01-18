@@ -4,10 +4,10 @@ import { GrapherState } from "../core/GrapherState"
 import {
     TestData,
     TestMetadata,
-    createOwidTestDataset,
+    createTestDataset,
     fakeEntities,
-} from "../testData/OwidTestData"
-import { legacyToOwidTableAndDimensionsWithMandatorySlug } from "../core/LegacyToOwidTable.js"
+} from "../testData/TestData"
+import { legacyToChartsTableAndDimensionsWithMandatorySlug } from "../core/LegacyToChartsTable.js"
 
 /**
  * Comprehensive life expectancy test data covering:
@@ -170,8 +170,8 @@ export const LifeExpectancyGrapher = (
         ...props,
         dimensions,
     })
-    const inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-        createOwidTestDataset([
+    const inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+        createTestDataset([
             { data: lifeExpectancyData, metadata: lifeExpectancyMetadata },
         ]),
         dimensions,
@@ -261,8 +261,8 @@ export const CanadaProvinceGrapher = (
         ...props,
         dimensions,
     })
-    const inputTable = legacyToOwidTableAndDimensionsWithMandatorySlug(
-        createOwidTestDataset([
+    const inputTable = legacyToChartsTableAndDimensionsWithMandatorySlug(
+        createTestDataset([
             { data: provinceData, metadata: populationMetadata },
         ]),
         dimensions,

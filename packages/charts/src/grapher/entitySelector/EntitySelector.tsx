@@ -24,7 +24,7 @@ import {
     getUserNavigatorLanguagesNonEnglish,
     getRegionAlternativeNames,
     convertDaysSinceEpochToDate,
-    checkIsOwidIncomeGroupName,
+    checkIsIncomeGroupName,
     checkHasMembers,
     Region,
     getRegionByName,
@@ -55,7 +55,7 @@ import {
     isPopulationVariableETLPath,
     isWorldEntityName,
 } from "../core/GrapherConstants"
-import { CoreColumn, OwidTable } from "../../core-table/index.js"
+import { CoreColumn, ChartsTable } from "../../core-table/index.js"
 import { SortIcon } from "../controls/SortIcon"
 import { Dropdown } from "../controls/Dropdown"
 import { scaleLinear, type ScaleLinear } from "d3-scale"
@@ -63,13 +63,13 @@ import {
     AdditionalGrapherDataFetchFn,
     ColumnSlug,
     EntityName,
-    OwidColumnDef,
+    ColumnDef,
     ProjectionColumnInfo,
     Time,
     ToleranceStrategy,
     type EntitySelectorEvent,
 } from "../../types/index.js"
-import { buildVariableTable } from "../core/LegacyToOwidTable"
+import { buildVariableTable } from "../core/LegacyToChartsTable"
 import { DrawerContext } from "../slideInDrawer/SlideInDrawer.js"
 import * as R from "remeda"
 import { MapConfig } from "../mapCharts/MapConfig"
@@ -105,8 +105,8 @@ export interface EntitySelectorState {
 
 export interface EntitySelectorManager {
     entitySelectorState: Partial<EntitySelectorState>
-    table: OwidTable
-    tableForSelection: OwidTable
+    table: ChartsTable
+    tableForSelection: ChartsTable
     selection: SelectionArray
     entityType?: string
     entityTypePlural?: string
@@ -183,7 +183,7 @@ const EXTERNAL_SORT_INDICATOR_DEFINITIONS = [
 
             // then check the catalog path
             return isPopulationVariableETLPath(
-                (column.def as OwidColumnDef)?.catalogPath ?? ""
+                (column.def as ColumnDef)?.catalogPath ?? ""
             )
         },
     },
@@ -388,7 +388,7 @@ export class EntitySelector extends React.Component<EntitySelectorProps> {
 
             const countryRegionsWithoutIncomeGroups = localCountryInfo.regions
                 ? localCountryInfo.regions.filter(
-                      (region) => !checkIsOwidIncomeGroupName(region)
+                      (region) => !checkIsIncomeGroupName(region)
                   )
                 : []
 
@@ -462,7 +462,7 @@ export class EntitySelector extends React.Component<EntitySelectorProps> {
 
     private interpolateAndCombineSortColumns(
         info: ProjectionColumnInfo
-    ): OwidTable {
+    ): ChartsTable {
         const { projectedSlug, historicalSlug } = info
 
         // Interpolate the historical and projected columns separately
@@ -673,11 +673,11 @@ export class EntitySelector extends React.Component<EntitySelectorProps> {
         )
     }
 
-    @computed private get inputTable(): OwidTable {
+    @computed private get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed private get table(): OwidTable {
+    @computed private get table(): ChartsTable {
         return this.manager.tableForSelection
     }
 
@@ -1040,7 +1040,7 @@ export class EntitySelector extends React.Component<EntitySelectorProps> {
                     }
                 }
 
-                const row = column.owidRowByEntityNameAndTime
+                const row = column.dataRowByEntityNameAndTime
                     .get(entityName)
                     ?.get(time)
 

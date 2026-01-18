@@ -2,7 +2,7 @@ import * as _ from "lodash-es"
 import { computed, makeObservable } from "mobx"
 import { ChartState } from "../chart/ChartInterface"
 import { StackedDiscreteBarChartManager } from "./StackedDiscreteBarChart"
-import { CoreColumn, OwidTable } from "../../core-table/index.js"
+import { CoreColumn, ChartsTable } from "../../core-table/index.js"
 import {
     ChartErrorInfo,
     ColorSchemeName,
@@ -39,18 +39,18 @@ export class StackedDiscreteBarChartState implements ChartState {
         makeObservable(this)
     }
 
-    @computed get inputTable(): OwidTable {
+    @computed get inputTable(): ChartsTable {
         return this.manager.table
     }
 
-    @computed get transformedTable(): OwidTable {
+    @computed get transformedTable(): ChartsTable {
         return (
             this.manager.transformedTable ??
             this.transformTable(this.inputTable)
         )
     }
 
-    transformTable(table: OwidTable): OwidTable {
+    transformTable(table: ChartsTable): ChartsTable {
         if (!this.yColumnSlugs.length) return table
 
         table = table.filterByEntityNames(
@@ -82,7 +82,7 @@ export class StackedDiscreteBarChartState implements ChartState {
         return table
     }
 
-    transformTableForSelection(table: OwidTable): OwidTable {
+    transformTableForSelection(table: ChartsTable): ChartsTable {
         table = table
             .replaceNonNumericCellsWithErrorValues(this.yColumnSlugs)
             .replaceNegativeCellsWithErrorValues(this.yColumnSlugs)
@@ -93,14 +93,14 @@ export class StackedDiscreteBarChartState implements ChartState {
         return table
     }
 
-    private applyMissingDataStrategy(table: OwidTable): OwidTable {
+    private applyMissingDataStrategy(table: ChartsTable): ChartsTable {
         // We want to remove all rows with missing data for at least one column if:
         // - MissingDataStrategy is explicitly set to hide, or
         // - We are in relative mode and MissingDataStrategy is not explicitly set to show:
         //     If we are showing relative mode, we want to drop all rows that are missing data for
         //     any column, because otherwise the displayed data will be misleading in that it may
         //     suggest patterns that are not actually present.
-        //     see https://github.com/owid/owid-grapher/issues/2860
+        //     see # legacy issue 2860
 
         const shouldRemoveRows =
             this.missingDataStrategy === MissingDataStrategy.hide ||
@@ -162,7 +162,7 @@ export class StackedDiscreteBarChartState implements ChartState {
         return (
             (this.manager.baseColorScheme
                 ? ColorSchemes.get(this.manager.baseColorScheme)
-                : null) ?? ColorSchemes.get(ColorSchemeName["owid-distinct"])
+                : null) ?? ColorSchemes.get(ColorSchemeName["distinct"])
         )
     }
 
@@ -187,7 +187,7 @@ export class StackedDiscreteBarChartState implements ChartState {
                         color: this.categoricalColorAssigner.assign(
                             col.displayName
                         ),
-                        points: col.owidRows.map((row) => ({
+                        points: col.dataRows.map((row) => ({
                             time: row.originalTime,
                             position: row.entityName,
                             value: row.value,
@@ -250,10 +250,10 @@ export class StackedDiscreteBarChartState implements ChartState {
                 sortByFunc = (item: Item): string => item.entityName
                 break
             case SortBy.column: {
-                const owidRowsByEntityName =
-                    this.sortColumn?.owidRowsByEntityName
+                const dataRowsByEntityName =
+                    this.sortColumn?.dataRowsByEntityName
                 sortByFunc = (item: Item): number => {
-                    const rows = owidRowsByEntityName?.get(item.entityName)
+                    const rows = dataRowsByEntityName?.get(item.entityName)
                     return rows?.[0]?.value ?? 0
                 }
                 break

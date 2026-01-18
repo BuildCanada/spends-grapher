@@ -49,7 +49,7 @@ export const Embedded: Story = {
     render: () => {
         const explorer = SampleExplorerOfGraphers({
             bounds: new Bounds(0, 0, 800, 500),
-            isEmbeddedInAnOwidPage: true,
+            isEmbeddedInPage: true,
         })
         return <Explorer {...explorer.props} />
     },

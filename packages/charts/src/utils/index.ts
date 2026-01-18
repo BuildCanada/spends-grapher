@@ -76,8 +76,8 @@ export {
     getPhraseForArchivalDate,
 } from "./metadataHelpers.js"
 
-// OwidVariable display config
-export { OwidVariableDisplayConfig } from "./OwidVariable.js"
+// Variable display config
+export { VariableDisplayConfig } from "./Variable.js"
 
 // Persistable
 export {
@@ -105,8 +105,8 @@ export {
     listedRegionsNames,
     type Country,
     type IncomeGroup,
-    type OwidIncomeGroupName,
-    checkIsOwidIncomeGroupName,
+    type IncomeGroupName,
+    checkIsIncomeGroupName,
     getCountryBySlug,
     getCountryByName,
     getRegionByNameOrVariantName,
@@ -123,7 +123,7 @@ export {
     getRegionAlternativeNames,
     mappableCountries,
     checkIsCountry,
-    checkIsOwidContinent,
+    checkIsContinent,
     checkIsIncomeGroup,
     getIncomeGroups,
     getCountryNamesForRegion,

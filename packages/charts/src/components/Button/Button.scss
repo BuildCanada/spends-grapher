@@ -1,4 +1,4 @@
-.owid-btn {
+.charts-btn {
     @include body-3-medium;
     padding: 8.5px 24px;
     border: 1px solid transparent;
@@ -7,23 +7,23 @@
     display: block;
     cursor: pointer;
 
-    &.owid-btn--icon-only {
+    &.charts-btn--icon-only {
         padding: 4.5px 9px;
     }
 
     &:disabled {
         cursor: default;
 
-        &.owid-btn--solid-blue,
-        &.owid-btn--solid-dark-blue,
-        &.owid-btn--solid-light-blue,
-        &.owid-btn--solid-vermillion {
+        &.charts-btn--solid-blue,
+        &.charts-btn--solid-dark-blue,
+        &.charts-btn--solid-light-blue,
+        &.charts-btn--solid-vermillion {
             color: $blue-50;
             background-color: $blue-10;
         }
 
-        &.owid-btn--outline-vermillion,
-        &.owid-btn--outline-white {
+        &.charts-btn--outline-vermillion,
+        &.charts-btn--outline-white {
             color: $blue-40;
             border-color: $blue-40;
         }
@@ -34,15 +34,15 @@
     }
 }
 
-.owid-btn--icon-right {
+.charts-btn--icon-right {
     margin-left: 0.5rem;
 }
 
-.owid-btn--icon-left {
+.charts-btn--icon-left {
     margin-right: 0.5rem;
 }
 
-.owid-btn--solid-vermillion {
+.charts-btn--solid-vermillion {
     background-color: $vermillion;
     color: #fff;
 
@@ -51,7 +51,7 @@
     }
 }
 
-.owid-btn--outline-vermillion {
+.charts-btn--outline-vermillion {
     border-color: $vermillion;
     color: $vermillion;
 
@@ -61,7 +61,7 @@
     }
 }
 
-.owid-btn--solid-blue {
+.charts-btn--solid-blue {
     background-color: $blue-60;
     color: #fff;
 
@@ -70,7 +70,7 @@
     }
 }
 
-.owid-btn--solid-dark-blue {
+.charts-btn--solid-dark-blue {
     background-color: $blue-95;
     color: #fff;
 
@@ -79,7 +79,7 @@
     }
 }
 
-.owid-btn--solid-light-blue {
+.charts-btn--solid-light-blue {
     background-color: $blue-20;
     color: $blue-90;
 
@@ -88,7 +88,7 @@
     }
 }
 
-.owid-btn--outline-white {
+.charts-btn--outline-white {
     background-color: transparent;
     border-color: $white;
     color: $white;
@@ -99,7 +99,7 @@
     }
 }
 
-.owid-btn--outline-light-blue {
+.charts-btn--outline-light-blue {
     border-color: $blue-20;
     color: $blue-90;
 

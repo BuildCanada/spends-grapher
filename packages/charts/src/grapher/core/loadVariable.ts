@@ -1,8 +1,8 @@
 import {
     ArchiveContext,
     AssetMap,
-    MultipleOwidVariableDataDimensionsMap,
-    OwidVariableDataMetadataDimensions,
+    MultipleVariableDataDimensionsMap,
+    VariableDataMetadataDimensions,
 } from "../../types/index.js"
 import { fetchWithRetry, readFromAssetMap } from "../../utils/index.js"
 import urljoin from "url-join"
@@ -51,7 +51,7 @@ export async function loadVariableDataAndMetadata(
         noCache?: boolean
         loadMetadataOnly?: boolean
     }
-): Promise<OwidVariableDataMetadataDimensions> {
+): Promise<VariableDataMetadataDimensions> {
     const metadataPromise = fetchWithRetry(
         getVariableMetadataRoute(dataApiUrl, variableId, options)
     )
@@ -84,7 +84,7 @@ export async function loadVariablesDataSite(
     archiveContext: ArchiveContext | undefined,
     noCache?: boolean,
     loadMetadataOnly?: boolean
-): Promise<MultipleOwidVariableDataDimensionsMap> {
+): Promise<MultipleVariableDataDimensionsMap> {
     const loadVariableDataPromises = variableIds.map((variableId) =>
         loadVariableDataAndMetadata(variableId, dataApiUrl, {
             assetMap:
@@ -95,7 +95,7 @@ export async function loadVariablesDataSite(
             loadMetadataOnly,
         })
     )
-    const variablesData: OwidVariableDataMetadataDimensions[] =
+    const variablesData: VariableDataMetadataDimensions[] =
         await Promise.all(loadVariableDataPromises)
     const variablesDataMap = new Map(
         variablesData.map((data) => [data.metadata.id, data])

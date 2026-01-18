@@ -47,7 +47,7 @@ export { reactRenderToStringClientOnly } from "./reactUtil.js"
 export { GrapherTabIcon } from "./GrapherTabIcon.js"
 export { GrapherTrendArrow } from "./GrapherTrendArrow.js"
 
-// Stub components for OWID data page features
+// Stub components for data page features
 export { CodeSnippet } from "./stubs/CodeSnippet.js"
 export {
     makeSource,

@@ -20,12 +20,12 @@ import { ColorScale } from "../color/ColorScale"
 import {
     Time,
     EntityName,
-    OwidVariableRow,
+    VariableRow,
     AxisConfigInterface,
     ColumnSlug,
     PrimitiveType,
 } from "../../types/index.js"
-import { CoreColumn, OwidTable } from "../../core-table/index.js"
+import { CoreColumn, ChartsTable } from "../../core-table/index.js"
 import {
     calculateTrendDirection,
     excludeUndefined,
@@ -43,7 +43,7 @@ interface MapTooltipProps {
     mapColumnInfo: MapColumnInfo
     position?: PointVector
     lineColorScale: ColorScale
-    timeSeriesTable: OwidTable
+    timeSeriesTable: ChartsTable
     targetTime?: Time // show tooltip values for a specific point in time
     targetTimes?: [Time, Time] // show tooltip values for a specific time range (start and end times)
     sparklineWidth?: number
@@ -109,30 +109,30 @@ export class MapTooltip
     }
 
     // Table pre-filtered by targetTime, excludes time series
-    @computed private get entityTable(): OwidTable {
+    @computed private get entityTable(): ChartsTable {
         const table =
             this.props.manager.transformedTable ?? this.props.manager.table
         return table.filterByEntityNames([this.entityName])
     }
 
-    @computed get timeSeriesTable(): OwidTable {
+    @computed get timeSeriesTable(): ChartsTable {
         return this.props.timeSeriesTable
     }
 
     @computed private get startDatum():
-        | OwidVariableRow<number | string>
+        | VariableRow<number | string>
         | undefined {
         if (this.startTime === undefined) return undefined
-        return this.mapColumn.owidRowByEntityNameAndTime
+        return this.mapColumn.dataRowByEntityNameAndTime
             .get(this.entityName)
             ?.get(this.startTime)
     }
 
     @computed private get endDatum():
-        | OwidVariableRow<number | string>
+        | VariableRow<number | string>
         | undefined {
         if (this.endTime === undefined) return undefined
-        return this.mapColumn.owidRowByEntityNameAndTime
+        return this.mapColumn.dataRowByEntityNameAndTime
             .get(this.entityName)
             ?.get(this.endTime)
     }
@@ -175,7 +175,7 @@ export class MapTooltip
                 { type: "historical+projected" },
                 (info) =>
                     this.entityTable.get(info.slugForIsProjectionColumn)
-                        .owidRows[0]?.value
+                        .dataRows[0]?.value
             )
             .exhaustive()
     }
@@ -341,7 +341,7 @@ function MapTooltipValue({
     isProjection = false,
 }: {
     mapColumn: CoreColumn
-    datum?: OwidVariableRow<number | string>
+    datum?: VariableRow<number | string>
     formattedValue?: string
     colorScale: ColorScale
     isProjection?: boolean
@@ -370,8 +370,8 @@ function MapTooltipRangeValues({
     colorScale,
 }: {
     mapColumn: CoreColumn
-    startDatum?: OwidVariableRow<number | string>
-    endDatum?: OwidVariableRow<number | string>
+    startDatum?: VariableRow<number | string>
+    endDatum?: VariableRow<number | string>
     formattedStartValue?: ReturnType<MapFormatValueForTooltip>
     formattedEndValue?: ReturnType<MapFormatValueForTooltip>
     colorScale: ColorScale

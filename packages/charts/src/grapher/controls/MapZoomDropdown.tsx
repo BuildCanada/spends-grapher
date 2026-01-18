@@ -11,7 +11,7 @@ import {
     GlobeRegionName,
     mappableCountries,
     MapRegionName,
-    checkIsOwidIncomeGroupName,
+    checkIsIncomeGroupName,
     getUserCountryInformation,
     regions,
 } from "../../utils/index.js"
@@ -114,7 +114,7 @@ export class MapZoomDropdown extends React.Component<{
                 this.manager.globeController?.rotateToCountry(selected.value)
             })
             .with("continent", () => {
-                this.manager.globeController?.rotateToOwidContinent(
+                this.manager.globeController?.rotateToContinent(
                     selected.value as GlobeRegionName
                 )
             })
@@ -205,7 +205,7 @@ export class MapZoomDropdown extends React.Component<{
 
             const countryRegionsWithoutIncomeGroups = localCountryInfo.regions
                 ? localCountryInfo.regions.filter(
-                      (region) => !checkIsOwidIncomeGroupName(region)
+                      (region) => !checkIsIncomeGroupName(region)
                   )
                 : []
 

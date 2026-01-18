@@ -8,7 +8,7 @@ export const CustomColorSchemes: ColorSchemeInterface[] = []
 
 // Create some of our own!
 
-export const OwidDistinctColors = {
+export const DistinctColors = {
     Purple: "#6d3e91",
     DarkOrange: "#c05917",
     LightTeal: "#58ac8c",
@@ -35,11 +35,11 @@ export const OwidDistinctColors = {
     Coral: "#d73c50",
 } as const
 
-const OwidDistinctColorsNames = lazy(() => R.invert(OwidDistinctColors))
+const DistinctColorsNames = lazy(() => R.invert(DistinctColors))
 
 // These are variations of some of the colors above where the original color would have too little
 // contrast against a white background for thin lines or text elements
-export const DarkerOwidDistinctColors: Record<string, string> = {
+export const DarkerDistinctColors: Record<string, string> = {
     DarkOrangeDarker: "#be5915",
     PeachDarker: "#c4523e",
     LightTealDarker: "#2c8465",
@@ -49,113 +49,113 @@ export const DarkerOwidDistinctColors: Record<string, string> = {
 }
 
 const darkerColorReplacementsHexToReplacementColorName = {
-    [OwidDistinctColors.DarkOrange]: DarkerOwidDistinctColors.DarkOrangeDarker,
-    [OwidDistinctColors.Peach]: DarkerOwidDistinctColors.PeachDarker,
-    [OwidDistinctColors.LightTeal]: DarkerOwidDistinctColors.LightTealDarker,
-    [OwidDistinctColors.Turquoise]: DarkerOwidDistinctColors.TurquoiseDarker,
-    [OwidDistinctColors.Camel]: DarkerOwidDistinctColors.CamelDarker,
-    [OwidDistinctColors.Lime]: DarkerOwidDistinctColors.LimeDarker,
+    [DistinctColors.DarkOrange]: DarkerDistinctColors.DarkOrangeDarker,
+    [DistinctColors.Peach]: DarkerDistinctColors.PeachDarker,
+    [DistinctColors.LightTeal]: DarkerDistinctColors.LightTealDarker,
+    [DistinctColors.Turquoise]: DarkerDistinctColors.TurquoiseDarker,
+    [DistinctColors.Camel]: DarkerDistinctColors.CamelDarker,
+    [DistinctColors.Lime]: DarkerDistinctColors.LimeDarker,
 } as Record<string, string>
 
 // TODO: Make this into a lazy initialization
-export const OwidDistinctLinesColors = {
-    ..._.omit(OwidDistinctColors, Object.keys(DarkerOwidDistinctColors)),
-    ...DarkerOwidDistinctColors,
+export const DistinctLinesColors = {
+    ..._.omit(DistinctColors, Object.keys(DarkerDistinctColors)),
+    ...DarkerDistinctColors,
 }
 
 // Used for looking up names from color hex values
-const OwidDistinctLinesColorNames = lazy(() =>
-    R.invert(OwidDistinctLinesColors)
+const DistinctLinesColorNames = lazy(() =>
+    R.invert(DistinctLinesColors)
 )
 
 // Below are 5 variations of the same colors in different permutations
 export const CategoricalColorsPaletteA = [
-    OwidDistinctColors.Denim,
-    OwidDistinctColors.Maroon,
-    OwidDistinctColors.OliveGreen,
-    OwidDistinctColors.RustyOrange,
-    OwidDistinctColors.Copper,
-    OwidDistinctColors.Cherry,
-    OwidDistinctColors.Coral,
-    OwidDistinctColors.MidnightBlue,
-    OwidDistinctColors.Teal,
-    OwidDistinctColors.Camel,
-    OwidDistinctColors.Mauve,
-    OwidDistinctColors.DarkOliveGreen,
+    DistinctColors.Denim,
+    DistinctColors.Maroon,
+    DistinctColors.OliveGreen,
+    DistinctColors.RustyOrange,
+    DistinctColors.Copper,
+    DistinctColors.Cherry,
+    DistinctColors.Coral,
+    DistinctColors.MidnightBlue,
+    DistinctColors.Teal,
+    DistinctColors.Camel,
+    DistinctColors.Mauve,
+    DistinctColors.DarkOliveGreen,
 ]
 
 export const CategoricalColorsPaletteB = [
-    OwidDistinctColors.Teal,
-    OwidDistinctColors.MidnightBlue,
-    OwidDistinctColors.DustyCoral,
-    OwidDistinctColors.Turquoise,
-    OwidDistinctColors.DarkMauve,
-    OwidDistinctColors.DarkOliveGreen,
-    OwidDistinctColors.RustyOrange,
-    OwidDistinctColors.Camel,
-    OwidDistinctColors.Blue,
-    OwidDistinctColors.Cherry,
-    OwidDistinctColors.LightTeal,
-    OwidDistinctColors.DarkCopper,
-    OwidDistinctColors.Peach,
+    DistinctColors.Teal,
+    DistinctColors.MidnightBlue,
+    DistinctColors.DustyCoral,
+    DistinctColors.Turquoise,
+    DistinctColors.DarkMauve,
+    DistinctColors.DarkOliveGreen,
+    DistinctColors.RustyOrange,
+    DistinctColors.Camel,
+    DistinctColors.Blue,
+    DistinctColors.Cherry,
+    DistinctColors.LightTeal,
+    DistinctColors.DarkCopper,
+    DistinctColors.Peach,
 ]
 
 export const CategoricalColorsPaletteC = [
-    OwidDistinctColors.Purple,
-    OwidDistinctColors.DarkOrange,
-    OwidDistinctColors.LightTeal,
-    OwidDistinctColors.Blue,
-    OwidDistinctColors.Maroon,
-    OwidDistinctColors.Camel,
-    OwidDistinctColors.MidnightBlue,
-    OwidDistinctColors.DustyCoral,
-    OwidDistinctColors.DarkOliveGreen,
-    OwidDistinctColors.DarkCopper,
-    OwidDistinctColors.Peach,
-    OwidDistinctColors.Mauve,
-    OwidDistinctColors.Turquoise,
-    OwidDistinctColors.OliveGreen,
-    OwidDistinctColors.Cherry,
-    OwidDistinctColors.Teal,
-    OwidDistinctColors.RustyOrange,
-    OwidDistinctColors.Denim,
-    OwidDistinctColors.Fuchsia,
-    OwidDistinctColors.TealishGreen,
-    OwidDistinctColors.Copper,
-    OwidDistinctColors.DarkMauve,
-    OwidDistinctColors.Lime,
-    OwidDistinctColors.Coral,
+    DistinctColors.Purple,
+    DistinctColors.DarkOrange,
+    DistinctColors.LightTeal,
+    DistinctColors.Blue,
+    DistinctColors.Maroon,
+    DistinctColors.Camel,
+    DistinctColors.MidnightBlue,
+    DistinctColors.DustyCoral,
+    DistinctColors.DarkOliveGreen,
+    DistinctColors.DarkCopper,
+    DistinctColors.Peach,
+    DistinctColors.Mauve,
+    DistinctColors.Turquoise,
+    DistinctColors.OliveGreen,
+    DistinctColors.Cherry,
+    DistinctColors.Teal,
+    DistinctColors.RustyOrange,
+    DistinctColors.Denim,
+    DistinctColors.Fuchsia,
+    DistinctColors.TealishGreen,
+    DistinctColors.Copper,
+    DistinctColors.DarkMauve,
+    DistinctColors.Lime,
+    DistinctColors.Coral,
 ]
 
 export const CategoricalColorsPaletteD = [
-    OwidDistinctColors.DustyCoral,
-    OwidDistinctColors.DarkOliveGreen,
-    OwidDistinctColors.Camel,
-    OwidDistinctColors.DarkMauve,
-    OwidDistinctColors.Turquoise,
-    OwidDistinctColors.TealishGreen,
-    OwidDistinctColors.Peach,
-    OwidDistinctColors.DarkCopper,
-    OwidDistinctColors.Fuchsia,
-    OwidDistinctColors.MidnightBlue,
+    DistinctColors.DustyCoral,
+    DistinctColors.DarkOliveGreen,
+    DistinctColors.Camel,
+    DistinctColors.DarkMauve,
+    DistinctColors.Turquoise,
+    DistinctColors.TealishGreen,
+    DistinctColors.Peach,
+    DistinctColors.DarkCopper,
+    DistinctColors.Fuchsia,
+    DistinctColors.MidnightBlue,
 ]
 
 export const CategoricalColorsPaletteE = [
-    OwidDistinctColors.DarkCopper,
-    OwidDistinctColors.Peach,
-    OwidDistinctColors.Blue,
-    OwidDistinctColors.DarkOliveGreen,
-    OwidDistinctColors.Purple,
-    OwidDistinctColors.Teal,
-    OwidDistinctColors.Maroon,
-    OwidDistinctColors.Coral,
-    OwidDistinctColors.OliveGreen,
-    OwidDistinctColors.Camel,
-    OwidDistinctColors.DarkMauve,
+    DistinctColors.DarkCopper,
+    DistinctColors.Peach,
+    DistinctColors.Blue,
+    DistinctColors.DarkOliveGreen,
+    DistinctColors.Purple,
+    DistinctColors.Teal,
+    DistinctColors.Maroon,
+    DistinctColors.Coral,
+    DistinctColors.OliveGreen,
+    DistinctColors.Camel,
+    DistinctColors.DarkMauve,
 ]
-export const OwidDistinctColorScheme = {
-    name: ColorSchemeName["owid-distinct"],
-    displayName: "OWID Distinct",
+export const DistinctColorScheme = {
+    name: ColorSchemeName["distinct"],
+    displayName: "Distinct",
     singleColorScale: false,
     isDistinct: true,
     // We use the feature of ColorSchemes to use the Palette A permutation
@@ -163,99 +163,99 @@ export const OwidDistinctColorScheme = {
     // colors
     colorSets: [CategoricalColorsPaletteA, CategoricalColorsPaletteC],
 }
-CustomColorSchemes.push(OwidDistinctColorScheme)
+CustomColorSchemes.push(DistinctColorScheme)
 
-const OwidDistinctLinesPalette = [
-    OwidDistinctColors.Denim,
-    OwidDistinctColors.RustyOrange,
-    DarkerOwidDistinctColors.CamelDarker,
-    DarkerOwidDistinctColors.LightTealDarker,
-    OwidDistinctColors.Purple,
-    OwidDistinctColors.Maroon,
-    OwidDistinctColors.MidnightBlue,
-    OwidDistinctColors.Mauve,
-    OwidDistinctColors.DarkCopper,
-    DarkerOwidDistinctColors.TurquoiseDarker,
-    OwidDistinctColors.Cherry,
-    DarkerOwidDistinctColors.LimeDarker,
-    DarkerOwidDistinctColors.PeachDarker,
-    OwidDistinctColors.Blue,
-    OwidDistinctColors.DarkOliveGreen,
-    OwidDistinctColors.Coral,
-    OwidDistinctColors.Copper,
-    OwidDistinctColors.Teal,
-    OwidDistinctColors.Fuchsia,
-    OwidDistinctColors.OliveGreen,
-    DarkerOwidDistinctColors.DarkOrangeDarker,
-    OwidDistinctColors.DarkMauve,
-    OwidDistinctColors.TealishGreen,
-    OwidDistinctColors.DustyCoral,
+const DistinctLinesPalette = [
+    DistinctColors.Denim,
+    DistinctColors.RustyOrange,
+    DarkerDistinctColors.CamelDarker,
+    DarkerDistinctColors.LightTealDarker,
+    DistinctColors.Purple,
+    DistinctColors.Maroon,
+    DistinctColors.MidnightBlue,
+    DistinctColors.Mauve,
+    DistinctColors.DarkCopper,
+    DarkerDistinctColors.TurquoiseDarker,
+    DistinctColors.Cherry,
+    DarkerDistinctColors.LimeDarker,
+    DarkerDistinctColors.PeachDarker,
+    DistinctColors.Blue,
+    DistinctColors.DarkOliveGreen,
+    DistinctColors.Coral,
+    DistinctColors.Copper,
+    DistinctColors.Teal,
+    DistinctColors.Fuchsia,
+    DistinctColors.OliveGreen,
+    DarkerDistinctColors.DarkOrangeDarker,
+    DistinctColors.DarkMauve,
+    DistinctColors.TealishGreen,
+    DistinctColors.DustyCoral,
 ]
 
-export const OwidDistinctLinesColorScheme = {
-    name: ColorSchemeName["OwidDistinctLines"],
-    displayName: "OWID Distinct (lines)",
+export const DistinctLinesColorScheme = {
+    name: ColorSchemeName["DistinctLines"],
+    displayName: "Distinct (lines)",
     singleColorScale: false,
     isDistinct: true,
-    colorSets: [OwidDistinctLinesPalette],
+    colorSets: [DistinctLinesPalette],
 }
-CustomColorSchemes.push(OwidDistinctLinesColorScheme)
+CustomColorSchemes.push(DistinctLinesColorScheme)
 
-export const OwidCategoricalAScheme = {
-    name: ColorSchemeName["OwidCategoricalA"],
-    displayName: "OWID categorical A",
+export const CategoricalAScheme = {
+    name: ColorSchemeName["CategoricalA"],
+    displayName: "Categorical A",
     singleColorScale: false,
     isDistinct: true,
     colorSets: [CategoricalColorsPaletteA],
 }
-CustomColorSchemes.push(OwidCategoricalAScheme)
+CustomColorSchemes.push(CategoricalAScheme)
 
-export const OwidCategoricalBScheme = {
-    name: ColorSchemeName["OwidCategoricalB"],
-    displayName: "OWID categorical B",
+export const CategoricalBScheme = {
+    name: ColorSchemeName["CategoricalB"],
+    displayName: "Categorical B",
     singleColorScale: false,
     isDistinct: true,
     colorSets: [CategoricalColorsPaletteB],
 }
-CustomColorSchemes.push(OwidCategoricalBScheme)
+CustomColorSchemes.push(CategoricalBScheme)
 
-export const OwidCategoricalCScheme = {
-    name: ColorSchemeName["OwidCategoricalC"],
-    displayName: "OWID categorical C",
+export const CategoricalCScheme = {
+    name: ColorSchemeName["CategoricalC"],
+    displayName: "Categorical C",
     singleColorScale: false,
     isDistinct: true,
     colorSets: [CategoricalColorsPaletteC],
 }
-CustomColorSchemes.push(OwidCategoricalCScheme)
+CustomColorSchemes.push(CategoricalCScheme)
 
-export const OwidCategoricalDScheme = {
-    name: ColorSchemeName["OwidCategoricalD"],
-    displayName: "OWID categorical D",
+export const CategoricalDScheme = {
+    name: ColorSchemeName["CategoricalD"],
+    displayName: "Categorical D",
     singleColorScale: false,
     isDistinct: true,
     colorSets: [CategoricalColorsPaletteD],
 }
-CustomColorSchemes.push(OwidCategoricalDScheme)
+CustomColorSchemes.push(CategoricalDScheme)
 
-export const OwidCategoricalEScheme = {
-    name: ColorSchemeName["OwidCategoricalE"],
-    displayName: "OWID categorical E",
+export const CategoricalEScheme = {
+    name: ColorSchemeName["CategoricalE"],
+    displayName: "Categorical E",
     singleColorScale: false,
     isDistinct: true,
     colorSets: [CategoricalColorsPaletteE],
 }
-CustomColorSchemes.push(OwidCategoricalEScheme)
+CustomColorSchemes.push(CategoricalEScheme)
 
 export const EnergyColors = {
-    Coal: OwidDistinctColors.Maroon,
-    Oil: OwidDistinctColors.DustyCoral,
-    Gas: OwidDistinctColors.Purple,
-    Biomass: OwidDistinctColors.DarkCopper,
-    Hydropower: OwidDistinctColors.Blue,
-    Nuclear: OwidDistinctColors.Teal,
-    Wind: OwidDistinctColors.MidnightBlue,
-    Solar: OwidDistinctColors.Peach,
-    OtherRenewables: OwidDistinctColors.OliveGreen,
+    Coal: DistinctColors.Maroon,
+    Oil: DistinctColors.DustyCoral,
+    Gas: DistinctColors.Purple,
+    Biomass: DistinctColors.DarkCopper,
+    Hydropower: DistinctColors.Blue,
+    Nuclear: DistinctColors.Teal,
+    Wind: DistinctColors.MidnightBlue,
+    Solar: DistinctColors.Peach,
+    OtherRenewables: DistinctColors.OliveGreen,
 }
 
 // Used for looking up color names from hex values
@@ -273,15 +273,15 @@ const EnergyColorPalette = [
     EnergyColors.OtherRenewables,
 ]
 
-export const OwidEnergy = {
-    name: ColorSchemeName["OwidEnergy"],
-    displayName: "OWID Energy",
+export const Energy = {
+    name: ColorSchemeName["Energy"],
+    displayName: "Energy",
     singleColorScale: false,
     isDistinct: true,
     colorSets: [EnergyColorPalette],
     colorMap: EnergyColors,
 }
-CustomColorSchemes.push(OwidEnergy)
+CustomColorSchemes.push(Energy)
 
 function getModifiedLinesNames(
     colorNames: Record<string, string>
@@ -300,17 +300,17 @@ const EnergyColorsLinesNames = lazy(() =>
     getModifiedLinesNames(EnergyColorsNames())
 )
 
-export const OwidEnergyLines = getModifiedLinesColorScheme(OwidEnergy)
-CustomColorSchemes.push(OwidEnergyLines)
+export const EnergyLines = getModifiedLinesColorScheme(Energy)
+CustomColorSchemes.push(EnergyLines)
 
 CustomColorSchemes.push({
     name: ColorSchemeName.stackedAreaDefault,
-    displayName: "OWID 4 Color Gradient (=Owid Distinct)",
+    displayName: "4 Color Gradient (=Distinct)",
     singleColorScale: false,
     isDistinct: true,
-    // TODO: this is now a copy of owid-distinct. After a data migration to get
+    // TODO: this is now a copy of distinct. After a data migration to get
     // rid of stackedAreaDefault in existing chart configs we should replace it with
-    // owid-distinct
+    // distinct
     // We use the feature of ColorSchemes to use the Palette A permutation
     // for 12 categories or less and the Palette C to reach up to 24 different
     // colors
@@ -318,75 +318,75 @@ CustomColorSchemes.push({
 })
 
 export const ContinentColors = {
-    Africa: OwidDistinctColors.Mauve,
-    Antarctica: OwidDistinctColors.DarkCopper,
-    Asia: OwidDistinctColors.Teal,
-    Europe: OwidDistinctColors.Denim,
-    NorthAmerica: OwidDistinctColors.Peach,
-    ["North America"]: OwidDistinctColors.Peach,
-    SouthAmerica: OwidDistinctColors.Maroon,
-    ["South America"]: OwidDistinctColors.Maroon,
-    Oceania: OwidDistinctColors.Turquoise,
-    World: OwidDistinctColors.DarkOliveGreen,
-    SubSaharanAfrica: OwidDistinctColors.DarkMauve,
-    MiddleEastNorthAfrica: OwidDistinctColors.Purple,
-    CentralAsia: OwidDistinctColors.LightTeal,
-    EastAsia: OwidDistinctColors.TealishGreen,
-    SoutheastAsia: OwidDistinctColors.Lime,
-    SouthAsia: OwidDistinctColors.OliveGreen,
-    CentralAmericaAndCarribean: OwidDistinctColors.DustyCoral,
-    EasternEurope: OwidDistinctColors.Blue,
-    WesternEurope: OwidDistinctColors.MidnightBlue,
-    AustralasiaAndOceania: OwidDistinctColors.Copper,
+    Africa: DistinctColors.Mauve,
+    Antarctica: DistinctColors.DarkCopper,
+    Asia: DistinctColors.Teal,
+    Europe: DistinctColors.Denim,
+    NorthAmerica: DistinctColors.Peach,
+    ["North America"]: DistinctColors.Peach,
+    SouthAmerica: DistinctColors.Maroon,
+    ["South America"]: DistinctColors.Maroon,
+    Oceania: DistinctColors.Turquoise,
+    World: DistinctColors.DarkOliveGreen,
+    SubSaharanAfrica: DistinctColors.DarkMauve,
+    MiddleEastNorthAfrica: DistinctColors.Purple,
+    CentralAsia: DistinctColors.LightTeal,
+    EastAsia: DistinctColors.TealishGreen,
+    SoutheastAsia: DistinctColors.Lime,
+    SouthAsia: DistinctColors.OliveGreen,
+    CentralAmericaAndCarribean: DistinctColors.DustyCoral,
+    EasternEurope: DistinctColors.Blue,
+    WesternEurope: DistinctColors.MidnightBlue,
+    AustralasiaAndOceania: DistinctColors.Copper,
 
     // World Bank regions
-    "East Asia and Pacific (WB)": OwidDistinctColors.Copper,
-    "Europe and Central Asia (WB)": OwidDistinctColors.Denim,
+    "East Asia and Pacific (WB)": DistinctColors.Copper,
+    "Europe and Central Asia (WB)": DistinctColors.Denim,
     "Middle East, North Africa, Afghanistan and Pakistan (WB)":
-        OwidDistinctColors.Camel,
-    "North America (WB)": OwidDistinctColors.Peach,
-    "South Asia (WB)": OwidDistinctColors.OliveGreen,
-    "Sub-Saharan Africa (WB)": OwidDistinctColors.DarkMauve,
-    "Latin America and Caribbean (WB)": OwidDistinctColors.Maroon,
+        DistinctColors.Camel,
+    "North America (WB)": DistinctColors.Peach,
+    "South Asia (WB)": DistinctColors.OliveGreen,
+    "Sub-Saharan Africa (WB)": DistinctColors.DarkMauve,
+    "Latin America and Caribbean (WB)": DistinctColors.Maroon,
 
     // UN regions
-    "Asia (UN)": OwidDistinctColors.Teal,
-    "Africa (UN)": OwidDistinctColors.Mauve,
-    "Europe (UN)": OwidDistinctColors.Denim,
-    "Oceania (UN)": OwidDistinctColors.Turquoise,
-    "Northern America (UN)": OwidDistinctColors.Peach,
-    "Latin America and the Caribbean (UN)": OwidDistinctColors.Maroon,
+    "Asia (UN)": DistinctColors.Teal,
+    "Africa (UN)": DistinctColors.Mauve,
+    "Europe (UN)": DistinctColors.Denim,
+    "Oceania (UN)": DistinctColors.Turquoise,
+    "Northern America (UN)": DistinctColors.Peach,
+    "Latin America and the Caribbean (UN)": DistinctColors.Maroon,
 
     // WHO regions
-    "Africa (WHO)": OwidDistinctColors.Mauve,
-    "Europe (WHO)": OwidDistinctColors.Denim,
-    "Americas (WHO)": OwidDistinctColors.Peach,
-    "South-East Asia (WHO)": OwidDistinctColors.Lime,
-    "Western Pacific (WHO)": OwidDistinctColors.Turquoise,
-    "Eastern Mediterranean (WHO)": OwidDistinctColors.Camel,
+    "Africa (WHO)": DistinctColors.Mauve,
+    "Europe (WHO)": DistinctColors.Denim,
+    "Americas (WHO)": DistinctColors.Peach,
+    "South-East Asia (WHO)": DistinctColors.Lime,
+    "Western Pacific (WHO)": DistinctColors.Turquoise,
+    "Eastern Mediterranean (WHO)": DistinctColors.Camel,
 
     // Maddison regions
-    "Australia and New Zealand": OwidDistinctColors.Teal,
-    "Central and Southern Asia": OwidDistinctColors.OliveGreen,
-    "Europe and Northern America": OwidDistinctColors.Denim,
-    "Eastern and South-Eastern Asia": OwidDistinctColors.Copper,
-    "Northern Africa and Western Asia": OwidDistinctColors.Camel,
-    "East Asia": OwidDistinctColors.Copper,
-    "Latin America": OwidDistinctColors.Maroon,
-    "Eastern Europe": OwidDistinctColors.MidnightBlue,
-    "Western Europe": OwidDistinctColors.Denim,
-    "Western Offshoots": OwidDistinctColors.Peach,
-    "Sub Saharan Africa": OwidDistinctColors.DarkMauve,
-    "South and South East Asia": OwidDistinctColors.OliveGreen,
-    "Middle East and North Africa": OwidDistinctColors.Camel,
+    "Australia and New Zealand": DistinctColors.Teal,
+    "Central and Southern Asia": DistinctColors.OliveGreen,
+    "Europe and Northern America": DistinctColors.Denim,
+    "Eastern and South-Eastern Asia": DistinctColors.Copper,
+    "Northern Africa and Western Asia": DistinctColors.Camel,
+    "East Asia": DistinctColors.Copper,
+    "Latin America": DistinctColors.Maroon,
+    "Eastern Europe": DistinctColors.MidnightBlue,
+    "Western Europe": DistinctColors.Denim,
+    "Western Offshoots": DistinctColors.Peach,
+    "Sub Saharan Africa": DistinctColors.DarkMauve,
+    "South and South East Asia": DistinctColors.OliveGreen,
+    "Middle East and North Africa": DistinctColors.Camel,
 
     // Pew Research Center regions
-    "Europe (Pew)": OwidDistinctColors.Denim,
-    "Asia-Pacific (Pew)": OwidDistinctColors.Teal,
-    "North America (Pew)": OwidDistinctColors.Peach,
-    "Sub-Saharan Africa (Pew)": OwidDistinctColors.DarkMauve,
-    "Latin America-Caribbean (Pew)": OwidDistinctColors.Maroon,
-    "Middle East-North Africa (Pew)": OwidDistinctColors.Camel,
+    "Europe (Pew)": DistinctColors.Denim,
+    "Asia-Pacific (Pew)": DistinctColors.Teal,
+    "North America (Pew)": DistinctColors.Peach,
+    "Sub-Saharan Africa (Pew)": DistinctColors.DarkMauve,
+    "Latin America-Caribbean (Pew)": DistinctColors.Maroon,
+    "Middle East-North Africa (Pew)": DistinctColors.Camel,
 } as const
 
 // Used for looking up color names from hex values
@@ -467,7 +467,7 @@ export const SingleColorDenim = {
     displayName: "Single color: Denim",
     singleColorScale: true,
     isDistinct: true,
-    colorSets: [[OwidDistinctColors.Denim]],
+    colorSets: [[DistinctColors.Denim]],
 }
 
 CustomColorSchemes.push(SingleColorDenim)
@@ -477,7 +477,7 @@ export const SingleColorTeal = {
     displayName: "Single color: Teal",
     singleColorScale: true,
     isDistinct: true,
-    colorSets: [[OwidDistinctColors.Teal]],
+    colorSets: [[DistinctColors.Teal]],
 }
 
 CustomColorSchemes.push(SingleColorTeal)
@@ -487,7 +487,7 @@ export const SingleColorPurple = {
     displayName: "Single color: Purple",
     singleColorScale: true,
     isDistinct: true,
-    colorSets: [[OwidDistinctColors.Purple]],
+    colorSets: [[DistinctColors.Purple]],
 }
 
 CustomColorSchemes.push(SingleColorPurple)
@@ -497,7 +497,7 @@ export const SingleColorDustyCoral = {
     displayName: "Single color: Dusty coral",
     singleColorScale: true,
     isDistinct: true,
-    colorSets: [[OwidDistinctColors.DustyCoral]],
+    colorSets: [[DistinctColors.DustyCoral]],
 }
 
 CustomColorSchemes.push(SingleColorDustyCoral)
@@ -507,7 +507,7 @@ export const SingleColorDarkCopper = {
     displayName: "Single color: Dark copper",
     singleColorScale: true,
     isDistinct: true,
-    colorSets: [[OwidDistinctColors.DarkCopper]],
+    colorSets: [[DistinctColors.DarkCopper]],
 }
 
 CustomColorSchemes.push(SingleColorDarkCopper)
@@ -665,7 +665,7 @@ export const BinaryMapPaletteE = {
 
 CustomColorSchemes.push(BinaryMapPaletteE)
 
-export const DefaultColorScheme = OwidDistinctColorScheme
+export const DefaultColorScheme = DistinctColorScheme
 
 export function getColorNameAndSemanticPalettes(
     color: string,
@@ -674,7 +674,7 @@ export function getColorNameAndSemanticPalettes(
     energyColorSchemeNames: Record<string, string>
 ): string[] {
     const colorNameStandardized = color.toUpperCase()
-    const owidDistinct =
+    const distinct =
         colorNameStandardized in baseColorSchemeNames
             ? `🎨 ${baseColorSchemeNames[colorNameStandardized]}`
             : ""
@@ -686,28 +686,28 @@ export function getColorNameAndSemanticPalettes(
         colorNameStandardized in energyColorSchemeNames
             ? `⚡ ${energyColorSchemeNames[colorNameStandardized]}`
             : ""
-    const lines = [owidDistinct, continents, energy].filter((x) => x !== "")
+    const lines = [distinct, continents, energy].filter((x) => x !== "")
 
     return lines
 }
 
-export function getColorNameOwidDistinctAndSemanticPalettes(
+export function getColorNameDistinctAndSemanticPalettes(
     color: string
 ): string[] {
     return getColorNameAndSemanticPalettes(
         color,
-        OwidDistinctColorsNames(),
+        DistinctColorsNames(),
         ContinentColorsNames(),
         EnergyColorsNames()
     )
 }
 
-export function getColorNameOwidDistinctLinesAndSemanticPalettes(
+export function getColorNameDistinctLinesAndSemanticPalettes(
     color: string
 ): string[] {
     return getColorNameAndSemanticPalettes(
         color,
-        OwidDistinctLinesColorNames(),
+        DistinctLinesColorNames(),
         ContinentColorsLinesNames(),
         EnergyColorsLinesNames()
     )

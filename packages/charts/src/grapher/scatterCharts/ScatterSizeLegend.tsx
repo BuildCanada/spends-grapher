@@ -6,7 +6,7 @@ import { TextWrap, Halo } from "../../components/index.js"
 import {
     Color,
     makeIdForHumanConsumption,
-    OwidVariableRoundingMode,
+    VariableRoundingMode,
 } from "../../utils/index.js"
 import {
     BASE_FONT_SIZE,
@@ -184,7 +184,7 @@ export class ScatterSizeLegend {
                                 value,
                                 {
                                     roundingMode:
-                                        OwidVariableRoundingMode.decimalPlaces,
+                                        VariableRoundingMode.decimalPlaces,
                                 }
                             )}
                             cx={cx}

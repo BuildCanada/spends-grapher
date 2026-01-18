@@ -1,10 +1,10 @@
 import {
-    OwidChartDimensionInterface,
-    OwidVariableRoundingMode,
-} from "../OwidVariableDisplayConfigInterface.js"
+    ChartDimensionInterface,
+    VariableRoundingMode,
+} from "../VariableDisplayConfigInterface.js"
 import { ColumnSlugs, EntityName } from "../domainTypes/CoreTableTypes.js"
 import { AxisAlign, Position } from "../domainTypes/Layout.js"
-import { Integer, OwidVariableId } from "../domainTypes/Various.js"
+import { Integer, VariableId } from "../domainTypes/Various.js"
 import { DetailDictionary } from "../gdocTypes/Gdoc.js"
 import {
     GRAPHER_CHART_TYPES,
@@ -13,7 +13,7 @@ import {
     GRAPHER_TAB_CONFIG_OPTIONS,
     GRAPHER_TAB_QUERY_PARAMS,
 } from "./GrapherConstants.js"
-import { OwidVariableDataMetadataDimensions } from "../OwidVariable.js"
+import { VariableDataMetadataDimensions } from "../Variable.js"
 import { ArchiveContext } from "../domainTypes/Archive.js"
 import {
     BinningStrategyIncludingManual,
@@ -233,7 +233,7 @@ export interface Tickmark {
     solid?: boolean // mostly for labelling domain start (e.g. 0)
 }
 export interface TickFormattingOptions {
-    roundingMode?: OwidVariableRoundingMode
+    roundingMode?: VariableRoundingMode
     numDecimalPlaces?: number
     numSignificantFigures?: number
     unit?: string
@@ -339,9 +339,9 @@ export type ComparisonLineConfig =
     | CustomComparisonLineConfig
 
 export enum LogoOption {
-    owid = "owid",
-    "core+owid" = "core+owid",
-    "gv+owid" = "gv+owid",
+    legacy = "legacy",
+    "core+legacy" = "core+legacy",
+    "gv+legacy" = "gv+legacy",
     buildcanada = "buildcanada",
     "buildcanada-wide" = "buildcanada-wide",
     canadaspends = "canadaspends",
@@ -441,20 +441,20 @@ export enum ColorSchemeName {
     Viridis = "Viridis",
     continents = "continents",
     stackedAreaDefault = "stackedAreaDefault",
-    "owid-distinct" = "owid-distinct",
+    "distinct" = "distinct",
     SingleColorDenim = "SingleColorDenim",
     SingleColorTeal = "SingleColorTeal",
     SingleColorPurple = "SingleColorPurple",
     SingleColorDustyCoral = "SingleColorDustyCoral",
     SingleColorDarkCopper = "SingleColorDarkCopper",
-    OwidCategoricalA = "OwidCategoricalA",
-    OwidCategoricalB = "OwidCategoricalB",
-    OwidCategoricalC = "OwidCategoricalC",
-    OwidCategoricalD = "OwidCategoricalD",
-    OwidCategoricalE = "OwidCategoricalE",
-    OwidEnergy = "OwidEnergy",
-    OwidEnergyLines = "OwidEnergyLines",
-    OwidDistinctLines = "OwidDistinctLines",
+    CategoricalA = "CategoricalA",
+    CategoricalB = "CategoricalB",
+    CategoricalC = "CategoricalC",
+    CategoricalD = "CategoricalD",
+    CategoricalE = "CategoricalE",
+    Energy = "Energy",
+    EnergyLines = "EnergyLines",
+    DistinctLines = "DistinctLines",
     BinaryMapPaletteA = "BinaryMapPaletteA",
     BinaryMapPaletteB = "BinaryMapPaletteB",
     BinaryMapPaletteC = "BinaryMapPaletteC",
@@ -520,7 +520,7 @@ export interface GrapherInterface extends SortConfig {
     maxTime?: TimeBound | TimeBoundValueStr
     timelineMinTime?: Time | TimeBoundValueStr
     timelineMaxTime?: Time | TimeBoundValueStr
-    dimensions?: OwidChartDimensionInterface[]
+    dimensions?: ChartDimensionInterface[]
     addCountryMode?: EntitySelectionMode
     comparisonLines?: ComparisonLineConfig[]
     stackMode?: StackMode
@@ -736,8 +736,8 @@ export enum GrapherWindowType {
 }
 
 export type AdditionalGrapherDataFetchFn = (
-    varId: OwidVariableId,
+    varId: VariableId,
     loadMetadataOnly?: boolean
-) => Promise<OwidVariableDataMetadataDimensions>
+) => Promise<VariableDataMetadataDimensions>
 
 export type GrapherTrendArrowDirection = "up" | "right" | "down"

@@ -24,9 +24,9 @@ import {
     CoreValueType,
     ColumnTypeNames,
     EntityName,
-    OwidColumnDef,
-    OwidRow,
-    OwidTableSlugs,
+    ColumnDef,
+    Row,
+    ChartsTableSlugs,
     ErrorValue,
     ToleranceOptions,
 } from "../types/index.js"
@@ -39,7 +39,7 @@ import {
     makeOriginalStartTimeSlugFromColumnSlug,
     timeColumnSlugFromColumnDef,
     toPercentageColumnDef,
-} from "./OwidTableUtil.js"
+} from "./TableUtil.js"
 import {
     linearInterpolation,
     toleranceInterpolation,
@@ -49,10 +49,10 @@ import {
 } from "./CoreTableUtils.js"
 import { CoreColumn, ColumnTypeMap } from "./CoreTableColumns.js"
 
-// An OwidTable is a subset of Table. An OwidTable always has EntityName, EntityCode, EntityId, and Time columns,
+// An ChartsTable is a subset of Table. An ChartsTable always has EntityName, EntityCode, EntityId, and Time columns,
 // and value column(s). Whether or not we need in the long run is uncertain and it may just be a stepping stone
 // to go from our Variables paradigm to the Table paradigm.
-export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
+export class ChartsTable extends CoreTable<Row, ColumnDef> {
     @imemo get availableEntityNames(): any[] {
         return Array.from(this.availableEntityNameSet)
     }
@@ -64,7 +64,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
     @imemo override get entityNameColumn(): CoreColumn {
         return (
             this.getFirstColumnWithType(ColumnTypeNames.EntityName) ??
-            this.get(OwidTableSlugs.entityName)
+            this.get(ChartsTableSlugs.entityName)
         )
     }
 
@@ -84,7 +84,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
         return this.rowIndex([this.entityNameSlug])
     }
 
-    getAnnotationColumnSlug(columnDef: OwidColumnDef): string | undefined {
+    getAnnotationColumnSlug(columnDef: ColumnDef): string | undefined {
         return _.isEmpty(columnDef?.annotationsColumnSlug)
             ? makeAnnotationsSlug(columnDef.slug)
             : columnDef.annotationsColumnSlug
@@ -92,7 +92,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
 
     // todo: instead of this we should probably make annotations another property on charts—something like "annotationsColumnSlugs"
     getAnnotationColumnForColumn(columnSlug: ColumnSlug): CoreColumn {
-        const def = this.get(columnSlug).def as OwidColumnDef
+        const def = this.get(columnSlug).def as ColumnDef
         const slug = this.getAnnotationColumnSlug(def)
         return this.get(slug)
     }
@@ -179,7 +179,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
         const adjustedStart = start === Infinity ? this.maxTime! : start
         const adjustedEnd = end === -Infinity ? this.minTime! : end
         // todo: we should set a time column onload so we don't have to worry about it again.
-        const timeColumnSlug = this.timeColumn?.slug || OwidTableSlugs.time
+        const timeColumnSlug = this.timeColumn?.slug || ChartsTableSlugs.time
 
         const description = `Keep only rows with Time between ${adjustedStart} - ${adjustedEnd}`
 
@@ -543,7 +543,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
             columnSlugs.forEach((valueSlug) => {
                 let comparisonValue: number
                 rowsForSingleEntity = rowsForSingleEntity.map(
-                    (row: Readonly<OwidRow>) => {
+                    (row: Readonly<Row>) => {
                         const newRow = {
                             ...row,
                         }
@@ -658,11 +658,11 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
             this.getAverageAnnualChangeIndicesByEntity(columnSlugs)
 
         // Overwrite table rows
-        const rows: OwidRow[] = []
+        const rows: Row[] = []
         entityNameToIndices.forEach((indices) => {
             const [startRow, endRow] = this.rowsAt(indices)
 
-            const newRow: OwidRow = { ...endRow }
+            const newRow: Row = { ...endRow }
             columns.forEach((col) => {
                 const timeSlug = col.originalTimeColumnSlug
 
@@ -712,7 +712,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
         )
     }
 
-    // Give our users a clean CSV of each Grapher. Assumes an Owid Table with entityName.
+    // Give our users a clean CSV of each Grapher. Assumes a ChartsTable with entityName.
     toPrettyCsv(
         useShortNames: boolean = false,
         activeColumnSlugs: string[] | undefined = undefined
@@ -720,8 +720,8 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
         let table
         if (activeColumnSlugs?.length) {
             const timeColumnToInclude = [
-                OwidTableSlugs.year,
-                OwidTableSlugs.day,
+                ChartsTableSlugs.year,
+                ChartsTableSlugs.day,
                 this.timeColumn.slug, // needed for explorers, where the time column may be called anything
             ].find((colSlug) => this.has(colSlug))
 
@@ -737,9 +737,9 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
             ])
         } else {
             table = this.dropColumns([
-                OwidTableSlugs.entityId,
-                OwidTableSlugs.time,
-                OwidTableSlugs.entityColor,
+                ChartsTableSlugs.entityId,
+                ChartsTableSlugs.time,
+                ChartsTableSlugs.entityColor,
             ])
         }
         return table
@@ -750,7 +750,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
     @imemo get entityNameColorIndex(): Map<EntityName, Color> {
         return this.valueIndex(
             this.entityNameSlug,
-            OwidTableSlugs.entityColor
+            ChartsTableSlugs.entityColor
         ) as Map<EntityName, Color>
     }
 
@@ -836,7 +836,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
         if (!this.has(columnSlug)) return this
 
         const column = this.get(columnSlug)
-        const columnDef = column.def as OwidColumnDef
+        const columnDef = column.def as ColumnDef
         const tolerance = toleranceOverride ?? column.tolerance ?? 0
         const toleranceStrategy =
             toleranceStrategyOverride ??
@@ -846,7 +846,7 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
         const timeColumnOfTable = !this.timeColumn.isMissing
             ? this.timeColumn
             : // CovidTable does not have a day or year column so we need to use time.
-              (this.get(OwidTableSlugs.time) as CoreColumn)
+              (this.get(ChartsTableSlugs.time) as CoreColumn)
 
         const maybeTimeColumnOfValue =
             getOriginalTimeColumnSlug(this, columnSlug) ??
@@ -923,14 +923,14 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
         if (!this.has(columnSlug)) return this
 
         const column = this.get(columnSlug)
-        const columnDef = column?.def as OwidColumnDef
+        const columnDef = column?.def as ColumnDef
 
         const maybeTimeColumnSlug =
             getOriginalTimeColumnSlug(this, columnSlug) ??
             timeColumnSlugFromColumnDef(columnDef)
         const timeColumn =
             this.get(maybeTimeColumnSlug) ??
-            (this.get(OwidTableSlugs.time) as CoreColumn) // CovidTable does not have a day or year column so we need to use time.
+            (this.get(ChartsTableSlugs.time) as CoreColumn) // CovidTable does not have a day or year column so we need to use time.
 
         const originalColumnSlug =
             makeOriginalValueSlugFromColumnSlug(columnSlug)
@@ -1157,16 +1157,16 @@ export class OwidTable extends CoreTable<OwidRow, OwidColumnDef> {
 
 const BLANK_TABLE_MESSAGE = `Table is empty.`
 
-// This just assures that even an emtpty OwidTable will have an entityName column. Probably a cleaner way to do this pattern (add a defaultColumns prop??)
-export const BlankOwidTable = (
-    tableSlug = `blankOwidTable`,
+// This just assures that even an emtpty ChartsTable will have an entityName column. Probably a cleaner way to do this pattern (add a defaultColumns prop??)
+export const BlankChartsTable = (
+    tableSlug = `blankChartsTable`,
     extraTableDescription = ""
-): OwidTable =>
-    new OwidTable(
+): ChartsTable =>
+    new ChartsTable(
         undefined,
         [
-            { slug: OwidTableSlugs.entityName },
-            { slug: OwidTableSlugs.year, type: ColumnTypeNames.Year },
+            { slug: ChartsTableSlugs.entityName },
+            { slug: ChartsTableSlugs.year, type: ColumnTypeNames.Year },
         ],
         {
             tableDescription: BLANK_TABLE_MESSAGE + extraTableDescription,

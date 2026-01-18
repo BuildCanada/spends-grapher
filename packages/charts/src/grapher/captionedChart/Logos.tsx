@@ -5,8 +5,8 @@ import {
     CANADASPENDS_LOGO_SVG,
     CORE_LOGO_SVG,
     GV_LOGO_SVG,
-    OWID_LOGO_SVG,
-    SMALL_OWID_LOGO_SVG,
+    LEGACY_LOGO_SVG,
+    SMALL_LEGACY_LOGO_SVG,
 } from "./LogosSVG"
 import { LogoOption } from "../../types/index.js"
 import { makeIdForHumanConsumption } from "../../utils/index.js"
@@ -20,20 +20,19 @@ interface LogoAttributes {
 }
 
 const logos: Record<LogoOption, LogoAttributes> = {
-    owid: {
-        svg: OWID_LOGO_SVG,
+    legacy: {
+        svg: LEGACY_LOGO_SVG,
         width: 65,
         height: 36,
         targetHeight: 36,
-        url: "https://ourworldindata.org",
     },
-    "core+owid": {
+    "core+legacy": {
         svg: CORE_LOGO_SVG,
         width: 102,
         height: 37,
         targetHeight: 36,
     },
-    "gv+owid": {
+    "gv+legacy": {
         svg: GV_LOGO_SVG,
         width: 420,
         height: 350,
@@ -62,13 +61,12 @@ const logos: Record<LogoOption, LogoAttributes> = {
     },
 }
 
-// owid logo optimized for small sizes
-const smallOwidLogo = {
-    svg: SMALL_OWID_LOGO_SVG,
+// legacy logo optimized for small sizes
+const smallLogo = {
+    svg: SMALL_LEGACY_LOGO_SVG,
     width: 51,
     height: 28,
     targetHeight: 28,
-    url: "https://ourworldindata.org",
 }
 
 interface LogoProps {
@@ -89,8 +87,8 @@ export class Logo {
     }
 
     private get spec(): LogoAttributes {
-        if (this.props.useSmallVersion && this.logo === LogoOption.owid) {
-            return smallOwidLogo
+        if (this.props.useSmallVersion && this.logo === LogoOption.legacy) {
+            return smallLogo
         }
         return logos[this.logo]
     }

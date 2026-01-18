@@ -1,6 +1,6 @@
 /**
  * Stub for MultiDimDataPageConfig.
- * Multi-dimensional data page configurations are specific to OWID's data pages.
+ * Multi-dimensional data page configurations are specific to data pages.
  */
 
 export interface MultiDimDataPageConfigRaw {

@@ -9,11 +9,11 @@ import {
     omitUndefinedValues,
     isPresent,
     dayjs,
-    OwidSource,
+    Source,
     formatValue,
     checkIsVeryShortUnit,
     TickFormattingOptions,
-    OwidVariableDisplayConfigInterface,
+    VariableDisplayConfigInterface,
     ColumnSlug,
     PrimitiveType,
     imemo,
@@ -29,16 +29,16 @@ import {
     ColumnTypeNames,
     CoreColumnDef,
     EntityName,
-    OwidVariableRow,
+    VariableRow,
     ErrorValue,
-    OwidVariableRoundingMode,
+    VariableRoundingMode,
 } from "../types/index.js"
 import { ErrorValueTypes, isNotErrorValue } from "./ErrorValues.js"
 import {
     getOriginalStartTimeColumnSlug,
     getOriginalTimeColumnSlug,
     getOriginalValueColumnSlug,
-} from "./OwidTableUtil.js"
+} from "./TableUtil.js"
 import * as R from "remeda"
 
 export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
@@ -86,7 +86,7 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
         return this.def.toleranceStrategy
     }
 
-    @imemo get display(): OwidVariableDisplayConfigInterface | undefined {
+    @imemo get display(): VariableDisplayConfigInterface | undefined {
         return this.def.display
     }
 
@@ -130,18 +130,18 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
         return this.originalTimeColumn.formatValue(time)
     }
 
-    @imemo get roundingMode(): OwidVariableRoundingMode {
+    @imemo get roundingMode(): VariableRoundingMode {
         return (
-            this.display?.roundingMode ?? OwidVariableRoundingMode.decimalPlaces
+            this.display?.roundingMode ?? VariableRoundingMode.decimalPlaces
         )
     }
 
     @imemo get roundsToFixedDecimals(): boolean {
-        return this.roundingMode === OwidVariableRoundingMode.decimalPlaces
+        return this.roundingMode === VariableRoundingMode.decimalPlaces
     }
 
     @imemo get roundsToSignificantFigures(): boolean {
-        return this.roundingMode === OwidVariableRoundingMode.significantFigures
+        return this.roundingMode === VariableRoundingMode.significantFigures
     }
 
     @imemo get numDecimalPlaces(): number {
@@ -418,7 +418,7 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
         return this.jsType === "string" ? values.sort() : sortNumeric(values)
     }
 
-    get source(): OwidSource {
+    get source(): Source {
         const { def } = this
         return {
             name: def.sourceName,
@@ -465,7 +465,7 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
 
     // todo: remove? Should not be on CoreTable
     // assumes table is sorted by time
-    @imemo get owidRows(): OwidVariableRow<JS_TYPE>[] {
+    @imemo get dataRows(): VariableRow<JS_TYPE>[] {
         const entities = this.allEntityNames
         const times = this.allTimes
         const values = this.values
@@ -483,12 +483,12 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
     }
 
     // todo: remove? Should not be on CoreTable
-    @imemo get owidRowsByEntityName(): Map<
+    @imemo get dataRowsByEntityName(): Map<
         EntityName,
-        OwidVariableRow<JS_TYPE>[]
+        VariableRow<JS_TYPE>[]
     > {
-        const map = new Map<EntityName, OwidVariableRow<JS_TYPE>[]>()
-        this.owidRows.forEach((row) => {
+        const map = new Map<EntityName, VariableRow<JS_TYPE>[]>()
+        this.dataRows.forEach((row) => {
             if (!map.has(row.entityName)) map.set(row.entityName, [])
             map.get(row.entityName)!.push(row)
         })
@@ -496,15 +496,15 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
     }
 
     // todo: remove? Should not be on CoreTable
-    @imemo get owidRowByEntityNameAndTime(): Map<
+    @imemo get dataRowByEntityNameAndTime(): Map<
         EntityName,
-        Map<Time, OwidVariableRow<JS_TYPE>>
+        Map<Time, VariableRow<JS_TYPE>>
     > {
         const valueByEntityNameAndTime = new Map<
             EntityName,
-            Map<Time, OwidVariableRow<JS_TYPE>>
+            Map<Time, VariableRow<JS_TYPE>>
         >()
-        this.owidRows.forEach((row) => {
+        this.dataRows.forEach((row) => {
             if (!valueByEntityNameAndTime.has(row.entityName))
                 valueByEntityNameAndTime.set(row.entityName, new Map())
             valueByEntityNameAndTime.get(row.entityName)!.set(row.time, row)
@@ -515,7 +515,7 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
     // todo: remove? Should not be on CoreTable
     @imemo get valuesByTime(): Map<Time, JS_TYPE[]> {
         const map = new Map<Time, JS_TYPE[]>()
-        this.owidRows.forEach((row) => {
+        this.dataRows.forEach((row) => {
             if (!map.has(row.time)) map.set(row.time, [])
             map.get(row.time)!.push(row.value)
         })
@@ -528,7 +528,7 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
             Time,
             Map<EntityName, JS_TYPE>
         >()
-        this.owidRows.forEach((row) => {
+        this.dataRows.forEach((row) => {
             if (!valueByTimeAndEntityName.has(row.time))
                 valueByTimeAndEntityName.set(row.time, new Map())
             valueByTimeAndEntityName
@@ -548,7 +548,7 @@ export abstract class AbstractCoreColumn<JS_TYPE extends PrimitiveType> {
             EntityName,
             Map<Time, JS_TYPE>
         >()
-        this.owidRows.forEach((row) => {
+        this.dataRows.forEach((row) => {
             if (!valueByEntityNameAndTime.has(row.entityName))
                 valueByEntityNameAndTime.set(row.entityName, new Map())
             valueByEntityNameAndTime
@@ -758,7 +758,7 @@ class CurrencyColumn extends NumericColumn {
         options?: TickFormattingOptions
     ): string {
         return super.formatValue(value, {
-            roundingMode: OwidVariableRoundingMode.decimalPlaces,
+            roundingMode: VariableRoundingMode.decimalPlaces,
             numDecimalPlaces: 0,
             unit: this.shortUnit,
             ...options,

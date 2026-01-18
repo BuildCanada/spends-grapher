@@ -1,4 +1,4 @@
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import {
     FacetStrategy,
     SeriesName,
@@ -21,17 +21,17 @@ export interface ChartSeries {
     color: Color
 }
 
-export type ChartTableTransformer = (inputTable: OwidTable) => OwidTable
+export type ChartTableTransformer = (inputTable: ChartsTable) => ChartsTable
 
 /** Interface implemented by all chart state classes */
 export interface ChartState {
     /** Fail message(s) to show to the user if something went wrong */
     errorInfo: ChartErrorInfo
 
-    /** OwidTable coming into the chart */
-    inputTable: OwidTable
-    /** OwidTable after the chart has transformed the input table */
-    transformedTable: OwidTable
+    /** ChartsTable coming into the chart */
+    inputTable: ChartsTable
+    /** ChartsTable after the chart has transformed the input table */
+    transformedTable: ChartsTable
 
     /** Array of selected entities for the chart */
     selectionArray?: SelectionArray

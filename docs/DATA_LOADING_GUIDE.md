@@ -46,15 +46,15 @@ All charts require data with these mandatory columns:
 
 ## Method 1: Using TestData Format (Recommended)
 
-The simplest approach uses the `createOwidTestDataset` helper with a structured array:
+The simplest approach uses the `createTestDataset` helper with a structured array:
 
 ```tsx
 import {
   Grapher,
   GrapherState,
-  createOwidTestDataset,
+  createTestDataset,
   fakeEntities,
-  legacyToOwidTableAndDimensionsWithMandatorySlug,
+  legacyToChartsTableAndDimensionsWithMandatorySlug,
   GRAPHER_CHART_TYPES,
   DimensionProperty,
 } from "@buildcanada/charts"
@@ -85,11 +85,11 @@ const dimensions = [
   { variableId, property: DimensionProperty.y },
 ]
 
-const dataset = createOwidTestDataset([
+const dataset = createTestDataset([
   { data: myData, metadata: myMetadata },
 ])
 
-const table = legacyToOwidTableAndDimensionsWithMandatorySlug(
+const table = legacyToChartsTableAndDimensionsWithMandatorySlug(
   dataset,
   dimensions,
   {} // optional: color mapping for entities
@@ -112,8 +112,8 @@ If you have JSON data from an API or file:
 import {
   Grapher,
   GrapherState,
-  createOwidTestDataset,
-  legacyToOwidTableAndDimensionsWithMandatorySlug,
+  createTestDataset,
+  legacyToChartsTableAndDimensionsWithMandatorySlug,
   GRAPHER_CHART_TYPES,
   DimensionProperty,
 } from "@buildcanada/charts"
@@ -154,8 +154,8 @@ const metadata = {
 
 // Build chart
 const dimensions = [{ variableId: 1, property: DimensionProperty.y }]
-const dataset = createOwidTestDataset([{ data: testData, metadata }])
-const table = legacyToOwidTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
+const dataset = createTestDataset([{ data: testData, metadata }])
+const table = legacyToChartsTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
 
 const grapherState = new GrapherState({
   title: "GDP Growth Rate",
@@ -302,12 +302,12 @@ const dimensions = [
   { variableId: 2, property: DimensionProperty.y },
 ]
 
-const dataset = createOwidTestDataset([
+const dataset = createTestDataset([
   { data: xData, metadata: xMetadata },
   { data: yData, metadata: yMetadata },
 ])
 
-const table = legacyToOwidTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
+const table = legacyToChartsTableAndDimensionsWithMandatorySlug(dataset, dimensions, {})
 
 const grapherState = new GrapherState({
   chartTypes: [GRAPHER_CHART_TYPES.ScatterPlot],
@@ -338,7 +338,7 @@ const entityColors = {
   "Germany": "#ffcc00",
 }
 
-const table = legacyToOwidTableAndDimensionsWithMandatorySlug(
+const table = legacyToChartsTableAndDimensionsWithMandatorySlug(
   dataset,
   dimensions,
   entityColors // Pass colors here
@@ -352,8 +352,8 @@ import {
   ChartsProvider,
   Grapher,
   GrapherState,
-  createOwidTestDataset,
-  legacyToOwidTableAndDimensionsWithMandatorySlug,
+  createTestDataset,
+  legacyToChartsTableAndDimensionsWithMandatorySlug,
   parseDelimited,
   GRAPHER_CHART_TYPES,
   DimensionProperty,
@@ -389,7 +389,7 @@ function CSVChart({ csvData }: { csvData: string }) {
   const variableId = 1
   const dimensions = [{ variableId, property: DimensionProperty.y }]
 
-  const dataset = createOwidTestDataset([{
+  const dataset = createTestDataset([{
     data: testData,
     metadata: {
       id: variableId,
@@ -397,7 +397,7 @@ function CSVChart({ csvData }: { csvData: string }) {
     },
   }])
 
-  const table = legacyToOwidTableAndDimensionsWithMandatorySlug(
+  const table = legacyToChartsTableAndDimensionsWithMandatorySlug(
     dataset,
     dimensions,
     {}
@@ -525,5 +525,5 @@ type TestMetadata = {
 - For Canada maps, use full province names (e.g., "British Columbia", not "BC")
 
 ### Colors not applying
-- Pass the color map to `legacyToOwidTableAndDimensionsWithMandatorySlug`
+- Pass the color map to `legacyToChartsTableAndDimensionsWithMandatorySlug`
 - Entity names in the color map must exactly match data entity names

@@ -57,7 +57,7 @@ const getAllEntitiesSortedWithWorld = lazy(() =>
         .concat([
             {
                 name: WORLD_ENTITY_NAME,
-                code: "OWID_WRL",
+                code: "WRL",
                 slug: "world",
                 regionType: RegionType.Other,
             },

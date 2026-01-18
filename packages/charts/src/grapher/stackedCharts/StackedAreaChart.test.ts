@@ -7,7 +7,7 @@ import {
     SynthesizeFruitTable,
     SynthesizeFruitTableWithStringValues,
     SynthesizeGDPTable,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 
 import { makeObservable, observable } from "mobx"
@@ -154,7 +154,7 @@ it("should drop missing values at start or end", () => {
     18,2003,uk
     2,2004,uk
     ,2005,uk`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "gdp", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
     ])
@@ -179,7 +179,7 @@ it("should mark interpolated values as fake", () => {
     ,2006,france
     2,2000,uk
     3,2004,uk`
-    const table = new OwidTable(csv, [
+    const table = new ChartsTable(csv, [
         { slug: "gdp", type: ColumnTypeNames.Numeric },
         { slug: "year", type: ColumnTypeNames.Year },
     ])

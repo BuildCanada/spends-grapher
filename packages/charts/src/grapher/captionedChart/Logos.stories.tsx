@@ -49,12 +49,12 @@ export const BuildCanadaSquareLogo: Story = {
 }
 
 /**
- * For backwards compatibility, the OWID logo is still available.
+ * For backwards compatibility, the legacy logo option is still available.
  */
-export const OwidLogo: Story = {
+export const LegacyLogo: Story = {
     render: () => {
         const grapherState = createLineChartState({
-            logo: LogoOption.owid,
+            logo: LogoOption.legacy,
         })
         return <Grapher grapherState={grapherState} />
     },
@@ -96,7 +96,7 @@ export const AllLogosComparison: Story = {
             },
             { logo: LogoOption.buildcanada, label: "Build Canada (Square)" },
             { logo: LogoOption.canadaspends, label: "Canada Spends" },
-            { logo: LogoOption.owid, label: "OWID" },
+            { logo: LogoOption.legacy, label: "Legacy" },
         ]
 
         return (

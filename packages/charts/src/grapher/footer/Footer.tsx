@@ -121,7 +121,7 @@ abstract class AbstractFooter<
 
     @computed protected get licenseText(): string {
         const branding = this.manager.branding
-        if (this.manager.hasOWIDLogo) {
+        if (this.manager.hasLegacyLogo) {
             return branding?.licenseText ?? "CC BY"
         }
         return branding?.poweredByText ?? "Powered by Build Canada Charts"
@@ -129,7 +129,7 @@ abstract class AbstractFooter<
 
     @computed protected get licenseUrl(): string {
         const branding = this.manager.branding
-        if (this.manager.hasOWIDLogo) {
+        if (this.manager.hasLegacyLogo) {
             return (
                 branding?.licenseUrl ??
                 "https://creativecommons.org/licenses/by/4.0/"
@@ -425,7 +425,7 @@ abstract class AbstractFooter<
                     </>
                 )}
                 <a
-                    className={this.manager.hasOWIDLogo ? "cclogo" : undefined}
+                    className={this.manager.hasLegacyLogo ? "cclogo" : undefined}
                     href={this.licenseUrl}
                     style={{ textDecoration: "none" }}
                     {...(this.manager.isInIFrame && {
@@ -460,7 +460,7 @@ abstract class AbstractFooter<
 
                         // if embbedded, open the sources modal
                         if (
-                            this.manager.isEmbeddedInAnOwidPage ||
+                            this.manager.isEmbeddedInPage ||
                             this.manager.isInIFrame
                         ) {
                             this.manager.activeModal = GrapherModal.Sources

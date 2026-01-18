@@ -26,7 +26,7 @@ function getPreferredSchemesByType(
             ColorSchemeName.SingleColorDarkCopper,
         ])
         .with(GRAPHER_CHART_TYPES.LineChart, () => [
-            ColorSchemeName.OwidDistinctLines,
+            ColorSchemeName.DistinctLines,
         ])
         .with(GRAPHER_CHART_TYPES.Marimekko, () => [
             ColorSchemeName.continents,
@@ -35,27 +35,27 @@ function getPreferredSchemesByType(
             ColorSchemeName.SingleColorPurple,
             ColorSchemeName.SingleColorTeal,
             ColorSchemeName.SingleColorDarkCopper,
-            ColorSchemeName.OwidCategoricalA,
-            ColorSchemeName.OwidCategoricalB,
-            ColorSchemeName.OwidCategoricalC,
-            ColorSchemeName.OwidCategoricalD,
-            ColorSchemeName.OwidCategoricalE,
+            ColorSchemeName.CategoricalA,
+            ColorSchemeName.CategoricalB,
+            ColorSchemeName.CategoricalC,
+            ColorSchemeName.CategoricalD,
+            ColorSchemeName.CategoricalE,
         ])
         .with(GRAPHER_CHART_TYPES.ScatterPlot, () => [
             ColorSchemeName.continents,
-            ColorSchemeName.OwidDistinctLines,
+            ColorSchemeName.DistinctLines,
         ])
         .with(GRAPHER_CHART_TYPES.SlopeChart, () => [
             ColorSchemeName.continents,
-            ColorSchemeName.OwidDistinctLines,
+            ColorSchemeName.DistinctLines,
         ])
         .with(GRAPHER_CHART_TYPES.StackedArea, () => [
-            ColorSchemeName["owid-distinct"],
-            ColorSchemeName.OwidCategoricalA,
-            ColorSchemeName.OwidCategoricalB,
-            ColorSchemeName.OwidCategoricalC,
-            ColorSchemeName.OwidCategoricalD,
-            ColorSchemeName.OwidCategoricalE,
+            ColorSchemeName["distinct"],
+            ColorSchemeName.CategoricalA,
+            ColorSchemeName.CategoricalB,
+            ColorSchemeName.CategoricalC,
+            ColorSchemeName.CategoricalD,
+            ColorSchemeName.CategoricalE,
             ColorSchemeName.SingleColorGradientDenim,
             ColorSchemeName.SingleColorGradientTeal,
             ColorSchemeName.SingleColorGradientPurple,
@@ -63,12 +63,12 @@ function getPreferredSchemesByType(
             ColorSchemeName.SingleColorGradientDarkCopper,
         ])
         .with(GRAPHER_CHART_TYPES.StackedBar, () => [
-            ColorSchemeName["owid-distinct"],
-            ColorSchemeName.OwidCategoricalA,
-            ColorSchemeName.OwidCategoricalB,
-            ColorSchemeName.OwidCategoricalC,
-            ColorSchemeName.OwidCategoricalD,
-            ColorSchemeName.OwidCategoricalE,
+            ColorSchemeName["distinct"],
+            ColorSchemeName.CategoricalA,
+            ColorSchemeName.CategoricalB,
+            ColorSchemeName.CategoricalC,
+            ColorSchemeName.CategoricalD,
+            ColorSchemeName.CategoricalE,
             ColorSchemeName.SingleColorGradientDenim,
             ColorSchemeName.SingleColorGradientTeal,
             ColorSchemeName.SingleColorGradientPurple,
@@ -76,12 +76,12 @@ function getPreferredSchemesByType(
             ColorSchemeName.SingleColorGradientDarkCopper,
         ])
         .with(GRAPHER_CHART_TYPES.StackedDiscreteBar, () => [
-            ColorSchemeName["owid-distinct"],
-            ColorSchemeName.OwidCategoricalA,
-            ColorSchemeName.OwidCategoricalB,
-            ColorSchemeName.OwidCategoricalC,
-            ColorSchemeName.OwidCategoricalD,
-            ColorSchemeName.OwidCategoricalE,
+            ColorSchemeName["distinct"],
+            ColorSchemeName.CategoricalA,
+            ColorSchemeName.CategoricalB,
+            ColorSchemeName.CategoricalC,
+            ColorSchemeName.CategoricalD,
+            ColorSchemeName.CategoricalE,
             ColorSchemeName.SingleColorGradientDenim,
             ColorSchemeName.SingleColorGradientTeal,
             ColorSchemeName.SingleColorGradientPurple,

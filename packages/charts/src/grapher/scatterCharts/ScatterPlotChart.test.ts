@@ -10,7 +10,7 @@ import {
     SynthesizeGDPTable,
     ErrorValueTypes,
     makeOriginalTimeSlugFromColumnSlug,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 import {
     ScatterPlotManager,
@@ -22,7 +22,7 @@ import {
     ScaleType,
     ScatterPointLabelStrategy,
     ColumnTypeNames,
-    OwidTableSlugs,
+    ChartsTableSlugs,
     Color,
     GRAPHER_CHART_TYPES,
 } from "../../types/index.js"
@@ -45,7 +45,7 @@ it("can create a new chart", () => {
 
 it("shows error when X or Y columns are missing", () => {
     const manager: ScatterPlotManager = {
-        table: new OwidTable([
+        table: new ChartsTable([
             ["entityId", "entityName", "entityCode", "year"],
             [1, "World", undefined, 2020],
         ]),
@@ -120,7 +120,7 @@ it("can filter points with negative values when using a log scale", () => {
 })
 
 describe("interpolation defaults", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -171,7 +171,7 @@ describe("interpolation defaults", () => {
 })
 
 describe("basic scatterplot", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -294,7 +294,7 @@ describe("basic scatterplot", () => {
 })
 
 describe("label point strategies", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -362,7 +362,7 @@ describe("label point strategies", () => {
 })
 
 it("assigns entity colors to series, overriding colorScale color", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -373,7 +373,7 @@ it("assigns entity colors to series, overriding colorScale color", () => {
                 "y",
                 "color",
                 "size",
-                OwidTableSlugs.entityColor,
+                ChartsTableSlugs.entityColor,
             ],
             [1, "UK", "", 2000, 1, 2, "Europe", null, "#ccc"],
         ],
@@ -405,7 +405,7 @@ it("assigns entity colors to series, overriding colorScale color", () => {
 })
 
 describe("entity exclusion", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -460,7 +460,7 @@ describe("entity exclusion", () => {
 })
 
 describe("colors & legend", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -566,7 +566,7 @@ describe("colors & legend", () => {
 })
 
 describe("series transformations", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -656,7 +656,7 @@ describe("series transformations", () => {
 })
 
 describe("average annual change", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             ["entityName", "year", "x", "y", "color", "size"],
             ["UK", 2000, 1, 1, null, null],
@@ -738,7 +738,7 @@ describe("average annual change", () => {
 
 describe("scatter plot with xOverrideTime", () => {
     const xOriginalTimeSlug = makeOriginalTimeSlugFromColumnSlug("x")
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -795,7 +795,7 @@ describe("scatter plot with xOverrideTime", () => {
 })
 
 describe("x/y tolerance", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -919,7 +919,7 @@ describe("x/y tolerance", () => {
 
 describe("correct bubble sizes", () => {
     it("with column", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             [
                 [
                     "entityId",
@@ -999,7 +999,7 @@ describe("correct bubble sizes", () => {
     })
 
     it("without column", () => {
-        const table = new OwidTable(
+        const table = new ChartsTable(
             [
                 ["entityId", "entityName", "entityCode", "year", "x", "y"],
                 // sorted alphabetically
@@ -1059,7 +1059,7 @@ describe("correct bubble sizes", () => {
 })
 
 it("applies color tolerance before applying the author timeline filter", () => {
-    const table = new OwidTable(
+    const table = new ChartsTable(
         [
             [
                 "entityId",
@@ -1108,7 +1108,7 @@ it("applies color tolerance before applying the author timeline filter", () => {
 describe("continent colors remain consistent regardless of data", () => {
     it("assigns correct colors even when some continents are missing", () => {
         // Test with only Asia and Europe (missing Africa, which is first in palette)
-        const table1 = new OwidTable(
+        const table1 = new ChartsTable(
             [
                 ["entityId", "entityName", "year", "x", "y", "color"],
                 [1, "China", 2000, 1, 1, "Asia"],

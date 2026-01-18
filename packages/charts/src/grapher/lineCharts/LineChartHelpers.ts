@@ -1,5 +1,5 @@
 import * as _ from "lodash-es"
-import { OwidTable } from "../../core-table/index.js"
+import { ChartsTable } from "../../core-table/index.js"
 import {
     AxisAlign,
     AxisConfigInterface,
@@ -91,7 +91,7 @@ export function getColorKey({
 }
 
 export function getAnnotationsMap(
-    table: OwidTable,
+    table: ChartsTable,
     slug: ColumnSlug
 ): AnnotationsMap | undefined {
     return table
@@ -117,7 +117,7 @@ export function getYAxisConfigDefaults(
         nice: config?.scaleType !== ScaleType.log,
         // if we only have a single y value (probably 0), we want the
         // horizontal axis to be at the bottom of the chart.
-        // see https://github.com/owid/owid-grapher/pull/975#issuecomment-890798547
+        // see # legacy PR 975#issuecomment-890798547
         singleValueAxisPointAlign: AxisAlign.start,
         // default to 0 if not set
         min: 0,

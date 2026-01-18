@@ -7,7 +7,7 @@ export {
     SynthesizeFruitTableWithNonPositives,
     SynthesizeFruitTableWithStringValues,
     SynthesizeProjectedPopulationTable,
-} from "./OwidTableSynthesizers.js"
+} from "./TableSynthesizers.js"
 
 export {
     type CoreColumn,
@@ -17,7 +17,7 @@ export {
     TimeColumn,
 } from "./CoreTableColumns.js"
 
-export { OwidTable, BlankOwidTable } from "./OwidTable.js"
+export { ChartsTable, BlankChartsTable } from "./ChartsTable.js"
 
 export {
     DroppedForTesting,
@@ -71,7 +71,7 @@ export {
     makeOriginalValueSlugFromColumnSlug,
     getOriginalTimeColumnSlug,
     toPercentageColumnDef,
-} from "./OwidTableUtil.js"
+} from "./TableUtil.js"
 
 export {
     insertMissingValuePlaceholders,

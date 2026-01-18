@@ -30,7 +30,7 @@ export class StackedBarChartState
 
     @computed
     get unstackedSeriesWithMissingValuesAsZeroes(): StackedSeries<number>[] {
-        // TODO: remove once monthly data is supported (https://github.com/owid/owid-grapher/issues/2007)
+        // TODO: remove once monthly data is supported (# legacy issue 2007)
         const enforceUniformSpacing = !(
             this.transformedTable.timeColumn instanceof ColumnTypeMap.Day
         )

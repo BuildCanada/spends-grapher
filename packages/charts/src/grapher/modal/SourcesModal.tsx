@@ -8,7 +8,7 @@ import {
     excludeUndefined,
     DisplaySource,
     prepareSourcesForDisplay,
-    OwidSource,
+    Source,
     IndicatorTitleWithFragments,
     joinTitleFragments,
     getCitationShort,
@@ -30,7 +30,7 @@ import { action, computed, makeObservable, observable } from "mobx"
 import { observer } from "mobx-react"
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { OwidColumnDef } from "../../types/index.js"
+import { ColumnDef } from "../../types/index.js"
 import { CoreColumn } from "../../core-table/index.js"
 import { Modal } from "./Modal"
 import { SourcesKeyDataTable } from "./SourcesKeyDataTable"
@@ -97,7 +97,7 @@ export class SourcesModal extends React.Component<SourcesModalProps> {
 
     @computed private get modalBounds(): Bounds {
         const maxWidth = MAX_CONTENT_WIDTH + 220
-        // using 15px instead of 16px to make sure the modal fully covers the OWID logo in the header
+        // using 15px instead of 16px to make sure the modal fully covers the logo in the header
         const padWidth = Math.max(15, (this.frameBounds.width - maxWidth) / 2)
         return this.frameBounds.padHeight(15).padWidth(padWidth)
     }
@@ -182,7 +182,7 @@ export class SourcesModal extends React.Component<SourcesModalProps> {
     ): React.ReactElement | null {
         if (!column) return null
         return (
-            <Source
+            <SourceDisplay
                 column={column}
                 editBaseUrl={this.editBaseUrl}
                 isEmbeddedInADataPage={
@@ -343,7 +343,7 @@ interface SourceProps {
 }
 
 @observer
-export class Source extends React.Component<SourceProps> {
+export class SourceDisplay extends React.Component<SourceProps> {
     constructor(props: SourceProps) {
         super(props)
         makeObservable(this)
@@ -353,7 +353,7 @@ export class Source extends React.Component<SourceProps> {
         return this.props.column
     }
 
-    @computed get def(): OwidColumnDef & { source?: OwidSource } {
+    @computed get def(): ColumnDef & { source?: Source } {
         return { ...this.column.def, source: this.column.source }
     }
 
@@ -361,7 +361,7 @@ export class Source extends React.Component<SourceProps> {
         return getCitationShort(
             this.def.origins ?? [],
             getAttributionFragmentsFromVariable(this.def),
-            this.def.owidProcessingLevel
+            this.def.processingLevel
         )
     }
 
@@ -373,13 +373,13 @@ export class Source extends React.Component<SourceProps> {
             getAttributionFragmentsFromVariable(this.def),
             this.def.presentation?.attributionShort,
             this.def.presentation?.titleVariant,
-            this.def.owidProcessingLevel,
+            this.def.processingLevel,
             undefined,
             undefined
         )
     }
 
-    @computed private get source(): OwidSource {
+    @computed private get source(): Source {
         return this.def.source ?? {}
     }
 
@@ -391,8 +391,8 @@ export class Source extends React.Component<SourceProps> {
         if (!this.props.editBaseUrl) return undefined
 
         // point user directly to the variable edit page if possible
-        if (this.def.owidVariableId) {
-            return `${this.props.editBaseUrl}/variables/${this.def.owidVariableId}`
+        if (this.def.variableId) {
+            return `${this.props.editBaseUrl}/variables/${this.def.variableId}`
         }
 
         // if that's not possible, point user to the dataset edit page
@@ -450,11 +450,11 @@ export class Source extends React.Component<SourceProps> {
     }
 
     @computed private get hideSourcesForDisplay(): boolean {
-        // the "Continent" variable curated by OWID is used in many charts but doesn't come with useful source information.
+        // the "Continent" variable is used in many charts but doesn't come with useful source information.
         // that's why we hide the sources section for this indicator for now, but we might decide to show it in the future.
         return (
-            !!this.def.owidVariableId &&
-            isContinentsVariableId(this.def.owidVariableId)
+            !!this.def.variableId &&
+            isContinentsVariableId(this.def.variableId)
         )
     }
 
@@ -496,7 +496,7 @@ export class Source extends React.Component<SourceProps> {
                 )}
                 <SourcesKeyDataTable
                     attribution={this.attributions}
-                    owidProcessingLevel={this.def.owidProcessingLevel}
+                    processingLevel={this.def.processingLevel}
                     dateRange={this.def.timespan}
                     lastUpdated={this.lastUpdated}
                     nextUpdate={this.nextUpdate}

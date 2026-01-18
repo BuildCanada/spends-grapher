@@ -51,7 +51,7 @@ html.IsInIframe #ExplorerContainer {
     }
     .ExplorerDownloadLink {
         font-size: 13px;
-        @include owid-link-60;
+        @include link-60;
     }
 }
 

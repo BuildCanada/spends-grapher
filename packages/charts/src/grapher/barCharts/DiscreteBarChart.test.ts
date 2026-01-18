@@ -7,13 +7,13 @@ import {
     SynthesizeFruitTable,
     SynthesizeFruitTableWithStringValues,
     SynthesizeGDPTable,
-    OwidTable,
+    ChartsTable,
 } from "../../core-table/index.js"
 import { DiscreteBarChartManager } from "./DiscreteBarChartConstants"
 import { ColorSchemeName, SeriesStrategy } from "../../types/index.js"
 import { SelectionArray } from "../selection/SelectionArray"
 import { SortBy, SortOrder } from "../../utils/index.js"
-import { OwidDistinctColorScheme } from "../color/CustomSchemes"
+import { DistinctColorScheme } from "../color/CustomSchemes"
 import { DiscreteBarChartState } from "./DiscreteBarChartState"
 
 it("can create a new bar chart", () => {
@@ -51,7 +51,7 @@ describe("barcharts with columns as the series", () => {
         manager.baseColorScheme = ColorSchemeName.Reds
         const chartState = new DiscreteBarChartState({ manager })
         expect(chartState.series[0].color).not.toEqual(
-            OwidDistinctColorScheme.colorSets[0][0]
+            DistinctColorScheme.colorSets[0][0]
         )
     })
 
@@ -96,7 +96,7 @@ describe("barcharts with columns as the series", () => {
 1001,2019,UK,,
 1002,2020,UK,,`
 
-        const table = new OwidTable(csv)
+        const table = new ChartsTable(csv)
             .interpolateColumnWithTolerance("gdp", { toleranceOverride: 1 })
             .filterByTargetTimes([2020])
         const manager = {
@@ -146,7 +146,7 @@ describe("sorting", () => {
 101,2019,Sweden
 98,2019,Zambia`
 
-    const table = new OwidTable(csv)
+    const table = new ChartsTable(csv)
     const manager = {
         table,
         seriesStrategy: SeriesStrategy.entity,

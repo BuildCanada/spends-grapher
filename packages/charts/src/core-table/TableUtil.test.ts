@@ -1,12 +1,12 @@
 import { expect, it, describe } from "vitest"
 
 import { replaceDef } from "./CoreTableUtils.js"
-import { OwidTable } from "./OwidTable.js"
+import { ChartsTable } from "./ChartsTable.js"
 import {
     SampleColumnSlugs,
     SynthesizeGDPTable,
-} from "./OwidTableSynthesizers.js"
-import { toPercentageColumnDef } from "./OwidTableUtil.js"
+} from "./TableSynthesizers.js"
+import { toPercentageColumnDef } from "./TableUtil.js"
 
 describe(toPercentageColumnDef, () => {
     it("should format resulting column as percent", () => {
@@ -22,7 +22,7 @@ describe(toPercentageColumnDef, () => {
         ])
 
         // Create new table with new column def
-        const newTable = new OwidTable(``, columnDefs)
+        const newTable = new ChartsTable(``, columnDefs)
         const percentageColumn = newTable.get(SampleColumnSlugs.GDP)
 
         expect(percentageColumn.formatValue(10.12)).toEqual("10.1%")
